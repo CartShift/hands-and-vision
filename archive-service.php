@@ -1,7 +1,7 @@
 <?php
 /**
  * Archive Template: Services
- * Premium immersive design with dramatic hero and showcase-style service presentation
+ * Elegant minimalist design with immersive light hero and showcase-style service presentation
  *
  * @package HandAndVision
  */

@@ -24,12 +24,12 @@ The primary audience is Hebrew-speaking. All designs must be tested for RTL (Rig
 - Use `border-inline-start` / `border-inline-end` for directional borders.
 
 ### 2. Design Language
-- **Colors**: Client-approved palette in `assets/css/hv-unified.css`:
-  - **Primary**: `--hv-primary` (#D02E04 Deep Red) - CTAs
-  - **Accent**: `--hv-orange` (#EFAF12 Warm Orange) - Highlights
-  - **Soft**: `--hv-yellow` (#FAE4AF), `--hv-pink` (#F8CEC8), `--hv-pink-soft` (#F5E0E9)
-  - **Brand**: `--hv-lilac` (#D9B6DC), `--hv-purple` (#B6A5E7), `--hv-blue` (#8B95F3)
-  - **Dark**: `--hv-petrol` (#254B61) - Headers, footers, dark text
+- **Colors**: **Professional Gradient Strategy** (Client Palette):
+  - **Text**: Petrol Blue (`--hv-petrol`) for headings/body.
+  - **Accents**: Lilac/Purple (`--hv-lilac`) for overlines, highlights & hover.
+  - **CTAs**: Deep Red (`--hv-primary`) - Only for main actions.
+  - **Backgrounds**: Soft Pink (`--hv-bg-secondary`) & Warm Cream.
+  - **Note**: Avoid Orange for text. Use Lilac/Purple for "brand" feel.
 - **Typography**: Inter / Heebo. High contrast.
 - **CSS Strategy**: `hv-unified.css` is the **Main Source of Truth**. Check partials in `assets/css/` first, but if empty, edit `hv-unified.css` directly.
 - **Vibe**: Art Gallery. Lots of whitespace. Sophisticated.
