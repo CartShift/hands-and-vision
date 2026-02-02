@@ -372,7 +372,7 @@
 		 */
 		initGLightbox() {
 			this.lightbox = GLightbox({
-				selector: ".hv-gallery-bento__item",
+				selector: ".hv-gallery-bento__link[href][href!='#']",
 				touchNavigation: true,
 				loop: true,
 				zoomable: true,
@@ -396,8 +396,12 @@
 		 * Initialize custom lightbox fallback
 		 */
 		initCustomLightbox() {
-			this.items.forEach((item, index) => {
-				item.addEventListener("click", e => this.openLightbox(index));
+			this.items.forEach(item => {
+				item.addEventListener("click", e => {
+					e.preventDefault();
+					e.stopPropagation();
+					this.openLightbox(item);
+				});
 			});
 
 			// Create lightbox elements
@@ -505,9 +509,10 @@
 		/**
 		 * Open lightbox at specific index
 		 */
-		openLightbox(index) {
+		openLightbox(clickedItem) {
 			this.updateVisibleItems();
-			this.currentIndex = index;
+			const idx = this.visibleItems.indexOf(clickedItem);
+			this.currentIndex = idx >= 0 ? idx : 0;
 			this.loadImage();
 
 			this.overlay.classList.add("active");
@@ -533,15 +538,18 @@
 			if (!item) return;
 
 			const img = item.querySelector(".hv-gallery-bento__img");
+			const link = item.querySelector(".hv-gallery-bento__link");
+			const fullSrc = (img && (img.dataset.fullSrc || img.getAttribute("src"))) || (link && link.getAttribute("href")) || "";
 			const title = item.querySelector(".hv-gallery-bento__title")?.textContent || "";
 			const meta = item.querySelector(".hv-gallery-bento__meta")?.textContent || "";
 
+			if (!fullSrc || fullSrc === "#") {
+				this.loader.classList.remove("active");
+				return;
+			}
+
 			this.loader.classList.add("active");
-
-			// Load high-res image
-			const fullSrc = img.dataset.fullSrc || img.src;
 			const tempImg = new Image();
-
 			tempImg.onload = () => {
 				this.image.src = fullSrc;
 				this.image.alt = title;
@@ -549,7 +557,7 @@
 				this.counterEl.textContent = `${this.currentIndex + 1} / ${this.visibleItems.length}`;
 				this.loader.classList.remove("active");
 			};
-
+			tempImg.onerror = () => this.loader.classList.remove("active");
 			tempImg.src = fullSrc;
 		}
 
