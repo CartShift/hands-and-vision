@@ -752,32 +752,33 @@
 	};
 
 	/**
-	 * Hero Scroll Indicator
+	 * Hero Scroll Indicator (homepage + service archive/single)
 	 */
 	const HeroScroll = {
 		init: function () {
-			const scrollIndicator = document.querySelector(".hv-hero-video__scroll");
-			if (!scrollIndicator) return;
-
-			scrollIndicator.addEventListener("click", function () {
-				// Find the next section after the hero
-				const heroSection = document.querySelector(".hv-hero-video");
-				if (heroSection && heroSection.nextElementSibling) {
-					heroSection.nextElementSibling.scrollIntoView({
-						behavior: "smooth",
-						block: "start"
-					});
-				} else {
-					// Fallback: scroll by window height
-					window.scrollBy({
-						top: window.innerHeight,
-						behavior: "smooth"
-					});
-				}
+			const videoScroll = document.querySelector(".hv-hero-video__scroll");
+			if (videoScroll) {
+				videoScroll.addEventListener("click", function () {
+					const heroSection = document.querySelector(".hv-hero-video");
+					if (heroSection && heroSection.nextElementSibling) {
+						heroSection.nextElementSibling.scrollIntoView({ behavior: "smooth", block: "start" });
+					} else {
+						window.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+					}
+				});
+			}
+			document.querySelectorAll(".hv-hero-scroll").forEach(function (el) {
+				el.addEventListener("click", function (e) {
+					const href = el.getAttribute("href");
+					if (href && href.indexOf("#") === 0) {
+						const target = document.querySelector(href);
+						if (target) {
+							e.preventDefault();
+							target.scrollIntoView({ behavior: "smooth", block: "start" });
+						}
+					}
+				});
 			});
-
-			// Add cursor pointer style
-			scrollIndicator.style.cursor = "pointer";
 		}
 	};
 

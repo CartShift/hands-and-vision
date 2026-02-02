@@ -1,7 +1,7 @@
 <?php
 /**
  * Archive Template: Services
- * Premium gallery-style services listing
+ * Premium full-viewport hero + alternating service cards
  *
  * @package HandAndVision
  */
@@ -22,21 +22,36 @@ $services = get_posts( array(
 
 <main id="primary" class="hv-archive-page hv-service-archive">
 
-    <!-- Hero Header -->
-    <section class="hv-page-hero">
-        <div class="hv-container hv-text-center">
-            <?php handandvision_breadcrumbs(); ?>
-            <span class="hv-overline hv-reveal"><?php echo handandvision_is_hebrew() ? 'מה אנחנו מציעים' : 'What We Offer'; ?></span>
-            <h1 class="hv-headline-1 hv-reveal"><?php echo handandvision_is_hebrew() ? 'השירותים שלנו' : 'Our Services'; ?></h1>
-            <p class="hv-subtitle hv-service-intro-text hv-reveal">
-                <?php echo handandvision_is_hebrew() ? 'אנו מציעים מגוון שירותים מותאמים אישית לעולם האמנות - מאוצרות ועד ייעוץ מקצועי' : 'We offer a range of personalized services for the art world - from curation to professional consultancy'; ?>
+    <section class="hv-service-archive-hero">
+        <div class="hv-service-archive-hero__bg"></div>
+        <div class="hv-service-archive-hero__content">
+            <span class="hv-overline hv-service-archive-hero__overline">
+                <?php if ( handandvision_is_hebrew() ) : ?>
+                    <span class="hv-word-1">אוצרות</span> · <span class="hv-word-2">ייעוץ</span> · <span class="hv-word-3">שירות</span>
+                <?php else : ?>
+                    <span class="hv-word-1">CURATION</span> · <span class="hv-word-2">CONSULTANCY</span> · <span class="hv-word-3">SERVICE</span>
+                <?php endif; ?>
+            </span>
+            <h1 class="hv-display hv-service-archive-hero__title"><?php echo handandvision_is_hebrew() ? 'השירותים שלנו' : 'Our Services'; ?></h1>
+            <p class="hv-service-archive-hero__subtitle">
+                <?php echo handandvision_is_hebrew() ? 'מגוון שירותים מותאמים לעולם האמנות — מאוצרות ועד ייעוץ מקצועי' : 'A range of tailored services for the art world — from curation to professional consultancy'; ?>
             </p>
         </div>
+        <a href="#hv-services-list" class="hv-hero-scroll" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'גלול לשירותים' : 'Scroll to services' ); ?>">
+            <span><?php echo handandvision_is_hebrew() ? 'גלול' : 'Scroll'; ?></span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+        </a>
     </section>
 
-    <!-- Services Grid -->
-    <section class="hv-section hv-section--cream">
+    <section id="hv-services-list" class="hv-section hv-section--cream hv-services-showcase" aria-labelledby="services-list-heading">
         <div class="hv-container">
+            <header class="hv-section-header hv-text-center hv-mb-10" id="services-list-heading">
+                <span class="hv-overline hv-reveal"><?php echo handandvision_is_hebrew() ? 'מה אנחנו מציעים' : 'What We Offer'; ?></span>
+                <h2 class="hv-headline-2 hv-line-draw hv-reveal"><?php echo handandvision_is_hebrew() ? 'בחרו שירות' : 'Choose a Service'; ?></h2>
+            </header>
             <div class="hv-services-cards">
                 <?php foreach ( $services as $i => $service ) :
                     $service_image = get_field( 'service_hero_image', $service->ID );
@@ -74,7 +89,6 @@ $services = get_posts( array(
         </div>
     </section>
 
-    <!-- CTA Section -->
     <section class="hv-cta-premium">
         <div class="hv-container hv-container--narrow hv-text-center">
             <span class="hv-overline hv-reveal"><?php echo handandvision_is_hebrew() ? 'מתחילים' : 'Getting Started'; ?></span>

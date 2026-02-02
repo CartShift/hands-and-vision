@@ -6205,7 +6205,206 @@ html[dir="rtl"] .hv-text-right {
    7. SERVICES PAGE OPTIMIZATIONS
    ========================================== */
 
-/* Hero Text Colors (Moved from inline) */
+/* --- Service Archive Hero (full-viewport) --- */
+.hv-service-archive-hero {
+	position: relative;
+	width: 100%;
+	height: 85vh;
+	min-height: 520px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	background: #0a0a0b;
+}
+
+.hv-service-archive-hero__bg {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(135deg, #1a1520 0%, #0f0d14 40%, #1a2433 100%);
+	z-index: 1;
+}
+
+.hv-service-archive-hero__content {
+	position: relative;
+	z-index: 10;
+	text-align: center;
+	padding: 40px 24px;
+	max-width: 880px;
+}
+
+.hv-service-archive-hero__overline {
+	display: block;
+	font-size: 0.75rem;
+	letter-spacing: 0.4em;
+	text-transform: uppercase;
+	margin-bottom: 28px;
+	color: #d4c9e8;
+	opacity: 0;
+	animation: hvFadeInUp 0.8s ease-out 0.1s forwards;
+}
+
+.hv-service-archive-hero__overline .hv-word-1 {
+	color: #c7b2e0;
+}
+.hv-service-archive-hero__overline .hv-word-2 {
+	color: #b8a4d9;
+}
+.hv-service-archive-hero__overline .hv-word-3 {
+	color: #9ec8d6;
+}
+
+.hv-service-archive-hero__title {
+	font-family: "Heebo", sans-serif;
+	font-size: clamp(2.25rem, 6vw, 4.5rem);
+	font-weight: 200;
+	letter-spacing: 0.12em;
+	color: #ffffff;
+	margin: 0 0 24px;
+	line-height: 1.05;
+	opacity: 0;
+	animation: hvFadeInUp 0.8s ease-out 0.25s forwards;
+	text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+}
+
+.hv-service-archive-hero__subtitle {
+	font-size: clamp(1rem, 1.8vw, 1.25rem);
+	font-weight: 300;
+	color: rgba(255, 255, 255, 0.85);
+	line-height: 1.7;
+	max-width: 600px;
+	margin: 0 auto;
+	opacity: 0;
+	animation: hvFadeInUp 0.8s ease-out 0.4s forwards;
+}
+
+/* --- Single Service Hero (full-viewport) --- */
+.hv-service-hero--full {
+	min-height: 100vh;
+	height: 100vh;
+}
+
+.hv-service-hero--full .hv-service-hero__overlay {
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.hv-service-hero__content .hv-overline,
+.hv-service-hero--full .hv-service-hero__overline {
+	display: block;
+	color: rgba(255, 255, 255, 0.9);
+	font-size: 0.75rem;
+	letter-spacing: 0.35em;
+	margin-bottom: 20px;
+}
+
+.hv-service-hero--full .hv-service-hero__title,
+.hv-service-hero__title.hv-display {
+	font-family: "Heebo", sans-serif;
+	font-size: clamp(2rem, 5.5vw, 4rem);
+	font-weight: 200;
+	letter-spacing: 0.1em;
+	color: #ffffff;
+	margin: 0 0 20px;
+	line-height: 1.1;
+	text-shadow: 0 2px 40px rgba(0, 0, 0, 0.5);
+}
+
+.hv-service-hero__subtitle {
+	font-size: clamp(1rem, 1.8vw, 1.2rem);
+	font-weight: 300;
+	color: rgba(255, 255, 255, 0.9);
+	max-width: 580px;
+	margin: 0 auto;
+	line-height: 1.75;
+}
+
+.hv-service-hero .hv-breadcrumb-trail,
+.hv-service-hero .hv-breadcrumb-trail a {
+	color: rgba(255, 255, 255, 0.85);
+}
+
+.hv-service-hero .hv-breadcrumb-trail a:hover {
+	color: #ffffff;
+}
+
+/* --- Hero scroll hint (archive + single) --- */
+.hv-hero-scroll {
+	position: absolute;
+	bottom: 36px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	color: rgba(255, 255, 255, 0.75);
+	font-size: 0.7rem;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	z-index: 10;
+	text-decoration: none;
+	opacity: 0;
+	animation: hvFadeInUp 0.8s ease-out 0.8s forwards;
+	transition: color 0.3s ease;
+	cursor: pointer;
+}
+
+.hv-hero-scroll:hover {
+	color: rgba(255, 255, 255, 1);
+}
+
+.hv-hero-scroll svg {
+	transition: transform 0.3s ease;
+}
+
+.hv-hero-scroll:hover svg {
+	transform: translateY(4px);
+}
+
+@media (max-width: 768px) {
+	.hv-service-archive-hero {
+		height: 75vh;
+		min-height: 440px;
+	}
+	.hv-service-hero--full {
+		min-height: 100vh;
+		height: 100vh;
+	}
+}
+
+/* --- Features showcase (single service) --- */
+.hv-features-showcase .hv-features-grid,
+.hv-features-showcase__grid {
+	gap: 32px;
+	margin-top: 48px;
+}
+
+.hv-features-showcase .hv-feature-item {
+	padding: 40px 36px;
+	border-radius: 8px;
+	box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+	border-inline-start: 3px solid #c7b2e0;
+}
+
+.hv-features-showcase .hv-feature-item__number {
+	font-size: 2.25rem;
+	font-weight: 200;
+	color: #c7b2e0;
+	margin-bottom: 12px;
+}
+
+.hv-artists-grid--narrow {
+	max-width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.hv-cta-subtitle {
+	margin: 1.5rem auto 2.5rem;
+	max-width: 550px;
+}
+
+/* Hero Text Colors (legacy page-hero) */
 .hv-service-archive .hv-page-hero .hv-overline {
 	color: #c7b2e0 !important;
 }

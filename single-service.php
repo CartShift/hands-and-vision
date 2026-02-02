@@ -1,7 +1,7 @@
 <?php
 /**
  * Single Template: Service
- * Premium service detail page
+ * Premium full-viewport hero + content sections
  *
  * @package HandAndVision
  */
@@ -14,26 +14,22 @@ get_header();
 $service_id = get_the_ID();
 $service_title = get_the_title();
 
-// Get ACF fields with defaults
 $hero_image = get_field( 'service_hero_image', $service_id );
 $hero_url = ( is_array( $hero_image ) && isset( $hero_image['url'] ) ) ? $hero_image['url'] : get_the_post_thumbnail_url( $service_id, 'full' );
-$short_desc = get_field( 'service_short_description', $service_id );
-$full_desc = get_field( 'service_full_description', $service_id );
+$short_desc = get_field( 'service_short_description', $service_id ) ?: '';
+$full_desc = get_field( 'service_full_description', $service_id ) ?: '';
 $features = get_field( 'service_what_we_do', $service_id );
 $gallery = get_field( 'service_gallery', $service_id );
 $related_artists = get_field( 'service_related_artists', $service_id );
 $cta_text = get_field( 'service_cta_text', $service_id );
 
-$short_desc = $short_desc ?: '';
-$full_desc = $full_desc ?: '';
 $features = is_array( $features ) ? $features : array();
 $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, array() );
 ?>
 
 <main id="primary" class="hv-single-service">
 
-    <!-- Service Hero -->
-    <section class="hv-service-hero">
+    <section class="hv-service-hero hv-service-hero--full">
         <div class="hv-service-hero__bg">
             <?php if ( $hero_url ) : ?>
                 <img src="<?php echo esc_url( $hero_url ); ?>" alt="<?php echo esc_attr( $service_title ); ?>">
@@ -45,17 +41,24 @@ $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, arra
         <div class="hv-service-hero__content">
             <div class="hv-container hv-text-center">
                 <?php handandvision_breadcrumbs(); ?>
-                <span class="hv-overline hv-reveal"><?php echo handandvision_is_hebrew() ? 'שירות' : 'Service'; ?></span>
-                <h1 class="hv-headline-1 hv-reveal"><?php echo esc_html( get_the_title() ); ?></h1>
-                <p class="hv-subtitle hv-reveal" style="max-width: 600px; margin: var(--hv-space-6) auto 0; color: var(--hv-silver);">
-                    <?php echo esc_html( $short_desc ); ?>
-                </p>
+                <span class="hv-overline hv-service-hero__overline"><?php echo handandvision_is_hebrew() ? 'שירות' : 'Service'; ?></span>
+                <h1 class="hv-display hv-service-hero__title"><?php echo esc_html( get_the_title() ); ?></h1>
+                <?php if ( $short_desc ) : ?>
+                    <p class="hv-service-hero__subtitle"><?php echo esc_html( $short_desc ); ?></p>
+                <?php endif; ?>
             </div>
         </div>
+        <a href="#hv-service-content" class="hv-hero-scroll" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'גלול לתוכן' : 'Scroll to content' ); ?>">
+            <span><?php echo handandvision_is_hebrew() ? 'גלול' : 'Scroll'; ?></span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+            </svg>
+        </a>
     </section>
 
+    <div id="hv-service-content">
     <?php if ( $full_desc ) : ?>
-    <!-- Service Description -->
     <section class="hv-section hv-section--lg hv-section--white">
         <div class="hv-container hv-container--narrow">
             <div class="hv-service-content hv-reveal">
@@ -65,21 +68,19 @@ $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, arra
     </section>
     <?php endif; ?>
 
-    <!-- Features -->
     <?php if ( ! empty( $features ) ) : ?>
-    <section class="hv-section hv-section--cream">
+    <section class="hv-section hv-section--cream hv-features-showcase">
         <div class="hv-container">
             <header class="hv-section-header hv-text-center hv-mb-10">
                 <span class="hv-overline hv-reveal"><?php echo handandvision_is_hebrew() ? 'מה כולל השירות' : 'What is Included'; ?></span>
                 <h2 class="hv-headline-2 hv-line-draw hv-reveal"><?php echo handandvision_is_hebrew() ? 'תחומי הפעילות' : 'Areas of Activity'; ?></h2>
             </header>
-
-            <div class="hv-features-grid hv-stagger">
+            <div class="hv-features-grid hv-features-showcase__grid">
                 <?php foreach ( $features as $i => $feature ) :
                     $feature_text = is_array( $feature ) ? ( $feature['point'] ?? '' ) : (string) $feature;
                     if ( $feature_text === '' ) continue;
                 ?>
-                    <div class="hv-feature-item">
+                    <div class="hv-feature-item hv-reveal">
                         <span class="hv-feature-item__number"><?php printf( '%02d', $i + 1 ); ?></span>
                         <p class="hv-feature-item__text"><?php echo esc_html( $feature_text ); ?></p>
                     </div>
@@ -96,7 +97,6 @@ $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, arra
         'section_class' => 'hv-section--white',
     ) ); ?>
 
-    <!-- Related Artists -->
     <?php if ( ! empty( $related_artists ) ) : ?>
     <section class="hv-section hv-section--dark">
         <div class="hv-container">
@@ -104,8 +104,7 @@ $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, arra
                 <span class="hv-overline hv-reveal"><?php echo handandvision_is_hebrew() ? 'עובדים איתנו' : 'Working with Us'; ?></span>
                 <h2 class="hv-headline-2 hv-text-white hv-line-draw hv-reveal"><?php echo handandvision_is_hebrew() ? 'אמנים בתחום' : 'Featured Artists'; ?></h2>
             </header>
-
-            <div class="hv-artists-grid hv-stagger" style="max-width: 1000px; margin: 0 auto;">
+            <div class="hv-artists-grid hv-stagger hv-artists-grid--narrow">
                 <?php foreach ( $related_artists as $artist ) :
                     $artist_id = is_object( $artist ) ? $artist->ID : $artist;
                     $artist_name = is_object( $artist ) ? $artist->post_title : get_the_title( $artist_id );
@@ -140,12 +139,11 @@ $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, arra
             $display_cta = $cta_text ?: $default_cta;
             ?>
             <h2 class="hv-headline-2 hv-reveal"><?php echo esc_html( $display_cta ); ?></h2>
-            <p class="hv-subtitle hv-reveal" style="margin: var(--hv-space-5) auto var(--hv-space-7); max-width: 550px;">
-                <?php echo handandvision_is_hebrew() ? 'נשמח לשמוע על הצרכים שלכם ולהציע פתרון מותאם' : 'We’d love to hear about your needs and offer a tailored solution'; ?>
-            </p>
+            <p class="hv-subtitle hv-cta-subtitle hv-reveal"><?php echo handandvision_is_hebrew() ? 'נשמח לשמוע על הצרכים שלכם ולהציע פתרון מותאם' : 'We’d love to hear about your needs and offer a tailored solution'; ?></p>
             <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-btn hv-btn--primary hv-btn--lg hv-reveal"><?php echo handandvision_is_hebrew() ? 'צרו קשר' : 'Contact Us'; ?></a>
         </div>
     </section>
+    </div>
 
 </main>
 
