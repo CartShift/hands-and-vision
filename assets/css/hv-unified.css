@@ -2199,7 +2199,7 @@ html[dir="rtl"] .hv-services-cards .hv-service-card:nth-child(even) .hv-service-
 }
 
 .hv-section--cream {
-	background: var(--hv-bg-secondary); /* Restoring the soft pink/purple vibe */
+	background: var(--hv-cream); /* Simple beige as requested */
 }
 
 .hv-section--warm {
@@ -4902,9 +4902,9 @@ ul.hv-nav-menu a,
 	background: linear-gradient(135deg, var(--hv-pearl) 0%, var(--hv-pearl) 100%) !important;
 }
 
-/* Fix sections with cream background */
+/* Fix sections with cream background - User prefers Simple Beige */
 .hv-section--cream {
-	background: var(--hv-bg-secondary) !important;
+	background: var(--hv-cream) !important;
 }
 
 /* Fix sections with white background */
@@ -4992,7 +4992,7 @@ input[type="submit"] {
 }
 
 .hv-service-block:nth-child(even) {
-	background: var(--hv-bg-secondary); /* Soft Pink/Lilac tint */
+	background: var(--hv-cream);
 	/* Subtle background for even items */
 }
 
@@ -6243,10 +6243,10 @@ html[dir="rtl"] .hv-text-right {
 	min-height: 200px;
 }
 
-/* Optional JS-enhanced animation: start hidden, reveal on scroll */
-.hv-js-ready .hv-gallery-bento__item:not(.revealed) {
-	opacity: 0;
-	transform: translateY(24px);
+/* Animation: reveal on scroll (handled by JS adding .revealed) */
+.hv-gallery-bento__item.revealed {
+	opacity: 1 !important;
+	transform: translateY(0) !important;
 }
 
 .hv-gallery-bento__item.revealed {
@@ -11344,7 +11344,7 @@ html[dir="rtl"] .hv-footer__links a:hover {
 /* Section backgrounds with subtle texture */
 .hv-section--cream {
 	background:
-		var(--hv-gradient-soft),
+		linear-gradient(135deg, var(--hv-cream) 0%, var(--hv-warm-cream) 100%),
 		url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E") !important;
 }
 
@@ -12166,8 +12166,8 @@ html[dir="rtl"] .hv-footer__links a:hover {
 	border-radius: 8px;
 	overflow: hidden;
 	background: var(--hv-charcoal);
-	opacity: 0;
-	transform: translateY(24px);
+	opacity: 1;
+	transform: none;
 	transition:
 		transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
 		opacity 0.5s ease-out,
@@ -13701,7 +13701,7 @@ html[dir="rtl"] .hv-footer__links a:hover {
 .hv-services-cta-premium {
     position: relative;
     padding: 180px 0;
-    background: var(--hv-bg-secondary); /* Soft Pink */
+    background: var(--hv-warm-cream); /* Simple Beige like Homepage CTA */
     overflow: hidden;
     color: var(--hv-petrol);
 }

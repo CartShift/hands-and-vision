@@ -17,53 +17,70 @@ $is_hebrew = handandvision_is_hebrew();
 
 <main id="primary" class="hv-shop-page">
 
-    <!-- Shop Hero -->
-    <section class="hv-shop-hero">
-        <div class="hv-container">
-            <?php handandvision_breadcrumbs(); ?>
-            <div class="hv-shop-hero__content hv-text-center">
-                <span class="hv-overline"><?php echo esc_html( $is_hebrew ? 'האוסף שלנו' : 'Our Collection' ); ?></span>
-                <h1 class="hv-headline-1"><?php echo esc_html( $is_hebrew ? 'חנות אמנות' : 'Art Gallery Shop' ); ?></h1>
-                <p class="hv-subtitle hv-shop-subtitle">
-                    <?php echo esc_html( $is_hebrew
-                        ? 'גלו יצירות אמנות ייחודיות מאמנים מובילים. כל יצירה מספרת סיפור משלה ומזמינה אתכם לחוויה אומנותית ייחודית'
-                        : 'Discover unique artworks from leading artists. Each piece tells its own story and invites you to a unique artistic experience'
-                    ); ?>
-                </p>
-
-                <!-- Gallery Stats -->
-                <div class="hv-shop-stats">
-                    <div class="hv-shop-stat">
-                        <span class="hv-shop-stat__number">
-                            <?php
-                            $artist_count = wp_count_posts( 'artist' )->publish;
-                            echo esc_html( $artist_count > 0 ? $artist_count : '50' );
-                            ?>+
+    <!-- Immersive Shop Hero -->
+    <section class="hv-services-hero">
+        <div class="hv-services-hero__bg">
+            <div class="hv-services-hero__gradient"></div>
+            <div class="hv-services-hero__orb hv-services-hero__orb--1"></div>
+            <div class="hv-services-hero__orb hv-services-hero__orb--2"></div>
+            <div class="hv-services-hero__orb hv-services-hero__orb--3"></div>
+            <div class="hv-services-hero__lines"></div>
+        </div>
+        <div class="hv-services-hero__content">
+            <div class="hv-container">
+                <?php handandvision_breadcrumbs(); ?>
+                <div class="hv-services-hero__inner">
+                    <div class="hv-services-hero__overline">
+                        <span class="hv-services-hero__line"></span>
+                        <span class="hv-services-hero__text">
+                            <?php echo esc_html( $is_hebrew ? 'האוסף שלנו' : 'Our Collection' ); ?>
                         </span>
-                        <span class="hv-shop-stat__label">
-                            <?php echo esc_html( $is_hebrew ? 'אמנים' : 'Artists' ); ?>
-                        </span>
+                        <span class="hv-services-hero__line"></span>
                     </div>
-                    <div class="hv-shop-stat">
-                        <span class="hv-shop-stat__number">
-                            <?php
-                            $product_count = wp_count_posts( 'product' )->publish;
-                            echo esc_html( $product_count > 0 ? $product_count : '200' );
-                            ?>+
-                        </span>
-                        <span class="hv-shop-stat__label">
-                            <?php echo esc_html( $is_hebrew ? 'יצירות' : 'Artworks' ); ?>
-                        </span>
-                    </div>
-                    <div class="hv-shop-stat">
-                        <span class="hv-shop-stat__number">15+</span>
-                        <span class="hv-shop-stat__label">
-                            <?php echo esc_html( $is_hebrew ? 'שנות ניסיון' : 'Years' ); ?>
-                        </span>
+                    <h1 class="hv-services-hero__title">
+                        <?php if ( $is_hebrew ) : ?>
+                            <span class="hv-services-hero__title-line">חנות</span>
+                            <span class="hv-services-hero__title-line hv-services-hero__title-line--accent">האמנות</span>
+                        <?php else : ?>
+                            <span class="hv-services-hero__title-line">Art Gallery</span>
+                            <span class="hv-services-hero__title-line hv-services-hero__title-line--accent">Shop</span>
+                        <?php endif; ?>
+                    </h1>
+                    <p class="hv-services-hero__subtitle">
+                        <?php echo esc_html( $is_hebrew
+                            ? 'גלו יצירות אמנות ייחודיות מאמנים מובילים. כל יצירה מספרת סיפור משלה ומזמינה אתכם לחוויה אומנותית ייחודית'
+                            : 'Discover unique artworks from leading artists. Each piece tells its own story and invites you to a unique artistic experience'
+                        ); ?>
+                    </p>
+                    <div class="hv-services-hero__stats">
+                        <div class="hv-services-hero__stat">
+                            <span class="hv-services-hero__stat-number">
+                                <?php
+                                $artist_count = wp_count_posts( 'artist' )->publish;
+                                echo esc_html( $artist_count > 0 ? $artist_count : '50' );
+                                ?>+
+                            </span>
+                            <span class="hv-services-hero__stat-label"><?php echo esc_html( $is_hebrew ? 'אמנים' : 'Artists' ); ?></span>
+                        </div>
+                        <div class="hv-services-hero__stat-divider"></div>
+                        <div class="hv-services-hero__stat">
+                            <span class="hv-services-hero__stat-number">
+                                <?php
+                                $product_count = wp_count_posts( 'product' )->publish;
+                                echo esc_html( $product_count > 0 ? $product_count : '200' );
+                                ?>+
+                            </span>
+                            <span class="hv-services-hero__stat-label"><?php echo esc_html( $is_hebrew ? 'יצירות' : 'Artworks' ); ?></span>
+                        </div>
                     </div>
                 </div>
             </div>
-
+        </div>
+        <div class="hv-services-hero__scroll">
+            <span><?php echo esc_html( $is_hebrew ? 'גלול לגילוי' : 'Scroll to discover' ); ?></span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
         </div>
     </section>
 
@@ -261,19 +278,35 @@ $is_hebrew = handandvision_is_hebrew();
     <?php endif; ?>
 
     <!-- Shop CTA -->
-    <section class="hv-shop-cta">
-        <div class="hv-container hv-container--narrow hv-text-center">
-            <span class="hv-overline hv-reveal"><?php echo esc_html( $is_hebrew ? 'מעוניינים בהזמנה מיוחדת?' : 'Interested in a Commission?' ); ?></span>
-            <h2 class="hv-headline-2 hv-reveal"><?php echo esc_html( $is_hebrew ? 'צרו איתנו קשר' : 'Get In Touch' ); ?></h2>
-            <p class="hv-subtitle hv-reveal">
-                <?php echo esc_html( $is_hebrew
-                    ? 'מחפשים משהו ספציפי? האמנים שלנו זמינים להזמנות מיוחדות ויצירות בהתאמה אישית.'
-                    : 'Looking for something specific? Our artists are available for commissions and custom pieces.'
-                ); ?>
-            </p>
-            <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-btn hv-btn--primary hv-reveal">
-                <?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Contact Us' ); ?>
-            </a>
+    <!-- Shop Premium CTA -->
+    <section class="hv-shop-cta-premium">
+        <div class="hv-shop-cta-premium__bg">
+            <div class="hv-shop-cta-premium__pattern"></div>
+        </div>
+        <div class="hv-container">
+            <div class="hv-shop-cta-premium__content">
+                <div class="hv-shop-cta-premium__icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <span class="hv-shop-cta-premium__overline">
+                    <?php echo esc_html( $is_hebrew ? 'מעוניינים בהזמנה מיוחדת?' : 'Interested in a Commission?' ); ?>
+                </span>
+                <h2 class="hv-shop-cta-premium__title">
+                    <?php echo esc_html( $is_hebrew ? 'צרו איתנו קשר' : 'Get In Touch' ); ?>
+                </h2>
+                <p class="hv-shop-cta-premium__desc">
+                    <?php echo esc_html( $is_hebrew
+                        ? 'מחפשים משהו ספציפי? האמנים שלנו זמינים להזמנות מיוחדות ויצירות בהתאמה אישית.'
+                        : 'Looking for something specific? Our artists are available for commissions and custom pieces.'
+                    ); ?>
+                </p>
+                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-shop-cta-premium__btn">
+                    <span><?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Contact Us' ); ?></span>
+                </a>
+            </div>
         </div>
     </section>
 

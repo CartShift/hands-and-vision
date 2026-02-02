@@ -38,10 +38,37 @@ while ( have_posts() ) :
 
 <main id="primary" class="hv-single-product">
 
+    <!-- Product Hero -->
+    <?php
+    $hero_bg = get_the_post_thumbnail_url( get_the_ID(), 'full' );
+    ?>
+    <section class="hv-service-single-hero">
+        <div class="hv-service-single-hero__bg">
+            <?php if ( $hero_bg ) : ?>
+                <img src="<?php echo esc_url( $hero_bg ); ?>" alt="" style="width: 100%; height: 100%; object-fit: cover; filter: blur(20px) brightness(0.7); transform: scale(1.1);">
+                <div class="hv-service-single-hero__overlay"></div>
+            <?php else : ?>
+                <div class="hv-service-single-hero__gradient"></div>
+            <?php endif; ?>
+        </div>
+        <div class="hv-service-single-hero__content">
+            <div class="hv-container">
+                <?php handandvision_breadcrumbs(); ?>
+                <div class="hv-service-single-hero__inner">
+                    <span class="hv-service-single-hero__label">
+                        <?php echo esc_html( $is_hebrew ? 'יצירת אמנות' : 'Artwork' ); ?>
+                    </span>
+                    <h1 class="hv-service-single-hero__title">
+                        <?php echo esc_html( get_the_title() ); ?>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Product Details -->
     <section class="hv-product-main">
         <div class="hv-container">
-            <?php handandvision_breadcrumbs(); ?>
             <div class="hv-product-layout">
 
                 <!-- Product Gallery -->
@@ -86,7 +113,7 @@ while ( have_posts() ) :
                         </div>
                     <?php endif; ?>
 
-                    <h1 class="hv-product-title hv-reveal"><?php echo esc_html( get_the_title() ); ?></h1>
+                    <!-- Title moved to Hero -->
 
                     <div class="hv-product-price hv-reveal">
                         <?php echo wp_kses_post( $product->get_price_html() ); ?>
@@ -281,20 +308,35 @@ while ( have_posts() ) :
     }
     ?>
 
-    <!-- CTA -->
-    <section class="hv-shop-cta">
-        <div class="hv-container hv-container--narrow hv-text-center">
-            <span class="hv-overline hv-reveal"><?php echo esc_html( $is_hebrew ? 'שאלות?' : 'Questions?' ); ?></span>
-            <h2 class="hv-headline-2 hv-reveal"><?php echo esc_html( $is_hebrew ? 'נשמח לעזור' : 'We\'re Here to Help' ); ?></h2>
-            <p class="hv-subtitle hv-reveal" style="margin: var(--hv-space-5) auto var(--hv-space-7); max-width: 550px;">
-                <?php echo esc_html( $is_hebrew
-                    ? 'יש לכם שאלות על היצירה? רוצים לדעת עוד על האמן/ית? צרו איתנו קשר.'
-                    : 'Have questions about this piece? Want to know more about the artist? Get in touch.'
-                ); ?>
-            </p>
-            <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-btn hv-btn--primary hv-reveal">
-                <?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Contact Us' ); ?>
-            </a>
+    <!-- Shop Premium CTA -->
+    <section class="hv-shop-cta-premium">
+        <div class="hv-shop-cta-premium__bg">
+            <div class="hv-shop-cta-premium__pattern"></div>
+        </div>
+        <div class="hv-container">
+            <div class="hv-shop-cta-premium__content">
+                <div class="hv-shop-cta-premium__icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <span class="hv-shop-cta-premium__overline">
+                    <?php echo esc_html( $is_hebrew ? 'שאלות?' : 'Questions?' ); ?>
+                </span>
+                <h2 class="hv-shop-cta-premium__title">
+                    <?php echo esc_html( $is_hebrew ? 'נשמח לעזור' : 'We\'re Here to Help' ); ?>
+                </h2>
+                <p class="hv-shop-cta-premium__desc">
+                    <?php echo esc_html( $is_hebrew
+                        ? 'יש לכם שאלות על היצירה? רוצים לדעת עוד על האמן/ית? צרו איתנו קשר.'
+                        : 'Have questions about this piece? Want to know more about the artist? Get in touch.'
+                    ); ?>
+                </p>
+                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-shop-cta-premium__btn">
+                    <span><?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Contact Us' ); ?></span>
+                </a>
+            </div>
         </div>
     </section>
 
