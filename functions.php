@@ -268,24 +268,24 @@ add_action( 'acf/init', 'handandvision_load_acf_fields', 5 );
  * ==========================================================================
  */
 
+// IMPORTANT: Load accessibility first - other modules depend on handandvision_is_hebrew()
+require_once ASTRA_THEME_DIR . 'inc/accessibility/language-rtl.php';
+
 // Custom Post Types
 require_once ASTRA_THEME_DIR . 'inc/post-types/register-cpts.php';
 
-// WooCommerce Integration
+// Theme Support (before WooCommerce - provides helper functions)
+require_once ASTRA_THEME_DIR . 'inc/theme-support/setup.php';
+require_once ASTRA_THEME_DIR . 'inc/theme-support/image-optimization.php';
+
+// WooCommerce Integration (depends on language functions)
 if ( class_exists( 'WooCommerce' ) ) {
     require_once ASTRA_THEME_DIR . 'inc/woocommerce/theme-support.php';
     require_once ASTRA_THEME_DIR . 'inc/woocommerce/artist-products.php';
     require_once ASTRA_THEME_DIR . 'inc/woocommerce/cart-customization.php';
 }
 
-// Accessibility Features
-require_once ASTRA_THEME_DIR . 'inc/accessibility/language-rtl.php';
-
-// Theme Support
-require_once ASTRA_THEME_DIR . 'inc/theme-support/setup.php';
-require_once ASTRA_THEME_DIR . 'inc/theme-support/image-optimization.php';
-
-// AJAX Handlers
+// AJAX Handlers (depends on language functions)
 require_once ASTRA_THEME_DIR . 'inc/ajax-handlers/contact-form.php';
 
 // Gallery Helpers
