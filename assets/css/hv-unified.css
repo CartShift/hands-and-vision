@@ -344,6 +344,7 @@ ul.hv-nav-menu {
 .hv-cart-count.has-items {
 	opacity: 1;
 	transform: scale(1);
+	color: #fff;
 	background: linear-gradient(135deg, #bd93f9, #ff79c6);
 	box-shadow: 0 2px 8px rgba(189, 147, 249, 0.4);
 }
@@ -1076,35 +1077,20 @@ html[dir="rtl"] .hv-lightbox-next {
 }
 
 /* Services Carousel */
-.hv-section--cream .hv-container:has(.hv-services-grid) {
-	overflow-x: visible;
-	max-width: none;
-	padding: 0;
-}
-
 .hv-services-grid {
 	display: flex;
-	flex-direction: row;
+	flex-wrap: wrap;
 	justify-content: center;
+	align-items: stretch;
 	gap: 24px;
-	overflow-x: auto;
-	overflow-y: visible;
-	padding: 20px 40px;
-	margin: 0 -40px;
-	-webkit-overflow-scrolling: touch;
-	scroll-snap-type: x mandatory;
-	scrollbar-width: none;
-	cursor: grab;
-	user-select: none;
-}
-
-.hv-services-grid::-webkit-scrollbar {
-	display: none;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .hv-service-card {
-	flex-shrink: 0;
-	width: 300px;
+	flex: 1 1 280px;
+	max-width: 320px;
+	min-width: 0;
 	text-align: center;
 	padding: 36px 28px;
 	background: #ffffff;
@@ -1112,11 +1098,11 @@ html[dir="rtl"] .hv-lightbox-next {
 	box-shadow:
 		0 4px 24px rgba(0, 0, 0, 0.05),
 		0 1px 3px rgba(0, 0, 0, 0.03);
-	scroll-snap-align: start;
 	transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 	border: 1px solid rgba(184, 164, 217, 0.08);
 	position: relative;
 	overflow: hidden;
+	box-sizing: border-box;
 }
 
 .hv-service-card::before {
@@ -1148,13 +1134,18 @@ html[dir="rtl"] .hv-lightbox-next {
 	justify-content: center;
 	width: 72px;
 	height: 72px;
-	font-size: 2.2rem;
 	color: #b8a4d9;
 	margin: 0 auto 28px;
 	background: linear-gradient(135deg, rgba(184, 164, 217, 0.08), rgba(212, 201, 232, 0.12));
 	border-radius: 50%;
 	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 	box-shadow: 0 4px 16px rgba(184, 164, 217, 0.15);
+}
+
+.hv-service-card__icon svg {
+	width: 40px;
+	height: 40px;
+	display: block;
 }
 
 .hv-service-card:hover .hv-service-card__icon {
@@ -4826,8 +4817,12 @@ input[type="submit"] {
    ======================================== */
 .hv-services-grid {
 	display: flex;
-	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: stretch;
 	width: 100%;
+	gap: 24px;
+	box-sizing: border-box;
 }
 
 .hv-service-block {
@@ -5509,42 +5504,29 @@ input[type="submit"] {
 /* ========================================
    Services Grid - Horizontal Carousel
    ======================================== */
-.hv-section--cream .hv-container:has(.hv-services-grid) {
-	overflow-x: visible;
-	max-width: none;
-	padding: 0;
-}
-
 .hv-services-grid {
 	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: stretch;
 	gap: 24px;
-	overflow-x: auto;
-	overflow-y: visible;
-	padding: 20px 40px;
-	margin: 0 -40px;
-	-webkit-overflow-scrolling: touch;
-	scroll-snap-type: x mandatory;
-	scrollbar-width: none; /* Firefox */
-	cursor: grab;
-	user-select: none;
-}
-
-.hv-services-grid::-webkit-scrollbar {
-	display: none; /* Chrome/Safari */
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .hv-service-card {
-	flex-shrink: 0;
-	width: 280px;
+	flex: 1 1 280px;
+	max-width: 320px;
+	min-width: 0;
 	text-align: center;
 	padding: 24px;
 	background: #ffffff;
 	border-radius: 16px;
 	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-	scroll-snap-align: start;
 	transition:
 		transform 0.3s ease,
 		box-shadow 0.3s ease;
+	box-sizing: border-box;
 }
 
 .hv-service-card:hover {
@@ -5910,7 +5892,6 @@ input[type="submit"] {
 		font-size: 3.5rem;
 	}
 
-	.hv-services-grid,
 	.hv-artists-showcase {
 		grid-template-columns: repeat(2, 1fr);
 	}
@@ -5930,7 +5911,6 @@ input[type="submit"] {
 		font-size: 1rem;
 	}
 
-	.hv-services-grid,
 	.hv-artists-showcase {
 		grid-template-columns: 1fr;
 	}

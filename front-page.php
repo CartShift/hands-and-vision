@@ -83,7 +83,7 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
     ?>
     <section class="hv-section hv-section--white" aria-labelledby="intro-heading">
         <div class="hv-container hv-container--narrow hv-text-center">
-            <h2 id="intro-heading" class="hv-sr-only"><?php echo esc_html( handandvision_is_hebrew() ? 'אודותינו' : 'About Us' ); ?></h2>
+            <h2 id="intro-heading" class="hv-headline-2 hv-animate"><?php echo esc_html( handandvision_is_hebrew() ? 'אודותינו' : 'About Us' ); ?></h2>
             <?php if ( $intro_logo_url ) : ?>
             <div class="hv-intro-logo">
                 <img src="<?php echo esc_url( $intro_logo_url ); ?>" alt="Hands and Vision" class="hv-intro-logo__img" width="160" height="80">

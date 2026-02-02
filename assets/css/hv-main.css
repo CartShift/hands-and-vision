@@ -344,6 +344,7 @@ ul.hv-nav-menu {
 .hv-cart-count.has-items {
 	opacity: 1;
 	transform: scale(1);
+	color: #fff;
 	background: linear-gradient(135deg, #bd93f9, #ff79c6);
 	box-shadow: 0 2px 8px rgba(189, 147, 249, 0.4);
 }
