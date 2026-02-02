@@ -202,8 +202,26 @@
 		},
 
 		updateImage: function () {
+			// Enhanced error handling
+			if (!this.images.length) {
+				console.error("Lightbox: No images loaded");
+				A11yUtils.announce("Error: No images available", "assertive");
+				this.close();
+				return;
+			}
+
 			const current = this.images[this.currentIndex];
-			if (!current || !this.image) return;
+			if (!current) {
+				console.error("Lightbox: Invalid image index", this.currentIndex);
+				A11yUtils.announce("Error loading image", "assertive");
+				return;
+			}
+
+			if (!this.image) {
+				console.error("Lightbox: Image element not found in DOM");
+				return;
+			}
+
 			this.image.src = current.src;
 			this.image.alt = current.caption || "";
 			if (this.caption) {
@@ -557,7 +575,12 @@
 				method: "POST",
 				body: formData
 			})
-				.then(response => response.json())
+				.then(response => {
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					return response.json();
+				})
 				.then(data => {
 					self.setLoading(false);
 
@@ -566,15 +589,18 @@
 						self.form.reset();
 						A11yUtils.announce("Form submitted successfully. " + data.data.message, "assertive");
 					} else {
-						self.showFeedback(data.data.message || "Error occurred", "error");
-						A11yUtils.announce("Form error: " + (data.data.message || "Error occurred"), "assertive");
+						const errorMsg = data.data.message || "Error occurred. Please try again.";
+						self.showFeedback(errorMsg, "error");
+						A11yUtils.announce("Form error: " + errorMsg, "assertive");
+						console.error("Contact form error:", data);
 					}
 				})
 				.catch(error => {
 					self.setLoading(false);
-					self.showFeedback("Connection error. Please try again.", "error");
-					A11yUtils.announce("Connection error. Please try again.", "assertive");
-					console.error("Error:", error);
+					const errorMsg = "Connection error. Please check your internet connection and try again.";
+					self.showFeedback(errorMsg, "error");
+					A11yUtils.announce(errorMsg, "assertive");
+					console.error("Contact form fetch error:", error);
 				});
 		},
 
@@ -756,7 +782,7 @@
 	};
 
 	/**
-	 * Header Cart - Animation on add to cart
+	 * Header Cart - Animation on add to cart (Vanilla JS - No jQuery Dependency)
 	 */
 	const HeaderCart = {
 		cartIcon: null,
@@ -771,18 +797,24 @@
 		bindEvents: function () {
 			const self = this;
 
-			// Check if jQuery is available (WooCommerce dependency)
-			if (typeof jQuery === "undefined") return;
-
-			// Listen for WooCommerce add to cart AJAX event
-			jQuery(document.body).on("added_to_cart", function () {
+			// Native JavaScript event delegation for WooCommerce add to cart
+			// This replaces jQuery(document.body).on("added_to_cart")
+			document.body.addEventListener("added_to_cart", function (event) {
 				self.animateCart();
 				A11yUtils.announce("Item added to cart");
 			});
 
-			// Also listen for fragment refresh (cart update)
-			jQuery(document.body).on("wc_fragments_refreshed", function () {
+			// Listen for fragment refresh (cart update)
+			document.body.addEventListener("wc_fragments_refreshed", function (event) {
 				// Re-select the cart count in case it was replaced
+				const cartCount = document.getElementById("hv-cart-count");
+				if (cartCount) {
+					cartCount.classList.add("has-items");
+				}
+			});
+
+			// Fallback: Listen for wc_cart_fragments_refreshed (alternative WooCommerce event)
+			document.body.addEventListener("wc_cart_fragments_refreshed", function (event) {
 				const cartCount = document.getElementById("hv-cart-count");
 				if (cartCount) {
 					cartCount.classList.add("has-items");
@@ -791,7 +823,10 @@
 		},
 
 		animateCart: function () {
-			if (!this.cartIcon) return;
+			if (!this.cartIcon) {
+				console.error("Header cart icon not found - cannot animate cart");
+				return;
+			}
 
 			// Remove class if already applied
 			this.cartIcon.classList.remove("added");

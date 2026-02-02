@@ -218,8 +218,12 @@ require_once ASTRA_THEME_DIR . 'inc/core/deprecated/deprecated-functions.php';
  * ==========================================================================
  * HAND AND VISION - Custom Theme Additions
  * ==========================================================================
+ * Organized modular structure for maintainability
  */
 
+/**
+ * ACF Fallback - Polite warning if ACF is not installed
+ */
 if ( ! function_exists( 'get_field' ) ) {
 	function get_field( $selector, $post_id = false ) {
 		if ( is_admin() && current_user_can( 'activate_plugins' ) && ! has_action( 'admin_notices', 'handandvision_acf_missing_notice' ) ) {
@@ -240,14 +244,14 @@ function handandvision_load_acf_fields() {
         return;
     }
 
-    $acf_files = array(
+    $acf_files = [
         'acf-homepage-fields.php',
         'acf-artist-fields.php',
         'acf-service-fields.php',
         'acf-gallery-fields.php',
         'acf-product-fields.php',
         'acf-contact-fields.php',
-    );
+    ];
 
     foreach ( $acf_files as $file ) {
         $file_path = ASTRA_THEME_DIR . 'inc/' . $file;
@@ -259,416 +263,43 @@ function handandvision_load_acf_fields() {
 add_action( 'acf/init', 'handandvision_load_acf_fields', 5 );
 
 /**
- * Register Custom Post Types for Hand and Vision
- * Labels in Hebrew, slugs in English
- */
-function handandvision_register_post_types() {
-    // Artist Post Type - אמנים
-    register_post_type( 'artist', array(
-        'labels' => array(
-            'name'                  => 'אמנים',
-            'singular_name'         => 'אמן',
-            'add_new'               => 'הוסף אמן חדש',
-            'add_new_item'          => 'הוסף אמן חדש',
-            'edit_item'             => 'ערוך אמן',
-            'new_item'              => 'אמן חדש',
-            'view_item'             => 'צפה באמן',
-            'view_items'            => 'צפה באמנים',
-            'search_items'          => 'חפש אמנים',
-            'not_found'             => 'לא נמצאו אמנים',
-            'not_found_in_trash'    => 'לא נמצאו אמנים בפח',
-            'all_items'             => 'כל האמנים',
-            'archives'              => 'ארכיון אמנים',
-            'attributes'            => 'מאפייני אמן',
-            'insert_into_item'      => 'הכנס לאמן',
-            'uploaded_to_this_item' => 'הועלה לאמן זה',
-            'featured_image'        => 'תמונת אמן',
-            'set_featured_image'    => 'הגדר תמונת אמן',
-            'remove_featured_image' => 'הסר תמונת אמן',
-            'use_featured_image'    => 'השתמש כתמונת אמן',
-            'menu_name'             => 'אמנים',
-            'filter_items_list'     => 'סנן רשימת אמנים',
-            'items_list_navigation' => 'ניווט רשימת אמנים',
-            'items_list'            => 'רשימת אמנים',
-        ),
-        'public'             => true,
-        'has_archive'        => true,
-        'rewrite'            => array( 'slug' => 'artists' ),
-        'supports'           => array( 'title', 'thumbnail', 'page-attributes' ),
-        'menu_icon'          => 'dashicons-groups',
-        'show_in_rest'       => true,
-    ) );
-
-    // Service Post Type - שירותים
-    register_post_type( 'service', array(
-        'labels' => array(
-            'name'                  => 'שירותים',
-            'singular_name'         => 'שירות',
-            'add_new'               => 'הוסף שירות חדש',
-            'add_new_item'          => 'הוסף שירות חדש',
-            'edit_item'             => 'ערוך שירות',
-            'new_item'              => 'שירות חדש',
-            'view_item'             => 'צפה בשירות',
-            'view_items'            => 'צפה בשירותים',
-            'search_items'          => 'חפש שירותים',
-            'not_found'             => 'לא נמצאו שירותים',
-            'not_found_in_trash'    => 'לא נמצאו שירותים בפח',
-            'all_items'             => 'כל השירותים',
-            'archives'              => 'ארכיון שירותים',
-            'attributes'            => 'מאפייני שירות',
-            'insert_into_item'      => 'הכנס לשירות',
-            'uploaded_to_this_item' => 'הועלה לשירות זה',
-            'featured_image'        => 'תמונת שירות',
-            'set_featured_image'    => 'הגדר תמונת שירות',
-            'remove_featured_image' => 'הסר תמונת שירות',
-            'use_featured_image'    => 'השתמש כתמונת שירות',
-            'menu_name'             => 'שירותים',
-            'filter_items_list'     => 'סנן רשימת שירותים',
-            'items_list_navigation' => 'ניווט רשימת שירותים',
-            'items_list'            => 'רשימת שירותים',
-        ),
-        'public'             => true,
-        'has_archive'        => true,
-        'rewrite'            => array( 'slug' => 'services' ),
-        'supports'           => array( 'title', 'thumbnail', 'page-attributes' ),
-        'menu_icon'          => 'dashicons-art',
-        'show_in_rest'       => true,
-    ) );
-
-    // Gallery Item Post Type - גלריה
-    register_post_type( 'gallery_item', array(
-        'labels' => array(
-            'name'                  => 'גלריה',
-            'singular_name'         => 'פריט גלריה',
-            'add_new'               => 'הוסף פריט חדש',
-            'add_new_item'          => 'הוסף פריט גלריה חדש',
-            'edit_item'             => 'ערוך פריט גלריה',
-            'new_item'              => 'פריט גלריה חדש',
-            'view_item'             => 'צפה בפריט',
-            'view_items'            => 'צפה בגלריה',
-            'search_items'          => 'חפש בגלריה',
-            'not_found'             => 'לא נמצאו פריטים',
-            'not_found_in_trash'    => 'לא נמצאו פריטים בפח',
-            'all_items'             => 'כל הפריטים',
-            'archives'              => 'ארכיון הגלריה',
-            'attributes'            => 'מאפייני פריט',
-            'insert_into_item'      => 'הכנס לפריט',
-            'uploaded_to_this_item' => 'הועלה לפריט זה',
-            'featured_image'        => 'תמונת פריט',
-            'set_featured_image'    => 'הגדר תמונת פריט',
-            'remove_featured_image' => 'הסר תמונת פריט',
-            'use_featured_image'    => 'השתמש כתמונת פריט',
-            'menu_name'             => 'גלריה',
-            'filter_items_list'     => 'סנן רשימת גלריה',
-            'items_list_navigation' => 'ניווט רשימת גלריה',
-            'items_list'            => 'רשימת גלריה',
-        ),
-        'public'             => true,
-        'has_archive'        => true,
-        'rewrite'            => array( 'slug' => 'gallery' ),
-        'supports'           => array( 'title', 'thumbnail', 'page-attributes' ),
-        'menu_icon'          => 'dashicons-format-gallery',
-        'show_in_rest'       => true,
-    ) );
-}
-add_action( 'init', 'handandvision_register_post_types' );
-
-/**
- * Add custom image sizes for Hand and Vision
- */
-function handandvision_image_sizes() {
-    add_image_size( 'hv-hero', 1920, 800, true );
-    add_image_size( 'hv-gallery', 600, 400, true );
-    add_image_size( 'hv-artist', 400, 400, true );
-    add_image_size( 'hv-product', 600, 800, true );
-}
-add_action( 'after_setup_theme', 'handandvision_image_sizes' );
-
-/**
- * ============================================================================
- * WOOCOMMERCE INTEGRATION
- * ============================================================================
+ * ==========================================================================
+ * MODULAR ARCHITECTURE - Organized by Feature
+ * ==========================================================================
  */
 
-/**
- * Declare WooCommerce support
- */
-function handandvision_woocommerce_support() {
-    add_theme_support( 'woocommerce' );
-    add_theme_support( 'wc-product-gallery-zoom' );
-    add_theme_support( 'wc-product-gallery-lightbox' );
-    add_theme_support( 'wc-product-gallery-slider' );
-}
-add_action( 'after_setup_theme', 'handandvision_woocommerce_support' );
+// Custom Post Types
+require_once ASTRA_THEME_DIR . 'inc/post-types/register-cpts.php';
 
-/**
- * Add custom product meta box for artist relationship
- */
-function handandvision_add_product_artist_metabox() {
-    add_meta_box(
-        'handandvision_product_artist',
-        handandvision_is_hebrew() ? 'אמן/ית היצירה' : 'Artist',
-        'handandvision_product_artist_callback',
-        'product',
-        'side',
-        'default'
-    );
-}
-add_action( 'add_meta_boxes', 'handandvision_add_product_artist_metabox' );
-
-/**
- * Display the artist selection dropdown in product edit screen
- */
-function handandvision_product_artist_callback( $post ) {
-    wp_nonce_field( 'handandvision_save_product_artist', 'handandvision_product_artist_nonce' );
-    $selected_artist = get_post_meta( $post->ID, '_handandvision_artist_id', true );
-
-    $artists = get_posts( array(
-        'post_type'   => 'artist',
-        'numberposts' => 200,
-        'orderby'     => 'title',
-        'order'       => 'ASC',
-    ) );
-
-    echo '<select name="handandvision_product_artist" id="handandvision_product_artist" style="width:100%;">';
-    echo '<option value="">' . ( handandvision_is_hebrew() ? '-- בחר אמן/ית --' : '-- Select Artist --' ) . '</option>';
-    foreach ( $artists as $artist ) {
-        printf(
-            '<option value="%s" %s>%s</option>',
-            esc_attr( $artist->ID ),
-            selected( $selected_artist, $artist->ID, false ),
-            esc_html( $artist->post_title )
-        );
-    }
-    echo '</select>';
-    echo '<p class="description" style="margin-top:10px;">' .
-         ( handandvision_is_hebrew() ? 'בחרו את האמן/ית שיצר/ה את היצירה' : 'Select the artist who created this piece' ) .
-         '</p>';
+// WooCommerce Integration
+if ( class_exists( 'WooCommerce' ) ) {
+    require_once ASTRA_THEME_DIR . 'inc/woocommerce/theme-support.php';
+    require_once ASTRA_THEME_DIR . 'inc/woocommerce/artist-products.php';
+    require_once ASTRA_THEME_DIR . 'inc/woocommerce/cart-customization.php';
 }
 
-/**
- * Save the artist relationship when product is saved
- */
-function handandvision_save_product_artist( $post_id ) {
-    // Check nonce
-    if ( ! isset( $_POST['handandvision_product_artist_nonce'] ) ) {
-        return;
-    }
-    if ( ! wp_verify_nonce( $_POST['handandvision_product_artist_nonce'], 'handandvision_save_product_artist' ) ) {
-        return;
-    }
+// Accessibility Features
+require_once ASTRA_THEME_DIR . 'inc/accessibility/language-rtl.php';
 
-    // Check autosave
-    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-        return;
-    }
+// Theme Support
+require_once ASTRA_THEME_DIR . 'inc/theme-support/setup.php';
+require_once ASTRA_THEME_DIR . 'inc/theme-support/image-optimization.php';
 
-    // Check permissions
-    if ( ! current_user_can( 'edit_post', $post_id ) ) {
-        return;
-    }
+// AJAX Handlers
+require_once ASTRA_THEME_DIR . 'inc/ajax-handlers/contact-form.php';
 
-    $old_artist_id = get_post_meta( $post_id, '_handandvision_artist_id', true );
-    if ( isset( $_POST['handandvision_product_artist'] ) ) {
-        $artist_id = absint( $_POST['handandvision_product_artist'] );
-        update_post_meta( $post_id, '_handandvision_artist_id', $artist_id ? $artist_id : '' );
-        handandvision_invalidate_artist_products_cache( array_filter( array( $old_artist_id, $artist_id ) ) );
-    } else {
-        delete_post_meta( $post_id, '_handandvision_artist_id' );
-        if ( $old_artist_id ) {
-            handandvision_invalidate_artist_products_cache( array( $old_artist_id ) );
-        }
-    }
-}
-add_action( 'save_post_product', 'handandvision_save_product_artist' );
+// Gallery Helpers
+require_once ASTRA_THEME_DIR . 'inc/gallery-helpers.php';
+
+// Custom Breadcrumbs
+require_once ASTRA_THEME_DIR . 'inc/breadcrumb-helpers.php';
 
 /**
- * Get products by artist ID (cached 1 hour, invalidated on product save)
+ * ==========================================================================
+ * HAND AND VISION - Custom Theme Functions
+ * ==========================================================================
+ * Asset enqueuing, header/footer, and menu customizations
  */
-function handandvision_get_artist_products( $artist_id ) {
-    if ( ! $artist_id ) {
-        return array();
-    }
-    $cache_key = 'hv_artist_products_' . $artist_id;
-    $cached = get_transient( $cache_key );
-    if ( false !== $cached && is_array( $cached ) ) {
-        return $cached;
-    }
-    $args = array(
-        'post_type'      => 'product',
-        'posts_per_page' => -1,
-        'meta_query'     => array(
-            array(
-                'key'     => '_handandvision_artist_id',
-                'value'   => $artist_id,
-                'compare' => '=',
-            ),
-        ),
-        'post_status'    => 'publish',
-    );
-    $products = get_posts( $args );
-    set_transient( $cache_key, $products, HOUR_IN_SECONDS );
-    return $products;
-}
-
-/**
- * Invalidate artist products cache for one or more artist IDs
- */
-function handandvision_invalidate_artist_products_cache( $artist_ids ) {
-    $artist_ids = array_filter( array_map( 'absint', (array) $artist_ids ) );
-    foreach ( $artist_ids as $aid ) {
-        delete_transient( 'hv_artist_products_' . $aid );
-    }
-}
-
-/**
- * Customize WooCommerce product columns
- */
-function handandvision_woocommerce_product_columns() {
-    return 4; // 4 columns for desktop
-}
-add_filter( 'loop_shop_columns', 'handandvision_woocommerce_product_columns' );
-
-/**
- * Change number of products per page
- */
-function handandvision_products_per_page() {
-    return 12;
-}
-add_filter( 'loop_shop_per_page', 'handandvision_products_per_page', 20 );
-
-/**
- * Remove default WooCommerce related products (we have custom implementation)
- */
-remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
-
-/**
- * Remove default WooCommerce product tabs (we have custom implementation)
- */
-remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs', 10 );
-
-/**
- * Disable default WooCommerce styles (we have custom styling)
- */
-add_filter( 'woocommerce_enqueue_styles', '__return_empty_array' );
-
-/**
- * Customize Add to Cart button text
- */
-function handandvision_custom_add_to_cart_text() {
-    $is_hebrew = handandvision_is_hebrew();
-    return $is_hebrew ? 'הוסף לעגלה' : 'Add to Cart';
-}
-add_filter( 'woocommerce_product_single_add_to_cart_text', 'handandvision_custom_add_to_cart_text' );
-add_filter( 'woocommerce_product_add_to_cart_text', 'handandvision_custom_add_to_cart_text' );
-
-/**
- * Add artist name to product title in cart/checkout
- */
-function handandvision_add_artist_to_cart_item_name( $product_name, $cart_item, $cart_item_key ) {
-    $product_id = $cart_item['product_id'];
-    $artist_id = get_post_meta( $product_id, '_handandvision_artist_id', true );
-
-    if ( $artist_id ) {
-        $artist_name = get_the_title( $artist_id );
-        $is_hebrew = handandvision_is_hebrew();
-        $by_text = $is_hebrew ? 'מאת' : 'by';
-        $product_name = $product_name . ' <span style="font-size:0.9em;color:#888;font-weight:normal;">(' . $by_text . ' ' . esc_html( $artist_name ) . ')</span>';
-    }
-
-    return $product_name;
-}
-add_filter( 'woocommerce_cart_item_name', 'handandvision_add_artist_to_cart_item_name', 10, 3 );
-
-/**
- * Display artist name on order confirmation
- */
-function handandvision_add_artist_to_order_item_name( $item_name, $item ) {
-    $product_id = $item->get_product_id();
-    $artist_id = get_post_meta( $product_id, '_handandvision_artist_id', true );
-
-    if ( $artist_id ) {
-        $artist_name = get_the_title( $artist_id );
-        $is_hebrew = handandvision_is_hebrew();
-        $by_text = $is_hebrew ? 'מאת' : 'by';
-        $item_name = $item_name . ' <span style="font-size:0.9em;color:#888;">(' . $by_text . ' ' . esc_html( $artist_name ) . ')</span>';
-    }
-
-    return $item_name;
-}
-add_filter( 'woocommerce_order_item_name', 'handandvision_add_artist_to_order_item_name', 10, 2 );
-
-/**
- * Update cart count fragment for AJAX add to cart
- */
-function handandvision_cart_count_fragments( $fragments ) {
-    $cart_count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
-    $has_items_class = $cart_count > 0 ? ' has-items' : '';
-
-    $fragments['#hv-cart-count'] = '<span class="hv-cart-count' . $has_items_class . '" id="hv-cart-count">' . esc_html( $cart_count ) . '</span>';
-
-    return $fragments;
-}
-add_filter( 'woocommerce_add_to_cart_fragments', 'handandvision_cart_count_fragments' );
-
-/**
- * Add custom classes to cart page body
- */
-function handandvision_cart_page_body_class( $classes ) {
-    if ( is_cart() ) {
-        $classes[] = 'hv-cart-page-wrapper';
-
-        if ( handandvision_is_hebrew() ) {
-            $classes[] = 'rtl';
-        }
-
-        // Add empty cart class
-        if ( WC()->cart && WC()->cart->is_empty() ) {
-            $classes[] = 'hv-cart-empty';
-        }
-    }
-
-    return $classes;
-}
-add_filter( 'body_class', 'handandvision_cart_page_body_class' );
-
-add_filter( 'astra_the_title_enabled', function ( $enabled ) {
-	return is_cart() ? false : $enabled;
-} );
-
-/**
- * Customize cart empty message
- */
-function handandvision_empty_cart_message() {
-    $is_hebrew = handandvision_is_hebrew();
-    $message = $is_hebrew ? 'סל הקניות שלך ריק כרגע' : 'Your cart is currently empty.';
-
-    return '<p class="cart-empty woocommerce-info">' . esc_html( $message ) . '</p>';
-}
-add_filter( 'wc_empty_cart_message', 'handandvision_empty_cart_message' );
-
-/**
- * Customize "Return to Shop" button text
- */
-function handandvision_return_to_shop_text() {
-    $is_hebrew = handandvision_is_hebrew();
-    return $is_hebrew ? 'חזרה לחנות' : 'Return to Shop';
-}
-add_filter( 'woocommerce_return_to_shop_text', 'handandvision_return_to_shop_text' );
-
-/**
- * Enable Flexible Logo Support (Prevent forced cropping)
- */
-function handandvision_flexible_logo() {
-    add_theme_support( 'custom-logo', array(
-        'height'      => 100,
-        'width'       => 400,
-        'flex-height' => true,
-        'flex-width'  => true,
-        'header-text' => array( 'site-title', 'site-description' ),
-    ) );
-}
-add_action( 'after_setup_theme', 'handandvision_flexible_logo', 20 ); // Priority 20 to override parent
 
 function handandvision_enqueue_custom_assets() {
     $theme_uri = get_stylesheet_directory_uri();
@@ -691,6 +322,17 @@ function handandvision_enqueue_custom_assets() {
     // Tell WordPress that hv-unified.css already includes RTL support
     // This prevents 404 errors when WordPress tries to find hv-unified-rtl.css
     wp_style_add_data( 'hv-unified', 'rtl', false );
+
+    // Premium Store CSS - only load on WooCommerce pages
+    if ( class_exists( 'WooCommerce' ) && ( is_woocommerce() || is_shop() || is_product_category() || is_product_tag() || is_product() || is_cart() || is_checkout() || is_account_page() ) ) {
+        wp_enqueue_style(
+            'hv-store-premium',
+            $theme_uri . '/assets/css/hv-store-premium.css',
+            array( 'hv-unified' ),
+            HV_THEME_VERSION
+        );
+        wp_style_add_data( 'hv-store-premium', 'rtl', false );
+    }
 
     wp_enqueue_script(
         'handandvision-main',
@@ -753,133 +395,6 @@ add_action( 'wp_enqueue_scripts', function() {
         }
     }
 }, 999 );
-
-/**
- * Get current language (HE or EN)
- */
-/**
- * Initialize language cookie
- */
-function handandvision_init_language_cookie() {
-    if ( is_admin() || headers_sent() ) {
-        return;
-    }
-
-    // if GET param is present, update the cookie
-    if ( isset( $_GET['lang'] ) ) {
-        $lang = sanitize_text_field( wp_unslash( $_GET['lang'] ) );
-        if ( in_array( $lang, array( 'en', 'he' ) ) ) {
-            setcookie( 'hv_lang', $lang, time() + 30 * DAY_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN );
-            $_COOKIE['hv_lang'] = $lang; // Update global for immediate use in this request
-        }
-    }
-}
-add_action( 'init', 'handandvision_init_language_cookie' );
-
-/**
- * Get current language (HE or EN)
- */
-function handandvision_get_current_language() {
-    // 1. Check URL Parameter (Highest Priority)
-    if ( isset( $_GET['lang'] ) ) {
-        $lang = sanitize_text_field( wp_unslash( $_GET['lang'] ) );
-        if ( 'en' === $lang || 'he' === $lang ) {
-            return $lang;
-        }
-    }
-
-    // 2. Check Cookie (Medium Priority)
-    if ( isset( $_COOKIE['hv_lang'] ) ) {
-        $lang = sanitize_text_field( wp_unslash( $_COOKIE['hv_lang'] ) );
-        if ( 'en' === $lang || 'he' === $lang ) {
-            return $lang;
-        }
-    }
-
-    // 3. Fallback to Plugins (Polylang / WPML)
-    if ( function_exists( 'pll_current_language' ) ) {
-        $pll_lang = pll_current_language();
-        if ( $pll_lang ) return $pll_lang;
-    }
-    if ( defined( 'ICL_LANGUAGE_CODE' ) ) {
-        return ICL_LANGUAGE_CODE;
-    }
-
-    // 4. Default to Hebrew
-    return 'he';
-}
-
-/**
- * Check if current language is Hebrew
- */
-function handandvision_is_hebrew() {
-    return handandvision_get_current_language() === 'he';
-}
-
-require_once ASTRA_THEME_DIR . 'inc/gallery-helpers.php';
-
-/**
- * Set html dir and body class from current language so RTL/LTR matches viewed language.
- */
-function handandvision_language_attributes( $attr ) {
-    $dir = handandvision_is_hebrew() ? 'rtl' : 'ltr';
-    if ( preg_match( '/\sdir="[^"]*"/', $attr ) ) {
-        return preg_replace( '/\sdir="[^"]*"/', ' dir="' . $dir . '"', $attr );
-    }
-    return $attr . ' dir="' . $dir . '"';
-}
-add_filter( 'language_attributes', 'handandvision_language_attributes' );
-
-function handandvision_body_class_rtl( $classes ) {
-    $classes = array_diff( $classes, array( 'rtl', 'ltr' ) );
-    $classes[] = handandvision_is_hebrew() ? 'rtl' : 'ltr';
-    return $classes;
-}
-add_filter( 'body_class', 'handandvision_body_class_rtl' );
-
-/**
- * Get safe logo URL - uses uploads directory to avoid special character issues in theme path
- */
-function handandvision_get_logo_url() {
-    // First check if custom logo is set in WordPress Customizer
-    if ( has_custom_logo() ) {
-        $custom_logo_id = get_theme_mod( 'custom_logo' );
-        $logo_data = wp_get_attachment_image_src( $custom_logo_id, 'full' );
-        if ( $logo_data && isset( $logo_data[0] ) ) {
-            return $logo_data[0];
-        }
-    }
-
-    // Try uploads directory for hv-logo.png
-    $upload_dir = wp_upload_dir();
-    $logo_in_uploads = $upload_dir['basedir'] . '/hv-logo.png';
-    $logo_url_in_uploads = $upload_dir['baseurl'] . '/hv-logo.png';
-
-    if ( file_exists( $logo_in_uploads ) ) {
-        return $logo_url_in_uploads;
-    }
-
-    return '';
-}
-
-function handandvision_get_contact_url() {
-	$page = get_page_by_path( 'contact' );
-	if ( $page && $page->post_status === 'publish' ) {
-		return get_permalink( $page );
-	}
-	$pages = get_posts( array(
-		'post_type'      => 'page',
-		'posts_per_page' => 1,
-		'meta_key'       => '_wp_page_template',
-		'meta_value'     => 'page-contact.php',
-		'post_status'    => 'publish',
-	) );
-	if ( ! empty( $pages ) ) {
-		return get_permalink( $pages[0] );
-	}
-	return home_url( '/contact' );
-}
-
 /**
  * Generate custom site header with language switcher, logo, navigation, and cart
  *
@@ -1079,151 +594,12 @@ function handandvision_rename_home_menu_item( $items, $args ) {
 }
 add_filter( 'wp_nav_menu_objects', 'handandvision_rename_home_menu_item', 10, 2 );
 
+/**
+ * Generate custom footer
+ */
 function handandvision_custom_footer() {
 	if ( defined( 'HV_FOOTER_RENDERING' ) && HV_FOOTER_RENDERING ) {
 		return;
 	}
 	get_template_part( 'footer' );
-}
-/**
- * AJAX Contact Form Submission Handler
- *
- * Handles form submissions with nonce verification, rate limiting, and spam protection.
- *
- * @since 3.3.0
- * @return void Sends JSON response
- */
-function handandvision_handle_contact_form() {
-    // Rate limiting - prevent spam
-    $ip_address = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-    $rate_key = 'hv_contact_rate_' . md5( $ip_address );
-    $last_submission = get_transient( $rate_key );
-
-    if ( false !== $last_submission ) {
-        wp_send_json_error( array(
-            'message' => handandvision_is_hebrew()
-                ? 'אנא המתינו דקה לפני שליחת פנייה נוספת.'
-                : 'Please wait a minute before submitting another message.'
-        ) );
-        return;
-    }
-
-    // Verify nonce with proper sanitization
-    $nonce = isset( $_POST['hv_contact_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['hv_contact_nonce'] ) ) : '';
-    if ( ! wp_verify_nonce( $nonce, 'hv_contact_action' ) ) {
-        wp_send_json_error( array(
-            'message' => handandvision_is_hebrew()
-                ? 'אימות נכשל. אנא טענו את הדף מחדש.'
-                : 'Security check failed. Please refresh the page.'
-        ) );
-        return;
-    }
-
-    $name    = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
-    $email   = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
-    $phone   = isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '';
-    $subject = isset( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ) : '';
-    $message = isset( $_POST['message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['message'] ) ) : '';
-
-    if ( empty( $name ) || empty( $email ) || empty( $message ) ) {
-        wp_send_json_error( array( 'message' => handandvision_is_hebrew() ? 'אנא מלאו את כל שדות החובה.' : 'Please fill in all required fields.' ) );
-    }
-
-    if ( ! is_email( $email ) ) {
-        wp_send_json_error( array( 'message' => handandvision_is_hebrew() ? 'כתובת האימייל אינה תקינה.' : 'Invalid email address.' ) );
-    }
-
-    // Get admin email from ACF or WordPress settings
-    $submitted_page_id = isset( $_POST['page_id'] ) ? intval( $_POST['page_id'] ) : 0;
-    $to = get_field( 'contact_email', $submitted_page_id ) ?: get_option( 'admin_email' );
-
-    // Subject line
-    $email_subject = 'פנייה חדשה מאתר Hand & Vision: ' . sanitize_text_field( $subject );
-
-    // Email Content - sanitize all user input
-    $body = "נשלחה פנייה חדשה מהאתר:\n\n";
-    $body .= "שם: " . sanitize_text_field( $name ) . "\n";
-    $body .= "אימייל: " . sanitize_email( $email ) . "\n";
-    if ( ! empty( $phone ) ) {
-        $body .= "טלפון: " . sanitize_text_field( $phone ) . "\n";
-    }
-    $body .= "נושא: " . sanitize_text_field( $subject ) . "\n\n";
-    $body .= "הודעה:\n" . sanitize_textarea_field( $message ) . "\n";
-
-    $headers = array(
-        'Content-Type: text/plain; charset=UTF-8',
-        'From: Hand & Vision <' . sanitize_email( get_option( 'admin_email' ) ) . '>',
-        'Reply-To: ' . sanitize_text_field( $name ) . ' <' . sanitize_email( $email ) . '>'
-    );
-
-    // Send Mail
-    $sent = wp_mail( $to, $email_subject, $body, $headers );
-
-    if ( $sent ) {
-        // Set rate limit - 60 seconds between submissions
-        set_transient( $rate_key, time(), 60 );
-        wp_send_json_success( array( 'message' => handandvision_is_hebrew() ? 'ההודעה נשלחה בהצלחה! נחזור אליכם בהקדם.' : 'Message sent successfully! We will get back to you soon.' ) );
-    } else {
-        wp_send_json_error( array( 'message' => handandvision_is_hebrew() ? 'אירעה שגיאה בשליחת ההודעה. אנא נסו שוב מאוחר יותר.' : 'Error sending message. Please try again later.' ) );
-    }
-}
-add_action( 'wp_ajax_hv_contact_form', 'handandvision_handle_contact_form' );
-add_action( 'wp_ajax_nopriv_hv_contact_form', 'handandvision_handle_contact_form' );
-
-/**
- * Auto-create Contact page if it doesn't exist
- */
-function handandvision_create_contact_page() {
-    // Check if contact page already exists by slug
-    $contact_page = get_page_by_path( 'contact' );
-
-    if ( ! $contact_page ) {
-        // Create the contact page
-        $page_id = wp_insert_post( array(
-            'post_title'     => handandvision_is_hebrew() ? 'צור קשר' : 'Contact',
-            'post_name'      => 'contact',
-            'post_status'    => 'publish',
-            'post_type'      => 'page',
-            'post_content'   => '',
-        ) );
-
-        if ( $page_id && ! is_wp_error( $page_id ) ) {
-            // Set the page template
-            update_post_meta( $page_id, '_wp_page_template', 'page-contact.php' );
-        }
-    } else {
-        // Ensure the template is set correctly
-        $current_template = get_post_meta( $contact_page->ID, '_wp_page_template', true );
-        if ( $current_template !== 'page-contact.php' ) {
-            update_post_meta( $contact_page->ID, '_wp_page_template', 'page-contact.php' );
-        }
-    }
-}
-add_action( 'after_switch_theme', 'handandvision_create_contact_page' );
-
-
-// Also run on init to ensure page exists (only once)
-function handandvision_ensure_contact_page_exists() {
-    if ( get_option( 'handandvision_contact_page_created' ) !== 'yes' ) {
-        handandvision_create_contact_page();
-        update_option( 'handandvision_contact_page_created', 'yes' );
-    }
-}
-add_action( 'init', 'handandvision_ensure_contact_page_exists' );
-
-/**
- * Get container class for header.php
- * Allows full-width sections on pages and archives by replacing .ast-container
- */
-function handandvision_get_container_class() {
-    // Pages, Archives, and Custom Post Types should be full width
-    // The internal content will handle its own containment (e.g. .hv-container)
-    if ( is_page() || is_archive() || is_home() || is_singular( array( 'artist', 'service', 'gallery_item', 'product' ) ) ) {
-        return 'hv-full-width-wrapper';
-    }
-
-    // Default fallback (e.g. single blog posts if standard)
-    return 'ast-container';
-}
-
 

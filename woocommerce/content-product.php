@@ -50,10 +50,16 @@ $artist_name = $artist_id ? get_the_title( $artist_id ) : '';
 					</span>
 				<?php endif; ?>
 
-				<!-- Quick View Trigger (Visual Only) -->
-				<span class="hv-product-card__quick-view">
-					<?php echo esc_html( $is_hebrew ? 'צפייה מהירה' : 'Quick View' ); ?>
-				</span>
+                <!-- Quick View Button -->
+                <button class="hv-product-card__quick-view" data-product-id="<?php echo esc_attr( $product->get_id() ); ?>">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                        <path d="M11 8v6"></path>
+                        <path d="M8 11h6"></path>
+                    </svg>
+                    <?php echo esc_html( $is_hebrew ? 'צפייה מהירה' : 'Quick View' ); ?>
+                </button>
 			</div>
 		</a>
 

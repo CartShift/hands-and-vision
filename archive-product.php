@@ -22,14 +22,46 @@ $is_hebrew = handandvision_is_hebrew();
         <div class="hv-container">
             <?php handandvision_breadcrumbs(); ?>
             <div class="hv-shop-hero__content hv-text-center">
-                <span class="hv-overline hv-reveal"><?php echo esc_html( $is_hebrew ? 'האוסף שלנו' : 'Our Collection' ); ?></span>
-                <h1 class="hv-headline-1 hv-reveal"><?php echo esc_html( $is_hebrew ? 'חנות אמנות' : 'Art Gallery Shop' ); ?></h1>
-                <p class="hv-subtitle hv-shop-subtitle hv-reveal">
+                <span class="hv-overline"><?php echo esc_html( $is_hebrew ? 'האוסף שלנו' : 'Our Collection' ); ?></span>
+                <h1 class="hv-headline-1"><?php echo esc_html( $is_hebrew ? 'חנות אמנות' : 'Art Gallery Shop' ); ?></h1>
+                <p class="hv-subtitle hv-shop-subtitle">
                     <?php echo esc_html( $is_hebrew
                         ? 'גלו יצירות אמנות ייחודיות מאמנים מובילים. כל יצירה מספרת סיפור משלה ומזמינה אתכם לחוויה אומנותית ייחודית'
                         : 'Discover unique artworks from leading artists. Each piece tells its own story and invites you to a unique artistic experience'
                     ); ?>
                 </p>
+
+                <!-- Gallery Stats -->
+                <div class="hv-shop-stats">
+                    <div class="hv-shop-stat">
+                        <span class="hv-shop-stat__number">
+                            <?php
+                            $artist_count = wp_count_posts( 'artist' )->publish;
+                            echo esc_html( $artist_count > 0 ? $artist_count : '50' );
+                            ?>+
+                        </span>
+                        <span class="hv-shop-stat__label">
+                            <?php echo esc_html( $is_hebrew ? 'אמנים' : 'Artists' ); ?>
+                        </span>
+                    </div>
+                    <div class="hv-shop-stat">
+                        <span class="hv-shop-stat__number">
+                            <?php
+                            $product_count = wp_count_posts( 'product' )->publish;
+                            echo esc_html( $product_count > 0 ? $product_count : '200' );
+                            ?>+
+                        </span>
+                        <span class="hv-shop-stat__label">
+                            <?php echo esc_html( $is_hebrew ? 'יצירות' : 'Artworks' ); ?>
+                        </span>
+                    </div>
+                    <div class="hv-shop-stat">
+                        <span class="hv-shop-stat__number">15+</span>
+                        <span class="hv-shop-stat__label">
+                            <?php echo esc_html( $is_hebrew ? 'שנות ניסיון' : 'Years' ); ?>
+                        </span>
+                    </div>
+                </div>
             </div>
 
             <!-- Filter Bar -->
