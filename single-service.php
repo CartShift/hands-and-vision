@@ -9,6 +9,14 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+// Check if handandvision_is_hebrew exists, if not create a fallback
+if ( ! function_exists( 'handandvision_is_hebrew' ) ) {
+    function handandvision_is_hebrew() {
+        return false;
+    }
+}
+
 get_header();
 
 $service_id = get_the_ID();
