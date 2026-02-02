@@ -19,6 +19,9 @@ if ( ! function_exists( 'handandvision_is_hebrew' ) ) {
 
 get_header();
 
+// Start The Loop
+while ( have_posts() ) : the_post();
+
 $service_id = get_the_ID();
 $service_title = get_the_title();
 
@@ -225,4 +228,7 @@ $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_heb
 
 </main>
 
-<?php get_footer(); ?>
+<?php
+endwhile; // End of the loop
+get_footer();
+?>
