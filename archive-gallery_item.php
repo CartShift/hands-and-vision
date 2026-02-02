@@ -189,9 +189,9 @@ $is_hebrew = handandvision_is_hebrew();
                 >
                     <a
                         href="<?php echo $image ? esc_url($image['url']) : '#'; ?>"
-                        class="hv-gallery-bento__link"
+                        class="hv-gallery-bento__link hv-lightbox"
                         data-gallery="gallery"
-                        data-caption="<?php echo esc_attr($caption ?: get_the_title()); ?>"
+                        data-caption="<?php echo esc_attr( ($caption ?: get_the_title()) . ( $artist_name ? ' — ' . $artist_name : '' ) ); ?>"
                         aria-label="<?php printf(
                             $is_hebrew ? 'צפה ב%s מאת %s' : 'View %s by %s',
                             esc_attr($caption ?: get_the_title()),

@@ -4223,6 +4223,17 @@ img {
 .hv-hidden {
 	display: none !important;
 }
+.hv-sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
 .hv-mt-4 {
 	margin-top: var(--hv-space-4, 1rem);
 }
