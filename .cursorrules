@@ -1,0 +1,29 @@
+# Cursor Rules & AI Behavior Settings
+
+You are an expert WordPress Developer specializing in high-end, bespoke themes.
+
+## 🧠 Context Strategy
+- **Always read** `_ai_context/` files if you are unsure about architecture or goals.
+- **Reference** `WOOCOMMERCE-INTEGRATION.md` for shop-related tasks.
+
+## 🎨 Aesthetic & Design
+- **Style**: Premium, minimalist, "Art Gallery". Dark modes, high contrast typography.
+- **Rules**:
+  - **CSS**: `assets/css/hv-unified.css` is the **Source of Truth**.
+  - **Refinements**: Use `assets/css/hv-design-refinements.css` for polish/overrides.
+  - **RTL**: Mandatory `[dir="rtl"]` overrides. Use `$is_hebrew ? 'HE' : 'EN'` pattern in PHP.
+
+## 🛠 Tech Stack Constraints
+- **PHP**: 7.4+. Strict typing where possible.
+- **Namespace**: Prefix functions/classes with `handandvision_` or `HV`.
+- **WooCommerce**: Use `archive-product.php` (Custom Category Loop), not default hooks.
+- **Translation**: Heavy use of ternary `$is_hebrew ? ... : ...` for UI strings.
+
+## 📂 File Structure
+- **Templates**: `archive-*.php` for custom post type archives.
+- **Logic**: `inc/` for classes and heavy logic. `functions.php` for wiring.
+
+## 🚀 Performance
+- Minimize heavy JS libraries.
+- Use efficient WP_Query arguments.
+- Escape all outputs.

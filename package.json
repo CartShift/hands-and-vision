@@ -1,0 +1,15 @@
+{
+  "name": "hands-and-vision",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "node -e \"require('child_process').execSync(require('path').join('vendor','bin',process.platform==='win32'?'phpcs.bat':'phpcs'), {stdio:'inherit'})\"",
+    "lint:fix": "node -e \"require('child_process').execSync(require('path').join('vendor','bin',process.platform==='win32'?'phpcbf.bat':'phpcbf'), {stdio:'inherit'})\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+}
