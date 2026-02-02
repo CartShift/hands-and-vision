@@ -9,8 +9,10 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
 get_header();
 
+// Safely get services
 $services = get_posts( array(
     'post_type'      => 'service',
     'posts_per_page' => -1,
@@ -18,6 +20,10 @@ $services = get_posts( array(
     'order'          => 'ASC',
     'post_status'    => 'publish',
 ) );
+
+if ( ! $services ) {
+    $services = array();
+}
 ?>
 
 <main id="primary" class="hv-archive-page hv-service-archive">
@@ -60,15 +66,23 @@ $services = get_posts( array(
         <div class="hv-container hv-container--wide">
             <div class="hv-services-archive-grid__inner">
                 <?php foreach ( $services as $i => $service ) :
-                    $service_image = get_field( 'service_hero_image', $service->ID );
+                    // Safely get ACF fields
+                    $service_image = function_exists( 'get_field' ) ? get_field( 'service_hero_image', $service->ID ) : false;
                     $image_url = ( is_array( $service_image ) && isset( $service_image['url'] ) ) ? $service_image['url'] : get_the_post_thumbnail_url( $service->ID, 'large' );
-                    $short_desc = get_field( 'service_short_description', $service->ID ) ?: wp_trim_words( $service->post_content, 18 );
+                    
+                    $short_desc_acf = function_exists( 'get_field' ) ? get_field( 'service_short_description', $service->ID ) : '';
+                    $short_desc = $short_desc_acf ?: wp_trim_words( $service->post_content, 18 );
+                    
                     $service_title = $service->post_title;
-                    if ( ! handandvision_is_hebrew() ) {
-                        $en_title = get_field( 'service_title_en', $service->ID );
-                        $en_desc  = get_field( 'service_desc_en', $service->ID );
-                        if ( ! empty( $en_title ) ) $service_title = $en_title;
-                        if ( ! empty( $en_desc ) ) $short_desc = $en_desc;
+                    
+                    // Handle language-specific fields
+                    if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew() ) {
+                        if ( function_exists( 'get_field' ) ) {
+                            $en_title = get_field( 'service_title_en', $service->ID );
+                            $en_desc  = get_field( 'service_desc_en', $service->ID );
+                            if ( ! empty( $en_title ) ) $service_title = $en_title;
+                            if ( ! empty( $en_desc ) ) $short_desc = $en_desc;
+                        }
                     }
                 ?>
                     <article class="hv-service-card-archive">

@@ -14,22 +14,32 @@ get_header();
 $service_id = get_the_ID();
 $service_title = get_the_title();
 
-$hero_image = get_field( 'service_hero_image', $service_id );
+// Safely get ACF fields
+$hero_image = function_exists( 'get_field' ) ? get_field( 'service_hero_image', $service_id ) : false;
 $hero_url = ( is_array( $hero_image ) && isset( $hero_image['url'] ) ) ? $hero_image['url'] : get_the_post_thumbnail_url( $service_id, 'full' );
-$short_desc = get_field( 'service_short_description', $service_id ) ?: '';
-$full_desc = get_field( 'service_full_description', $service_id ) ?: '';
-$features = get_field( 'service_what_we_do', $service_id );
-$gallery = get_field( 'service_gallery', $service_id );
-$related_artists = get_field( 'service_related_artists', $service_id );
-$cta_text = get_field( 'service_cta_text', $service_id );
+
+$short_desc = function_exists( 'get_field' ) ? get_field( 'service_short_description', $service_id ) : '';
+$full_desc = function_exists( 'get_field' ) ? get_field( 'service_full_description', $service_id ) : '';
+$features = function_exists( 'get_field' ) ? get_field( 'service_what_we_do', $service_id ) : array();
+$gallery = function_exists( 'get_field' ) ? get_field( 'service_gallery', $service_id ) : array();
+$related_artists = function_exists( 'get_field' ) ? get_field( 'service_related_artists', $service_id ) : array();
+$cta_text = function_exists( 'get_field' ) ? get_field( 'service_cta_text', $service_id ) : '';
 
 $features = is_array( $features ) ? $features : array();
-$gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, array() );
 
-if ( ! handandvision_is_hebrew() ) {
-    $en_title = get_field( 'service_title_en', $service_id );
-    if ( ! empty( $en_title ) ) {
-        $service_title = $en_title;
+// Normalize gallery grid items safely
+$gallery_grid_items = array();
+if ( function_exists( 'handandvision_normalize_gallery_grid_items' ) ) {
+    $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, array() );
+}
+
+// Handle language-specific title
+if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew() ) {
+    if ( function_exists( 'get_field' ) ) {
+        $en_title = get_field( 'service_title_en', $service_id );
+        if ( ! empty( $en_title ) ) {
+            $service_title = $en_title;
+        }
     }
 }
 ?>
@@ -161,7 +171,7 @@ if ( ! handandvision_is_hebrew() ) {
                 <?php foreach ( $related_artists as $artist ) :
                     $artist_id = is_object( $artist ) ? $artist->ID : $artist;
                     $artist_name = is_object( $artist ) ? $artist->post_title : get_the_title( $artist_id );
-                    $portrait = get_field( 'artist_portrait', $artist_id );
+                    $portrait = function_exists( 'get_field' ) ? get_field( 'artist_portrait', $artist_id ) : false;
                     $portrait_url = ( is_array( $portrait ) && isset( $portrait['url'] ) ) ? $portrait['url'] : get_the_post_thumbnail_url( $artist_id, 'medium' );
                 ?>
                     <article class="hv-service-artist-card">
