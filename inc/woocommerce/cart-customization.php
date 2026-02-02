@@ -11,15 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-/**
- * Add artist name to product title in cart/checkout
- *
- * @since 3.3.0
- * @param string $product_name Product name HTML
- * @param array  $cart_item    Cart item data
- * @param string $cart_item_key Cart item key
- * @return string Modified product name
- */
+function handandvision_cart_item_display_title( $product_name, $cart_item, $cart_item_key ) {
+    if ( ! handandvision_is_hebrew() && function_exists( 'handandvision_product_title' ) ) {
+        return handandvision_product_title( $cart_item['product_id'] );
+    }
+    return $product_name;
+}
+add_filter( 'woocommerce_cart_item_name', 'handandvision_cart_item_display_title', 5, 3 );
+
 function handandvision_add_artist_to_cart_item_name( $product_name, $cart_item, $cart_item_key ) {
     $product_id = $cart_item['product_id'];
     $artist_id = get_post_meta( $product_id, '_handandvision_artist_id', true );
@@ -43,6 +42,14 @@ add_filter( 'woocommerce_cart_item_name', 'handandvision_add_artist_to_cart_item
  * @param WC_Order_Item $item      Order item object
  * @return string Modified item name
  */
+function handandvision_order_item_display_title( $item_name, $item ) {
+    if ( ! handandvision_is_hebrew() && function_exists( 'handandvision_product_title' ) ) {
+        return handandvision_product_title( $item->get_product_id() );
+    }
+    return $item_name;
+}
+add_filter( 'woocommerce_order_item_name', 'handandvision_order_item_display_title', 5, 2 );
+
 function handandvision_add_artist_to_order_item_name( $item_name, $item ) {
     $product_id = $item->get_product_id();
     $artist_id = get_post_meta( $product_id, '_handandvision_artist_id', true );

@@ -10,6 +10,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
+if ( ! function_exists( 'handandvision_is_hebrew' ) ) {
+	function handandvision_is_hebrew() { return false; }
+}
 $is_hebrew = handandvision_is_hebrew();
 ?>
 
@@ -26,7 +29,7 @@ $is_hebrew = handandvision_is_hebrew();
                     echo esc_html(
                         $is_hebrew
                             ? sprintf( '%d פריטים', $item_count )
-                            : sprintf( _n( '%d item', '%d items', $item_count, 'woocommerce' ), $item_count )
+                            : ( 1 === $item_count ? '1 item' : $item_count . ' items' )
                     );
                     ?>
                 </p>

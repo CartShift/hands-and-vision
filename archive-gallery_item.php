@@ -56,7 +56,7 @@ $is_hebrew = handandvision_is_hebrew();
 <main class="hv-gallery-page" id="gallery-content">
 
 <?php
-get_template_part( 'hero/page-hero', null, array(
+get_template_part( 'template-parts/hero/page-hero', null, array(
 	'overline'   => $is_hebrew ? 'עבודות נבחרות' : 'Selected Works',
 	'title'      => $is_hebrew ? 'גלריה' : 'Gallery',
 	'subtitle'   => $is_hebrew ? 'עבודות נבחרות מהקולקטיב שלנו' : 'Selected works from our collective',

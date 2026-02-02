@@ -282,6 +282,7 @@ require_once ASTRA_THEME_DIR . 'inc/theme-support/image-optimization.php';
 if ( class_exists( 'WooCommerce' ) ) {
     require_once ASTRA_THEME_DIR . 'inc/woocommerce/theme-support.php';
     require_once ASTRA_THEME_DIR . 'inc/woocommerce/artist-products.php';
+    require_once ASTRA_THEME_DIR . 'inc/woocommerce/product-helpers.php';
     require_once ASTRA_THEME_DIR . 'inc/woocommerce/cart-customization.php';
 }
 

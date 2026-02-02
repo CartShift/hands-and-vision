@@ -69,7 +69,7 @@ $artist_name = $artist_id ? get_the_title( $artist_id ) : '';
 					<span class="hv-product-card__artist"><?php echo esc_html( $artist_name ); ?></span>
 				<?php endif; ?>
 
-				<h3 class="hv-product-card__title"><?php echo esc_html( get_the_title() ); ?></h3>
+				<h3 class="hv-product-card__title"><?php echo esc_html( function_exists( 'handandvision_product_title' ) ? handandvision_product_title( $product ) : get_the_title() ); ?></h3>
 
 				<div class="hv-product-card__price">
 					<?php echo wp_kses_post( $product->get_price_html() ); ?>
@@ -81,6 +81,7 @@ $artist_name = $artist_id ? get_the_title( $artist_id ) : '';
 				<?php
 				// Custom Add to Cart Button
 				$args = array(); // Default args
+				$add_text = $is_hebrew ? 'הוסף לעגלה' : 'Add to Cart';
 				echo apply_filters(
 					'woocommerce_loop_add_to_cart_link',
 					sprintf(
@@ -88,7 +89,7 @@ $artist_name = $artist_id ? get_the_title( $artist_id ) : '';
 						esc_url( $product->add_to_cart_url() ),
 						esc_attr( isset( $args['class'] ) ? $args['class'] : 'hv-btn hv-btn--small hv-btn--outline add_to_cart_button ajax_add_to_cart' ),
 						isset( $args['attributes'] ) ? wc_implode_html_attributes( $args['attributes'] ) : 'data-product_id="' . esc_attr( $product->get_id() ) . '" aria-label="' . esc_attr( $product->add_to_cart_description() ) . '" rel="nofollow"',
-						esc_html( $product->add_to_cart_text() )
+						esc_html( $add_text )
 					),
 					$product,
 					$args

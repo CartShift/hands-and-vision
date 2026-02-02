@@ -40,7 +40,7 @@ $total_services = count( $services );
 <main id="primary" class="hv-services-page">
 
 <?php
-get_template_part( 'hero/page-hero', null, array(
+get_template_part( 'template-parts/hero/page-hero', null, array(
 	'overline'   => $is_hebrew ? 'שירותים מקצועיים' : 'Professional Services',
 	'title'      => array(
 		array( 'text' => $is_hebrew ? 'אוצרות, ייעוץ' : 'Curation, Consultancy', 'accent' => false ),

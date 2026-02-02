@@ -12,6 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 
+if ( ! function_exists( 'handandvision_is_hebrew' ) ) {
+	function handandvision_is_hebrew() { return false; }
+}
 $is_hebrew = handandvision_is_hebrew();
 $term = get_queried_object();
 if ( ! $term || ! isset( $term->name ) ) {
@@ -64,7 +67,7 @@ if ( ! $term || ! isset( $term->name ) ) {
                                 <?php if ( $artist_name ) : ?>
                                     <span class="hv-product-card__artist"><?php echo esc_html( $artist_name ); ?></span>
                                 <?php endif; ?>
-                                <h3 class="hv-product-card__title"><?php echo esc_html( get_the_title() ); ?></h3>
+                                <h3 class="hv-product-card__title"><?php echo esc_html( function_exists( 'handandvision_product_title' ) ? handandvision_product_title( get_the_ID() ) : get_the_title() ); ?></h3>
                                 <div class="hv-product-card__price">
                                     <?php echo wp_kses_post( $product->get_price_html() ); ?>
                                 </div>

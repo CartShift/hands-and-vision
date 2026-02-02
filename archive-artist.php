@@ -25,7 +25,7 @@ $artists = get_posts( array(
 
 <?php
 $is_hebrew = handandvision_is_hebrew();
-get_template_part( 'hero/page-hero', null, array(
+get_template_part( 'template-parts/hero/page-hero', null, array(
 	'overline'   => $is_hebrew ? 'הקולקטיב שלנו' : 'Our Collective',
 	'title'      => $is_hebrew ? 'האמנים' : 'Artists',
 	'subtitle'   => $is_hebrew

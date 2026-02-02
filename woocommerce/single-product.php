@@ -14,6 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 
+if ( ! function_exists( 'handandvision_is_hebrew' ) ) {
+	function handandvision_is_hebrew() { return false; }
+}
 $is_hebrew = handandvision_is_hebrew();
 
 while ( have_posts() ) :
@@ -59,7 +62,7 @@ while ( have_posts() ) :
                         <?php echo esc_html( $is_hebrew ? 'יצירת אמנות' : 'Artwork' ); ?>
                     </span>
                     <h1 class="hv-service-single-hero__title">
-                        <?php echo esc_html( get_the_title() ); ?>
+                        <?php echo esc_html( function_exists( 'handandvision_product_title' ) ? handandvision_product_title( get_the_ID() ) : get_the_title() ); ?>
                     </h1>
                 </div>
             </div>
@@ -248,7 +251,7 @@ while ( have_posts() ) :
                                 <?php echo get_the_post_thumbnail( $related_product_post->ID, 'woocommerce_thumbnail' ); ?>
                             </div>
                             <div class="hv-product-card__content">
-                                <h3 class="hv-product-card__title"><?php echo esc_html( $related_product->get_name() ); ?></h3>
+                                <h3 class="hv-product-card__title"><?php echo esc_html( function_exists( 'handandvision_product_title' ) ? handandvision_product_title( $related_product ) : $related_product->get_name() ); ?></h3>
                                 <div class="hv-product-card__price">
                                     <?php echo wp_kses_post( $related_product->get_price_html() ); ?>
                                 </div>
@@ -292,7 +295,7 @@ while ( have_posts() ) :
                                 <?php if ( $related_artist_name ) : ?>
                                     <span class="hv-product-card__artist"><?php echo esc_html( $related_artist_name ); ?></span>
                                 <?php endif; ?>
-                                <h3 class="hv-product-card__title"><?php echo esc_html( $related_product->get_name() ); ?></h3>
+                                <h3 class="hv-product-card__title"><?php echo esc_html( function_exists( 'handandvision_product_title' ) ? handandvision_product_title( $related_product ) : $related_product->get_name() ); ?></h3>
                                 <div class="hv-product-card__price">
                                     <?php echo wp_kses_post( $related_product->get_price_html() ); ?>
                                 </div>

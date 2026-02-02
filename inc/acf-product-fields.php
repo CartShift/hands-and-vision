@@ -1,7 +1,7 @@
 <?php
 /**
  * ACF Field Group Configuration for WooCommerce Products
- * 
+ *
  * This file registers custom ACF fields for WooCommerce products.
  * Labels and instructions in Hebrew.
  *
@@ -29,6 +29,19 @@ function handandvision_register_acf_product_fields() {
         'key' => 'group_product_fields',
         'title' => 'פרטי היצירה',
         'fields' => array(
+            array(
+                'key' => 'field_product_translation_tab',
+                'label' => 'תרגום לאנגלית',
+                'name' => '',
+                'type' => 'tab',
+            ),
+            array(
+                'key' => 'field_product_title_en',
+                'label' => 'כותרת באנגלית (English Title)',
+                'name' => 'product_title_en',
+                'type' => 'text',
+                'instructions' => 'כותרת היצירה כפי שתופיע בגרסה האנגלית של האתר.',
+            ),
             array(
                 'key' => 'field_product_artist',
                 'label' => 'אמן',

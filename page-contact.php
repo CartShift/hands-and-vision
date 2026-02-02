@@ -25,7 +25,7 @@ $page_subtitle = get_field( 'page_subtitle', $page_id ) ?: ( handandvision_is_he
 <main id="primary" class="site-main hv-contact-page">
 
 <?php
-get_template_part( 'hero/page-hero', null, array(
+get_template_part( 'template-parts/hero/page-hero', null, array(
 	'overline'   => $page_overline,
 	'title'      => $page_title_display,
 	'subtitle'   => $page_subtitle,

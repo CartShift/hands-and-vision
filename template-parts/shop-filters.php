@@ -5,6 +5,9 @@
  * @package HandAndVision
  */
 
+if ( ! function_exists( 'handandvision_is_hebrew' ) ) {
+	function handandvision_is_hebrew() { return false; }
+}
 $is_hebrew = handandvision_is_hebrew();
 $current_artist = isset( $_GET['filter_artist'] ) ? absint( $_GET['filter_artist'] ) : 0;
 $current_cat_id = is_tax( 'product_cat' ) ? get_queried_object_id() : 0;
