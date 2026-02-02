@@ -191,18 +191,18 @@
 
 				if (thumb) {
 					// Set temporary names
-					thumb.style.viewTransitionName = 'lightbox-img';
-					this.image.style.viewTransitionName = 'lightbox-img';
+					thumb.style.viewTransitionName = "lightbox-img";
+					this.image.style.viewTransitionName = "lightbox-img";
 
 					const transition = document.startViewTransition(() => {
 						openLogic();
 						// Remove name from thumb during transition so it doesn't stay
-						thumb.style.viewTransitionName = '';
+						thumb.style.viewTransitionName = "";
 					});
 
 					transition.finished.finally(() => {
 						// Cleanup lightbox name after transition
-						this.image.style.viewTransitionName = '';
+						this.image.style.viewTransitionName = "";
 					});
 				} else {
 					openLogic();
@@ -229,12 +229,12 @@
 				// Need to strip host if absolute vs relative issues occur, but usually exact match works for lightbox links
 				// We look for a link pointing to this image, and find its inner img
 				const thumbLink = document.querySelector('a[href="' + currentSrc + '"]');
-				const thumb = thumbLink ? thumbLink.querySelector('img') : null;
+				const thumb = thumbLink ? thumbLink.querySelector("img") : null;
 
 				if (thumb) {
 					// Apply names for the closing transition
-					thumb.style.viewTransitionName = 'lightbox-img';
-					this.image.style.viewTransitionName = 'lightbox-img';
+					thumb.style.viewTransitionName = "lightbox-img";
+					this.image.style.viewTransitionName = "lightbox-img";
 
 					const transition = document.startViewTransition(() => {
 						closeLogic();
@@ -244,8 +244,8 @@
 					});
 
 					transition.finished.finally(() => {
-						thumb.style.viewTransitionName = '';
-						this.image.style.viewTransitionName = '';
+						thumb.style.viewTransitionName = "";
+						this.image.style.viewTransitionName = "";
 					});
 				} else {
 					closeLogic();
@@ -353,7 +353,10 @@
 					},
 					{
 						threshold: 0.15,
-						rootMargin: "0px 0px -80px 0px"
+						rootMargin: (function () {
+							const h = getComputedStyle(document.documentElement).getPropertyValue("--hv-header-height").trim() || "80px";
+							return "0px 0px -" + h + " 0px";
+						})()
 					}
 				);
 
@@ -851,9 +854,139 @@
 	/**
 	 * Header Cart - Animation on add to cart (Vanilla JS - No jQuery Dependency)
 	 */
+	/**
+	 * AJAX Shop Filters with View Transitions
+	 */
+	const AjaxFilters = {
+		container: null,
+		isAnimating: false,
+
+		init: function () {
+			// Find the main product container
+			this.container = document.querySelector(".hv-shop-grid, .hv-product-grid-premium");
+			if (!this.container) return;
+
+			this.bindEvents();
+		},
+
+		bindEvents: function () {
+			const self = this;
+
+			// Delegate clicks for category links
+			document.addEventListener("click", function (e) {
+				const link = e.target.closest(".hv-shop-filters__categories a, .hv-pagination a, .woocommerce-pagination a");
+				if (link && self.container.contains(document.querySelector(link.getAttribute("href")) || self.container)) {
+					// Check if it's a link to the same shop page (query params)
+					const url = new URL(link.href);
+					if (url.origin === window.location.origin && url.pathname === window.location.pathname) {
+						e.preventDefault();
+						self.handleFilter(link.href);
+					}
+				}
+			});
+
+			// Handle select change
+			const select = document.querySelector(".hv-artist-filter-form select, .hv-shop-filters select");
+			if (select) {
+				select.addEventListener("change", function (e) {
+					e.preventDefault();
+
+					// Construct URL from form data or value
+					const form = select.closest("form");
+					const formData = new FormData(form);
+					const params = new URLSearchParams(formData);
+					// Add filter_artist explicitly if needed
+					if (!params.has('filter_artist') && select.name === 'filter_artist') {
+						params.set('filter_artist', select.value);
+					}
+
+					const url = new URL(window.location.href);
+					url.search = params.toString();
+
+					self.handleFilter(url.toString());
+				});
+			}
+		},
+
+		handleFilter: function (url) {
+			if (this.isAnimating) return;
+			this.isAnimating = true;
+
+			const self = this;
+
+			// Add loading state
+			this.container.classList.add("hv-loading");
+
+			fetch(url)
+				.then(response => response.text())
+				.then(html => {
+					const parser = new DOMParser();
+					const newDoc = parser.parseFromString(html, "text/html");
+					const newContainer = newDoc.querySelector(".hv-shop-grid, .hv-product-grid-premium");
+					const newFilters = newDoc.querySelector(".hv-shop-filters-wrap");
+
+					if (!newContainer) {
+						window.location.href = url; // Fallback if parsing fails
+						return;
+					}
+
+					// View Transition Logic
+					if (document.startViewTransition) {
+						document.startViewTransition(() => {
+							self.swapContent(newContainer, newFilters, newDoc);
+							// Update history
+							window.history.pushState({}, "", url);
+						});
+					} else {
+						// Fallback
+						self.swapContent(newContainer, newFilters, newDoc);
+						window.history.pushState({}, "", url);
+					}
+				})
+				.catch(err => {
+					console.error("Filter error:", err);
+					window.location.href = url;
+				})
+				.finally(() => {
+					this.container.classList.remove("hv-loading");
+					this.isAnimating = false;
+
+					// Re-init reveals
+					if (window.ScrollAnimations) ScrollAnimations.init();
+				});
+		},
+
+		swapContent: function (newContainer, newFilters, newDoc) {
+			// Swap Grid
+			if (this.container && newContainer) {
+				this.container.innerHTML = newContainer.innerHTML;
+				// Update pagination if exists
+				const paginationObj = document.querySelector(".hv-pagination, .woocommerce-pagination");
+				const newPagination = newDoc.querySelector(".hv-pagination, .woocommerce-pagination");
+				if (paginationObj && newPagination) {
+					paginationObj.outerHTML = newPagination.outerHTML;
+				} else if (paginationObj && !newPagination) {
+					paginationObj.remove();
+				}
+			}
+
+			// Swap Filters (to update active states)
+			const currentFilters = document.querySelector(".hv-shop-filters-wrap");
+			if (currentFilters && newFilters) {
+				currentFilters.outerHTML = newFilters.outerHTML;
+				// Re-bind events for new filters
+				this.bindEvents();
+			}
+		}
+	};
+
+	/**
+	 * Header Cart - Animation on add to cart (Vanilla JS - No jQuery Dependency)
+	 */
 	const HeaderCart = {
 		cartIcon: null,
 		pendingAnimate: false,
+		flyImage: null,
 
 		init: function () {
 			this.cartIcon = document.getElementById("hv-header-cart");
@@ -862,11 +995,25 @@
 
 		bindEvents: function () {
 			const self = this;
+
+			// Listen for standard WooCommerce add to cart click
+			document.body.addEventListener("click", function (e) {
+				if (e.target.classList.contains("ajax_add_to_cart")) {
+					const button = e.target;
+					const productCard = button.closest(".hv-product-card, .hv-product-card-minimal");
+					if (productCard) {
+						const img = productCard.querySelector("img");
+						if (img) self.startFlyAnimation(img);
+					}
+				}
+			});
+
 			document.body.addEventListener("added_to_cart", function () {
 				self.pendingAnimate = true;
 				A11yUtils.announce("Item added to cart");
 			});
-			document.body.addEventListener("wc_fragments_refreshed", function () {
+
+			const refreshCallback = function () {
 				self.cartIcon = document.getElementById("hv-header-cart");
 				const cartCount = document.getElementById("hv-cart-count");
 				if (cartCount) cartCount.classList.add("has-items");
@@ -874,16 +1021,49 @@
 					self.pendingAnimate = false;
 					self.animateCart();
 				}
+			};
+
+			document.body.addEventListener("wc_fragments_refreshed", refreshCallback);
+			document.body.addEventListener("wc_cart_fragments_refreshed", refreshCallback);
+		},
+
+		startFlyAnimation: function (sourceImg) {
+			if (!this.cartIcon) return;
+
+			// Clone image
+			const flyImg = sourceImg.cloneNode(true);
+			const rect = sourceImg.getBoundingClientRect();
+			const cartRect = this.cartIcon.getBoundingClientRect();
+
+			// Style clone
+			flyImg.style.position = "fixed";
+			flyImg.style.left = rect.left + "px";
+			flyImg.style.top = rect.top + "px";
+			flyImg.style.width = rect.width + "px";
+			flyImg.style.height = rect.height + "px";
+			flyImg.style.objectFit = "cover";
+			flyImg.style.zIndex = "100000"; /* High Z-Index to beat sticky header */
+			flyImg.style.borderRadius = "4px";
+			flyImg.style.pointerEvents = "none";
+			flyImg.style.transition = "all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)";
+			flyImg.style.opacity = "0.8";
+
+			document.body.appendChild(flyImg);
+
+			// Trigger animation
+			requestAnimationFrame(() => {
+				flyImg.style.left = (cartRect.left + cartRect.width / 2 - 20) + "px";
+				flyImg.style.top = (cartRect.top + cartRect.height / 2 - 20) + "px";
+				flyImg.style.width = "40px";
+				flyImg.style.height = "40px";
+				flyImg.style.opacity = "0";
+				flyImg.style.borderRadius = "50%";
 			});
-			document.body.addEventListener("wc_cart_fragments_refreshed", function () {
-				self.cartIcon = document.getElementById("hv-header-cart");
-				const cartCount = document.getElementById("hv-cart-count");
-				if (cartCount) cartCount.classList.add("has-items");
-				if (self.pendingAnimate && self.cartIcon) {
-					self.pendingAnimate = false;
-					self.animateCart();
-				}
-			});
+
+			// Cleanup
+			setTimeout(() => {
+				flyImg.remove();
+			}, 800);
 		},
 
 		animateCart: function () {
@@ -909,5 +1089,6 @@
 		DragScroll.init();
 		HeroScroll.init();
 		HeaderCart.init();
+		AjaxFilters.init();
 	});
 })();
