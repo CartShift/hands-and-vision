@@ -160,9 +160,9 @@ $current_year = date( 'Y' );
         const artistsShowcase = document.querySelector('.hv-artists-showcase');
         enableDragScroll(artistsShowcase);
 
-        // Apply to services grid
-        const servicesGrid = document.querySelector('.hv-services-grid');
-        enableDragScroll(servicesGrid);
+        // Apply to services carousel (homepage)
+        const servicesCarousel = document.querySelector('.hv-services-carousel');
+        enableDragScroll(servicesCarousel);
     });
 })();
 </script>

@@ -644,7 +644,7 @@
 	 */
 	const DragScroll = {
 		init: function () {
-			const containers = document.querySelectorAll(".hv-artists-showcase");
+			const containers = document.querySelectorAll(".hv-artists-showcase, .hv-services-carousel");
 			const prefersReducedMotion = A11yUtils.prefersReducedMotion();
 
 			containers.forEach(function (container) {

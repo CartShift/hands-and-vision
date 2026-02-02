@@ -25,7 +25,7 @@ $intro_text = get_field( 'intro_text', $front_page_id ) ?: '';
 
 $featured_services = get_field( 'featured_services', $front_page_id );
 if ( empty( $featured_services ) ) {
-	$featured_services = get_posts( array( 'post_type' => 'service', 'posts_per_page' => 4, 'orderby' => 'menu_order', 'order' => 'ASC', 'post_status' => 'publish' ) );
+	$featured_services = get_posts( array( 'post_type' => 'service', 'posts_per_page' => -1, 'orderby' => 'menu_order', 'order' => 'ASC', 'post_status' => 'publish' ) );
 }
 
 $featured_artists = get_field( 'featured_artists', $front_page_id );
@@ -87,7 +87,7 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
 
     <!-- SERVICES SECTION -->
     <?php
-    $display_services = ! empty( $featured_services ) ? $featured_services : get_posts( array( 'post_type' => 'service', 'posts_per_page' => 20, 'orderby' => 'menu_order date', 'order' => 'ASC', 'post_status' => 'publish' ) );
+    $display_services = ! empty( $featured_services ) ? $featured_services : get_posts( array( 'post_type' => 'service', 'posts_per_page' => -1, 'orderby' => 'menu_order date', 'order' => 'ASC', 'post_status' => 'publish' ) );
     $display_services = is_array( $display_services ) ? $display_services : array();
     ?>
     <section class="hv-section hv-section--cream" aria-labelledby="services-heading">
@@ -97,7 +97,9 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
                 <h2 id="services-heading" class="hv-headline-2"><?php echo handandvision_is_hebrew() ? 'השירותים שלנו' : 'Our Services'; ?></h2>
             </header>
 
-            <div class="hv-services-grid" role="group" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'שירותים' : 'Services' ); ?>">
+            <?php if ( ! empty( $display_services ) ) : ?>
+            <div class="hv-services-carousel-bleed">
+            <div class="hv-services-carousel" role="group" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'שירותים' : 'Services' ); ?>">
                 <?php
                 foreach ( $display_services as $i => $service_item ) :
                     if ( ! is_object( $service_item ) ) continue;
@@ -112,17 +114,34 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
                         if ( ! empty( $en_desc ) ) $s_desc = $en_desc;
                     }
                     $s_link = get_permalink( $service_item->ID );
+                    $s_img_id = null;
+                    $s_hero = get_field( 'service_hero_image', $service_item->ID );
+                    if ( is_array( $s_hero ) && ! empty( $s_hero['ID'] ) ) $s_img_id = (int) $s_hero['ID'];
+                    if ( ! $s_img_id ) $s_img_id = get_post_thumbnail_id( $service_item->ID );
                 ?>
                     <article class="hv-service-card">
-                        <span class="hv-service-card__icon"><?php echo handandvision_get_service_icon_svg( $i ); ?></span>
-                        <h3 class="hv-service-card__title"><?php echo esc_html( $s_title ); ?></h3>
-                        <p class="hv-service-card__desc"><?php echo esc_html( $s_desc ); ?></p>
                         <a href="<?php echo esc_url( $s_link ); ?>" class="hv-service-card__link">
-                            <?php echo handandvision_is_hebrew() ? 'קראו עוד ←' : 'Read More →'; ?>
+                            <div class="hv-service-card__thumb">
+                                <?php if ( $s_img_id ) : ?>
+                                    <?php echo wp_get_attachment_image( $s_img_id, 'medium_large', false, array( 'class' => 'hv-service-card__img', 'loading' => 'lazy' ) ); ?>
+                                <?php else : ?>
+                                    <div class="hv-service-card__placeholder" style="background: linear-gradient(135deg, hsl(<?php echo (int) ( 30 + $i * 15 ); ?>, 15%, 85%) 0%, hsl(<?php echo (int) ( 40 + $i * 15 ); ?>, 20%, 75%) 100%);"></div>
+                                <?php endif; ?>
+                            </div>
+                            <h3 class="hv-service-card__title"><?php echo esc_html( $s_title ); ?></h3>
+                            <p class="hv-service-card__desc"><?php echo esc_html( $s_desc ); ?></p>
+                            <span class="hv-service-card__cta"><?php echo handandvision_is_hebrew() ? 'קראו עוד ←' : 'Read More →'; ?></span>
                         </a>
                     </article>
                 <?php endforeach; ?>
             </div>
+            </div>
+            <div class="hv-text-center hv-mt-8">
+                <a href="<?php echo esc_url( get_post_type_archive_link( 'service' ) ); ?>" class="hv-btn hv-btn--outline"><?php echo handandvision_is_hebrew() ? 'כל השירותים' : 'All Services'; ?></a>
+            </div>
+            <?php else : ?>
+            <p class="hv-text-center hv-muted hv-mt-4"><?php echo esc_html( handandvision_is_hebrew() ? 'השירותים יוצגו כאן בקרוב.' : 'Our services will be featured here soon.' ); ?></p>
+            <?php endif; ?>
         </div>
     </section>
 
