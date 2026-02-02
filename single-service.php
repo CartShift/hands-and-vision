@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Check if handandvision_is_hebrew exists, if not create a fallback
+// Fallback function for language detection
 if ( ! function_exists( 'handandvision_is_hebrew' ) ) {
     function handandvision_is_hebrew() {
         return false;
@@ -19,15 +19,21 @@ if ( ! function_exists( 'handandvision_is_hebrew' ) ) {
 
 get_header();
 
-// Start The Loop
+// WordPress Loop
 while ( have_posts() ) : the_post();
 
 $service_id = get_the_ID();
 $service_title = get_the_title();
+$is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
 
-// Safely get ACF fields
+// ACF Fields - All Protected
 $hero_image = function_exists( 'get_field' ) ? get_field( 'service_hero_image', $service_id ) : false;
-$hero_url = ( is_array( $hero_image ) && isset( $hero_image['url'] ) ) ? $hero_image['url'] : get_the_post_thumbnail_url( $service_id, 'full' );
+$hero_url = '';
+if ( is_array( $hero_image ) && isset( $hero_image['url'] ) ) {
+    $hero_url = $hero_image['url'];
+} elseif ( has_post_thumbnail() ) {
+    $hero_url = get_the_post_thumbnail_url( $service_id, 'full' );
+}
 
 $short_desc = function_exists( 'get_field' ) ? get_field( 'service_short_description', $service_id ) : '';
 $full_desc = function_exists( 'get_field' ) ? get_field( 'service_full_description', $service_id ) : '';
@@ -36,34 +42,29 @@ $gallery = function_exists( 'get_field' ) ? get_field( 'service_gallery', $servi
 $related_artists = function_exists( 'get_field' ) ? get_field( 'service_related_artists', $service_id ) : array();
 $cta_text = function_exists( 'get_field' ) ? get_field( 'service_cta_text', $service_id ) : '';
 
+// Validate arrays
 $features = is_array( $features ) ? $features : array();
+$gallery = is_array( $gallery ) ? $gallery : array();
+$related_artists = is_array( $related_artists ) ? $related_artists : array();
 
-// Normalize gallery grid items safely
+// Normalize gallery
 $gallery_grid_items = array();
-if ( ! empty( $gallery ) && is_array( $gallery ) && function_exists( 'handandvision_normalize_gallery_grid_items' ) ) {
+if ( ! empty( $gallery ) && function_exists( 'handandvision_normalize_gallery_grid_items' ) ) {
     $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, array() );
 }
 
-// Ensure related_artists is an array
-if ( ! is_array( $related_artists ) ) {
-    $related_artists = array();
-}
-
-// Handle language-specific title
-if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew() ) {
-    if ( function_exists( 'get_field' ) ) {
-        $en_title = get_field( 'service_title_en', $service_id );
-        if ( ! empty( $en_title ) ) {
-            $service_title = $en_title;
-        }
+// English title override
+if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
+    $en_title = get_field( 'service_title_en', $service_id );
+    if ( ! empty( $en_title ) ) {
+        $service_title = $en_title;
     }
 }
-$is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
 ?>
 
 <main id="primary" class="hv-single-service">
 
-    <!-- Premium Hero Section -->
+    <!-- Hero Section -->
     <section class="hv-service-single-hero">
         <div class="hv-service-single-hero__bg">
             <?php if ( $hero_url ) : ?>
@@ -104,7 +105,7 @@ $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_heb
     </section>
     <?php endif; ?>
 
-    <!-- Features / What We Do -->
+    <!-- Features -->
     <?php if ( ! empty( $features ) ) : ?>
     <section class="hv-service-features-section">
         <div class="hv-container">
@@ -117,12 +118,15 @@ $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_heb
                 </h2>
             </div>
             <div class="hv-service-features-grid">
-                <?php foreach ( $features as $i => $feature ) :
-                    $feature_text = is_array( $feature ) ? ( $feature['point'] ?? '' ) : (string) $feature;
-                    if ( $feature_text === '' ) continue;
+                <?php
+                $counter = 0;
+                foreach ( $features as $feature ) :
+                    $counter++;
+                    $feature_text = is_array( $feature ) && isset( $feature['point'] ) ? $feature['point'] : (string) $feature;
+                    if ( empty( $feature_text ) ) continue;
                 ?>
                     <div class="hv-service-feature-item">
-                        <div class="hv-service-feature-number"><?php printf( '%02d', $i + 1 ); ?></div>
+                        <div class="hv-service-feature-number"><?php printf( '%02d', $counter ); ?></div>
                         <p class="hv-service-feature-text"><?php echo esc_html( $feature_text ); ?></p>
                     </div>
                 <?php endforeach; ?>
@@ -145,10 +149,10 @@ $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_heb
             </div>
             <div class="hv-service-gallery-grid">
                 <?php foreach ( $gallery_grid_items as $item ) :
-                    $image_url = $item['image'] ?? '';
-                    $title = $item['title'] ?? '';
-                    $link = $item['link'] ?? '';
-                    if ( ! $image_url ) continue;
+                    $image_url = isset( $item['image'] ) ? $item['image'] : '';
+                    $title = isset( $item['title'] ) ? $item['title'] : '';
+                    $link = isset( $item['link'] ) ? $item['link'] : '';
+                    if ( empty( $image_url ) ) continue;
                 ?>
                     <div class="hv-service-gallery-item">
                         <?php if ( $link ) : ?>
@@ -186,10 +190,18 @@ $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_heb
             </div>
             <div class="hv-service-artists-grid">
                 <?php foreach ( $related_artists as $artist ) :
-                    $artist_id = is_object( $artist ) ? $artist->ID : $artist;
-                    $artist_name = is_object( $artist ) ? $artist->post_title : get_the_title( $artist_id );
+                    $artist_id = is_object( $artist ) ? $artist->ID : (int) $artist;
+                    if ( ! $artist_id ) continue;
+                    
+                    $artist_name = get_the_title( $artist_id );
                     $portrait = function_exists( 'get_field' ) ? get_field( 'artist_portrait', $artist_id ) : false;
-                    $portrait_url = ( is_array( $portrait ) && isset( $portrait['url'] ) ) ? $portrait['url'] : get_the_post_thumbnail_url( $artist_id, 'medium' );
+                    $portrait_url = '';
+                    
+                    if ( is_array( $portrait ) && isset( $portrait['url'] ) ) {
+                        $portrait_url = $portrait['url'];
+                    } elseif ( has_post_thumbnail( $artist_id ) ) {
+                        $portrait_url = get_the_post_thumbnail_url( $artist_id, 'medium' );
+                    }
                 ?>
                     <article class="hv-service-artist-card">
                         <a href="<?php echo esc_url( get_permalink( $artist_id ) ); ?>" class="hv-service-artist-link">
@@ -214,17 +226,23 @@ $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_heb
         <div class="hv-container hv-container--narrow">
             <div class="hv-service-cta-content">
                 <span class="hv-service-cta-label">
-                    <?php echo esc_html( $is_hebrew ? 'מתחילים' : 'Let's Begin' ); ?>
+                    <?php echo esc_html( $is_hebrew ? 'מתחילים' : 'Let\'s Begin' ); ?>
                 </span>
                 <?php
                 $default_cta = $is_hebrew ? 'מוכנים להתחיל את הפרויקט?' : 'Ready to Start Your Project?';
-                $display_cta = $cta_text ?: $default_cta;
+                $display_cta = ! empty( $cta_text ) ? $cta_text : $default_cta;
                 ?>
                 <h2 class="hv-service-cta-title"><?php echo esc_html( $display_cta ); ?></h2>
                 <p class="hv-service-cta-desc">
-                    <?php echo esc_html( $is_hebrew ? 'נשמח לשמוע על הצרכים שלכם ולבנות יחד את הפתרון המושלם' : 'We'd love to hear about your needs and build the perfect solution together' ); ?>
+                    <?php echo esc_html( $is_hebrew ? 'נשמח לשמוע על הצרכים שלכם ולבנות יחד את הפתרון המושלם' : 'We\'d love to hear about your needs and build the perfect solution together' ); ?>
                 </p>
-                <a href="<?php echo esc_url( function_exists( 'handandvision_get_contact_url' ) ? handandvision_get_contact_url() : home_url( '/contact' ) ); ?>" class="hv-service-cta-btn">
+                <?php
+                $contact_url = home_url( '/contact' );
+                if ( function_exists( 'handandvision_get_contact_url' ) ) {
+                    $contact_url = handandvision_get_contact_url();
+                }
+                ?>
+                <a href="<?php echo esc_url( $contact_url ); ?>" class="hv-service-cta-btn">
                     <?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Get in Touch' ); ?>
                 </a>
             </div>
@@ -234,6 +252,6 @@ $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_heb
 </main>
 
 <?php
-endwhile; // End of the loop
+endwhile; // End Loop
 get_footer();
-?>
+
