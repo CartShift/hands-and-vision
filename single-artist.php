@@ -68,6 +68,100 @@ $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, arra
         'subtitle' => handandvision_is_hebrew() ? 'עבודות נבחרות' : 'Selected Works',
     ) ); ?>
 
+    <?php
+    // Get gallery items linked to this artist from the gallery_item CPT
+    $artist_gallery_items = handandvision_get_artist_gallery_items( $artist_id );
+
+    if ( ! empty( $artist_gallery_items ) ) :
+    ?>
+    <!-- Artist Gallery Works Section -->
+    <section class="hv-section hv-section--cream hv-artist-gallery-works">
+        <div class="hv-container">
+            <header class="hv-section-header hv-text-center hv-mb-10">
+                <span class="hv-overline hv-reveal"><?php echo handandvision_is_hebrew() ? 'עבודות מהגלריה' : 'Gallery Works'; ?></span>
+                <h2 class="hv-headline-2 hv-line-draw hv-reveal"><?php echo handandvision_is_hebrew() ? 'יצירות מתוך הקולקטיב' : 'Works from the Collective'; ?></h2>
+            </header>
+
+            <div class="hv-artist-gallery__grid hv-stagger">
+                <?php
+                $total_items = count( $artist_gallery_items );
+                foreach ( $artist_gallery_items as $index => $item ) :
+                    // Calculate srcset for responsive images
+                    $srcset = '';
+                    $sizes = '(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 33vw';
+                    if ( ! empty( $item['image_id'] ) ) {
+                        $srcset = wp_get_attachment_image_srcset( $item['image_id'] );
+                    }
+
+                    // Determine item size class for visual variety
+                    $size_class = '';
+                    if ( $index === 0 && $total_items > 3 ) {
+                        $size_class = 'hv-artist-gallery__item--featured';
+                    } elseif ( $index % 5 === 2 ) {
+                        $size_class = 'hv-artist-gallery__item--wide';
+                    }
+                ?>
+                    <article class="hv-artist-gallery__item <?php echo esc_attr( $size_class ); ?>"
+                             data-index="<?php echo esc_attr( $index ); ?>"
+                             style="--stagger-delay: <?php echo ( $index * 0.08 ); ?>s">
+                        <a href="<?php echo esc_url( $item['url'] ); ?>"
+                           class="hv-artist-gallery__link hv-lightbox"
+                           data-gallery="artist-gallery"
+                           data-caption="<?php echo esc_attr( $item['caption'] ?: $item['title'] ); ?><?php echo $item['year'] ? ' (' . $item['year'] . ')' : ''; ?>"
+                           aria-label="<?php printf(
+                               handandvision_is_hebrew() ? 'צפה בעבודה: %s' : 'View work: %s',
+                               esc_attr( $item['caption'] ?: $item['title'] )
+                           ); ?>">
+
+                            <div class="hv-artist-gallery__media">
+                                <img class="hv-artist-gallery__img"
+                                     src="<?php echo esc_url( $item['url'] ); ?>"
+                                     alt="<?php echo esc_attr( $item['caption'] ?: $item['title'] ); ?>"
+                                     loading="lazy"
+                                     decoding="async"
+                                     <?php if ( $srcset ) : ?>srcset="<?php echo esc_attr( $srcset ); ?>"<?php endif; ?>
+                                     sizes="<?php echo esc_attr( $sizes ); ?>">
+                            </div>
+
+                            <div class="hv-artist-gallery__overlay">
+                                <h3 class="hv-artist-gallery__title">
+                                    <?php echo esc_html( $item['caption'] ?: $item['title'] ); ?>
+                                </h3>
+                                <?php if ( $item['year'] || $item['project'] ) : ?>
+                                    <span class="hv-artist-gallery__meta">
+                                        <?php
+                                        $meta_parts = array_filter( array( $item['project'], $item['year'] ) );
+                                        echo esc_html( implode( ' · ', $meta_parts ) );
+                                        ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+
+                            <span class="hv-artist-gallery__zoom" aria-hidden="true">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                                </svg>
+                            </span>
+                        </a>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+
+            <?php if ( $total_items > 6 ) : ?>
+            <div class="hv-text-center hv-mt-8 hv-reveal">
+                <a href="<?php echo esc_url( get_post_type_archive_link( 'gallery_item' ) ); ?>?artist=<?php echo esc_attr( $artist_id ); ?>"
+                   class="hv-btn hv-btn--outline">
+                    <?php echo handandvision_is_hebrew() ? 'לכל הגלריה' : 'View Full Gallery'; ?>
+                </a>
+            </div>
+            <?php endif; ?>
+        </div>
+    </section>
+    <?php endif; ?>
+
     <!-- Artist Products Section -->
     <?php
     if ( class_exists( 'WooCommerce' ) ) {

@@ -1,7 +1,7 @@
 <?php
 /**
  * Archive Template: Services
- * Premium minimalist design with elegant hero and refined service cards
+ * Premium immersive design with dramatic hero and showcase-style service presentation
  *
  * @package HandAndVision
  */
@@ -19,6 +19,8 @@ if ( ! function_exists( 'handandvision_is_hebrew' ) ) {
     }
 }
 
+$is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
+
 // Safely get services
 $services = get_posts( array(
     'post_type'      => 'service',
@@ -31,130 +33,180 @@ $services = get_posts( array(
 if ( ! $services ) {
     $services = array();
 }
+
+$total_services = count( $services );
 ?>
 
-<main id="primary" class="hv-archive-page hv-service-archive">
+<main id="primary" class="hv-services-page">
 
-    <!-- Premium Hero Section -->
-    <section class="hv-service-hero-archive">
-        <div class="hv-service-hero-archive__inner">
+    <!-- Immersive Hero Section -->
+    <section class="hv-services-hero">
+        <div class="hv-services-hero__bg">
+            <div class="hv-services-hero__gradient"></div>
+            <div class="hv-services-hero__orb hv-services-hero__orb--1"></div>
+            <div class="hv-services-hero__orb hv-services-hero__orb--2"></div>
+            <div class="hv-services-hero__orb hv-services-hero__orb--3"></div>
+            <div class="hv-services-hero__lines"></div>
+        </div>
+        <div class="hv-services-hero__content">
             <div class="hv-container">
                 <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
-                <div class="hv-service-hero-archive__content">
-                    <div class="hv-service-hero-archive__label">
-                        <?php
-                        $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
-                        if ( $is_hebrew ) :
-                        ?>
-                            <span class="hv-fade-in">שירותים</span>
-                            <span class="hv-fade-in" style="animation-delay: 0.1s;">·</span>
-                            <span class="hv-fade-in" style="animation-delay: 0.2s;">אוצרות</span>
-                            <span class="hv-fade-in" style="animation-delay: 0.3s;">·</span>
-                            <span class="hv-fade-in" style="animation-delay: 0.4s;">ייעוץ</span>
-                        <?php else : ?>
-                            <span class="hv-fade-in">Services</span>
-                            <span class="hv-fade-in" style="animation-delay: 0.1s;">·</span>
-                            <span class="hv-fade-in" style="animation-delay: 0.2s;">Curation</span>
-                            <span class="hv-fade-in" style="animation-delay: 0.3s;">·</span>
-                            <span class="hv-fade-in" style="animation-delay: 0.4s;">Consultancy</span>
-                        <?php endif; ?>
+                <div class="hv-services-hero__inner">
+                    <div class="hv-services-hero__overline">
+                        <span class="hv-services-hero__line"></span>
+                        <span class="hv-services-hero__text">
+                            <?php echo esc_html( $is_hebrew ? 'שירותים מקצועיים' : 'Professional Services' ); ?>
+                        </span>
+                        <span class="hv-services-hero__line"></span>
                     </div>
-                    <h1 class="hv-service-hero-archive__title">
-                        <?php
-                        $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
-                        echo esc_html( $is_hebrew ? 'שירותים מקצועיים לעולם האמנות' : 'Professional Services for the Art World' );
-                        ?>
+                    <h1 class="hv-services-hero__title">
+                        <?php if ( $is_hebrew ) : ?>
+                            <span class="hv-services-hero__title-line">אוצרות, ייעוץ</span>
+                            <span class="hv-services-hero__title-line hv-services-hero__title-line--accent">ואמנות בתנועה</span>
+                        <?php else : ?>
+                            <span class="hv-services-hero__title-line">Curation, Consultancy</span>
+                            <span class="hv-services-hero__title-line hv-services-hero__title-line--accent">& Art in Motion</span>
+                        <?php endif; ?>
                     </h1>
-                    <p class="hv-service-hero-archive__desc">
-                        <?php echo esc_html( $is_hebrew ? 'אוצרות, ייעוץ ושירותים מותאמים אישית המשלבים מקצועיות עם תשוקה לאמנות' : 'Curation, consultancy and bespoke services combining professionalism with passion for art' ); ?>
+                    <p class="hv-services-hero__subtitle">
+                        <?php echo esc_html( $is_hebrew
+                            ? 'אנו מציעים מגוון שירותים מותאמים אישית לעולם האמנות – מאוצרות תערוכות ועד ייעוץ איסוף, הכל עם תשוקה למצוינות.'
+                            : 'We offer a range of bespoke services for the art world — from exhibition curation to collection advisory, all with a passion for excellence.' ); ?>
                     </p>
+                    <div class="hv-services-hero__stats">
+                        <div class="hv-services-hero__stat">
+                            <span class="hv-services-hero__stat-number"><?php echo esc_html( $total_services ); ?></span>
+                            <span class="hv-services-hero__stat-label"><?php echo esc_html( $is_hebrew ? 'שירותים' : 'Services' ); ?></span>
+                        </div>
+                        <div class="hv-services-hero__stat-divider"></div>
+                        <div class="hv-services-hero__stat">
+                            <span class="hv-services-hero__stat-number">∞</span>
+                            <span class="hv-services-hero__stat-label"><?php echo esc_html( $is_hebrew ? 'אפשרויות' : 'Possibilities' ); ?></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="hv-service-hero-archive__divider"></div>
+        <div class="hv-services-hero__scroll">
+            <span><?php echo esc_html( $is_hebrew ? 'גלול לגילוי' : 'Scroll to discover' ); ?></span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
+        </div>
     </section>
 
-    <!-- Services Grid -->
-    <section class="hv-services-archive-grid">
+    <!-- Services Showcase -->
+    <section class="hv-services-showcase">
         <div class="hv-container hv-container--wide">
-            <div class="hv-services-archive-grid__inner">
-                <?php foreach ( $services as $i => $service ) :
-                    // Safely get ACF fields
-                    $service_image = function_exists( 'get_field' ) ? get_field( 'service_hero_image', $service->ID ) : false;
-                    $image_url = ( is_array( $service_image ) && isset( $service_image['url'] ) ) ? $service_image['url'] : get_the_post_thumbnail_url( $service->ID, 'large' );
 
-                    $short_desc_acf = function_exists( 'get_field' ) ? get_field( 'service_short_description', $service->ID ) : '';
-                    $short_desc = $short_desc_acf ?: wp_trim_words( $service->post_content, 18 );
+            <?php foreach ( $services as $i => $service ) :
+                // Safely get ACF fields
+                $service_image = function_exists( 'get_field' ) ? get_field( 'service_hero_image', $service->ID ) : false;
+                $image_url = ( is_array( $service_image ) && isset( $service_image['url'] ) ) ? $service_image['url'] : get_the_post_thumbnail_url( $service->ID, 'large' );
 
-                    $service_title = $service->post_title;
+                $short_desc_acf = function_exists( 'get_field' ) ? get_field( 'service_short_description', $service->ID ) : '';
+                $short_desc = $short_desc_acf ?: wp_trim_words( $service->post_content, 25 );
 
-                    // Handle language-specific fields
-                    if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew() ) {
-                        if ( function_exists( 'get_field' ) ) {
-                            $en_title = get_field( 'service_title_en', $service->ID );
-                            $en_desc  = get_field( 'service_desc_en', $service->ID );
-                            if ( ! empty( $en_title ) ) $service_title = $en_title;
-                            if ( ! empty( $en_desc ) ) $short_desc = $en_desc;
-                        }
+                $service_title = $service->post_title;
+
+                // Handle language-specific fields
+                if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew() ) {
+                    if ( function_exists( 'get_field' ) ) {
+                        $en_title = get_field( 'service_title_en', $service->ID );
+                        $en_desc  = get_field( 'service_desc_en', $service->ID );
+                        if ( ! empty( $en_title ) ) $service_title = $en_title;
+                        if ( ! empty( $en_desc ) ) $short_desc = $en_desc;
                     }
-                ?>
-                    <article class="hv-service-card-archive">
-                        <a href="<?php echo esc_url( get_permalink( $service->ID ) ); ?>" class="hv-service-card-archive__link">
-                            <div class="hv-service-card-archive__media">
-                                <?php if ( $image_url ) : ?>
-                                    <img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $service_title ); ?>" loading="lazy">
-                                <?php else : ?>
-                                    <div class="hv-service-card-archive__placeholder"></div>
-                                <?php endif; ?>
-                                <div class="hv-service-card-archive__overlay">
-                                    <span class="hv-service-card-archive__number"><?php printf( '%02d', $i + 1 ); ?></span>
+                }
+
+                // Determine card style: first card is featured, then alternate grid
+                $is_featured = ( $i === 0 );
+                $card_class = $is_featured ? 'hv-service-showcase-card hv-service-showcase-card--featured' : 'hv-service-showcase-card';
+            ?>
+
+                <article class="<?php echo esc_attr( $card_class ); ?>" data-service-index="<?php echo esc_attr( $i + 1 ); ?>">
+                    <a href="<?php echo esc_url( get_permalink( $service->ID ) ); ?>" class="hv-service-showcase-card__link">
+                        <div class="hv-service-showcase-card__media">
+                            <?php if ( $image_url ) : ?>
+                                <img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $service_title ); ?>" loading="lazy">
+                            <?php else : ?>
+                                <div class="hv-service-showcase-card__placeholder">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <path d="M21 15l-5-5L5 21"/>
+                                    </svg>
                                 </div>
+                            <?php endif; ?>
+                            <div class="hv-service-showcase-card__media-overlay"></div>
+                        </div>
+                        <div class="hv-service-showcase-card__content">
+                            <div class="hv-service-showcase-card__header">
+                                <span class="hv-service-showcase-card__number"><?php printf( '%02d', $i + 1 ); ?></span>
+                                <span class="hv-service-showcase-card__tag">
+                                    <?php echo esc_html( $is_hebrew ? 'שירות' : 'Service' ); ?>
+                                </span>
                             </div>
-                            <div class="hv-service-card-archive__content">
-                                <h2 class="hv-service-card-archive__title"><?php echo esc_html( $service_title ); ?></h2>
-                                <p class="hv-service-card-archive__desc"><?php echo esc_html( $short_desc ); ?></p>
-                                <span class="hv-service-card-archive__arrow">
-                                    <?php
-                                    $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
-                                    if ( $is_hebrew ) :
-                                    ?>
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                                            <line x1="19" y1="12" x2="5" y2="12"></line>
-                                            <polyline points="12 19 5 12 12 5"></polyline>
+                            <h2 class="hv-service-showcase-card__title"><?php echo esc_html( $service_title ); ?></h2>
+                            <p class="hv-service-showcase-card__desc"><?php echo esc_html( $short_desc ); ?></p>
+                            <div class="hv-service-showcase-card__cta">
+                                <span class="hv-service-showcase-card__cta-text">
+                                    <?php echo esc_html( $is_hebrew ? 'גלה עוד' : 'Discover More' ); ?>
+                                </span>
+                                <span class="hv-service-showcase-card__cta-arrow">
+                                    <?php if ( $is_hebrew ) : ?>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M19 12H5M12 19l-7-7 7-7"/>
                                         </svg>
                                     <?php else : ?>
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                                            <polyline points="12 5 19 12 12 19"></polyline>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M5 12h14M12 5l7 7-7 7"/>
                                         </svg>
                                     <?php endif; ?>
                                 </span>
                             </div>
-                        </a>
-                    </article>
-                <?php endforeach; ?>
-            </div>
+                        </div>
+                    </a>
+                </article>
+
+            <?php endforeach; ?>
+
         </div>
     </section>
 
-    <!-- Premium CTA -->
-    <section class="hv-services-cta">
-        <div class="hv-container hv-container--narrow">
-            <div class="hv-services-cta__content">
-                <?php
-                $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
-                ?>
-                <span class="hv-services-cta__label">
-                    <?php echo esc_html( $is_hebrew ? 'בואו נדבר' : 'Let\'s Talk' ); ?>
-                </span>
-                <h2 class="hv-services-cta__title">
+    <!-- Premium CTA Section -->
+    <section class="hv-services-cta-premium">
+        <div class="hv-services-cta-premium__bg">
+            <div class="hv-services-cta-premium__pattern"></div>
+        </div>
+        <div class="hv-container">
+            <div class="hv-services-cta-premium__content">
+                <div class="hv-services-cta-premium__icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <span class="hv-services-cta-premium__overline">
                     <?php echo esc_html( $is_hebrew ? 'מוכנים להתחיל?' : 'Ready to Begin?' ); ?>
+                </span>
+                <h2 class="hv-services-cta-premium__title">
+                    <?php echo esc_html( $is_hebrew ? 'בואו ניצור משהו יוצא דופן יחד' : "Let's Create Something Extraordinary Together" ); ?>
                 </h2>
-                <p class="hv-services-cta__desc">
-                    <?php echo esc_html( $is_hebrew ? 'נשמח לשמוע על הפרויקט שלכם ולבנות יחד את הדרך קדימה' : 'We\'d love to hear about your project and build the path forward together' ); ?>
+                <p class="hv-services-cta-premium__desc">
+                    <?php echo esc_html( $is_hebrew
+                        ? 'נשמח לשמוע על החזון האמנותי שלכם ולעזור להפוך אותו למציאות.'
+                        : "We'd love to hear about your artistic vision and help bring it to life." ); ?>
                 </p>
-                <a href="<?php echo esc_url( function_exists( 'handandvision_get_contact_url' ) ? handandvision_get_contact_url() : home_url( '/contact' ) ); ?>" class="hv-services-cta__btn">
-                    <?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Get in Touch' ); ?>
+                <a href="<?php echo esc_url( function_exists( 'handandvision_get_contact_url' ) ? handandvision_get_contact_url() : home_url( '/contact' ) ); ?>" class="hv-services-cta-premium__btn">
+                    <span><?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Get in Touch' ); ?></span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <?php if ( $is_hebrew ) : ?>
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        <?php else : ?>
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        <?php endif; ?>
+                    </svg>
                 </a>
             </div>
         </div>

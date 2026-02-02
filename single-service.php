@@ -192,11 +192,11 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
                 <?php foreach ( $related_artists as $artist ) :
                     $artist_id = is_object( $artist ) ? $artist->ID : (int) $artist;
                     if ( ! $artist_id ) continue;
-                    
+
                     $artist_name = get_the_title( $artist_id );
                     $portrait = function_exists( 'get_field' ) ? get_field( 'artist_portrait', $artist_id ) : false;
                     $portrait_url = '';
-                    
+
                     if ( is_array( $portrait ) && isset( $portrait['url'] ) ) {
                         $portrait_url = $portrait['url'];
                     } elseif ( has_post_thumbnail( $artist_id ) ) {
