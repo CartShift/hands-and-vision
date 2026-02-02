@@ -198,6 +198,35 @@ html {
 #content.site-content {
 	padding-top: var(--hv-header-height) !important;
 }
+
+/* ==========================================
+   VIEW TRANSITION ANIMATIONS
+   ========================================== */
+
+/* 1. Header Text Slide-in */
+::view-transition-old(header-text) {
+	animation: 0.3s ease-in both fade-out-up;
+}
+::view-transition-new(header-text) {
+	animation: 0.4s ease-out both fade-in-up;
+}
+
+/* 2. Lightbox Zoom */
+::view-transition-old(lightbox-img),
+::view-transition-new(lightbox-img) {
+	animation-duration: 0.4s;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fade-in-up {
+	from { opacity: 0; transform: translateY(20px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-out-up {
+	from { opacity: 1; transform: translateY(0); }
+	to { opacity: 0; transform: translateY(-20px); }
+}
 .hv-hero-layout {
 	width: 100% !important;
 	max-width: 100% !important;
@@ -3187,12 +3216,16 @@ body.hv-hero-layout-page #content > .hv-full-width-wrapper {
 	width: 100% !important;
 	padding: 0 !important;
 	margin: 0 !important;
+	padding-top: 0 !important;
+	margin-top: 0 !important;
 }
 body.hv-hero-layout-page #primary.hv-hero-layout {
 	width: 100% !important;
 	max-width: 100% !important;
 	padding: 0 !important;
 	margin: 0 !important;
+	padding-top: 0 !important;
+	margin-top: 0 !important;
 	float: none !important;
 	flex: none !important;
 }
@@ -13857,3 +13890,456 @@ html[dir="rtl"] .hv-footer__links a:hover {
 		padding: 0 20px;
 	}
 }
+
+/* ==========================================================================
+   ARTIST EXPERIENCE REDESIGN (Feb 2026)
+   Premium Gallery Aesthetics
+   ========================================================================== */
+
+/* -------------------------------------------
+   ARCHIVE: PREMIUM GRID ("THE COLLECTIVE")
+   ------------------------------------------- */
+
+.hv-artists-archive-premium {
+    background-color: var(--hv-white);
+}
+
+.hv-artist-grid-premium {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    padding: 60px 0;
+}
+
+@media (max-width: 1024px) {
+    .hv-artist-grid-premium {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        padding: 40px 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .hv-artist-grid-premium {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+}
+
+/* Card Styling */
+.hv-artist-card-premium {
+    position: relative;
+    display: block;
+    group: hover;
+}
+
+.hv-artist-card-premium__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.hv-artist-card-premium__media-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    margin-bottom: 20px;
+    background-color: var(--hv-bg-secondary);
+}
+
+/* Base Image */
+.hv-artist-card-premium__media {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hv-artist-card-premium__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Hover Zoom Effect */
+.hv-artist-card-premium:hover .hv-artist-card-premium__media {
+    transform: scale(1.05);
+}
+
+/* Overlay with "View Profile" */
+.hv-artist-card-premium__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hv-artist-card-premium:hover .hv-artist-card-premium__overlay {
+    opacity: 1;
+}
+
+.hv-artist-card-premium__view-btn {
+    background: var(--hv-white);
+    color: var(--hv-petrol);
+    padding: 12px 24px;
+    font-family: "Heebo", sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transform: translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hv-artist-card-premium:hover .hv-artist-card-premium__view-btn {
+    transform: translateY(0);
+}
+
+/* Card Typography */
+.hv-artist-card-premium__info {
+    text-align: center;
+}
+
+.hv-artist-card-premium__name {
+    font-family: "Heebo", sans-serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--hv-petrol);
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+}
+
+.hv-artist-card-premium__discipline {
+    font-family: "Heebo", sans-serif;
+    font-size: 0.85rem;
+    color: var(--hv-stone);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+
+/* Minimal CTA */
+.hv-artist-cta-minimal {
+    padding: 80px 0;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.hv-artist-cta-minimal h2 {
+    font-family: "Heebo", sans-serif;
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--hv-petrol);
+    margin-bottom: 16px;
+}
+
+.hv-artist-cta-minimal p {
+    font-size: 1.1rem;
+    color: var(--hv-slate);
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+/* Underline Link Style */
+.hv-link-decor {
+    font-family: "Heebo", sans-serif;
+    font-size: 1rem;
+    color: var(--hv-petrol);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hv-petrol);
+    padding-bottom: 4px;
+    transition: all 0.3s ease;
+}
+
+.hv-link-decor:hover {
+    color: var(--hv-lilac);
+    border-color: var(--hv-lilac);
+}
+
+
+/* -------------------------------------------
+   SINGLE ARTIST: CINEMATIC HERO
+   ------------------------------------------- */
+
+.hv-single-artist-premium {
+    background-color: var(--hv-white);
+}
+
+/* Asymmetrical Grid */
+.hv-artist-hero-premium {
+    padding-top: var(--hv-space-6);
+    padding-bottom: 80px;
+}
+
+.hv-artist-hero-premium__grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr; /* Image is smaller, text layout wider */
+    gap: 80px;
+    align-items: start;
+}
+
+/* RTL Flip */
+[dir="rtl"] .hv-artist-hero-premium__grid {
+    grid-template-columns: 0.8fr 1.2fr; /* Keep ratio */
+}
+
+/* Content Side */
+.hv-artist-hero-premium__content {
+    padding-top: 40px;
+}
+
+/* Typography Scale */
+.hv-artist-hero-premium__content .hv-headline-1 {
+    font-size: clamp(3.5rem, 6vw, 5.5rem); /* Huge Impact */
+    line-height: 1;
+    margin-bottom: 40px;
+    font-weight: 200;
+    letter-spacing: -0.03em;
+}
+
+.hv-artist-bio {
+    max-width: 65ch;
+    color: var(--hv-charcoal);
+    font-size: 1.15rem;
+    line-height: 1.7;
+    font-weight: 300;
+}
+
+.hv-artist-bio p {
+    margin-bottom: 24px;
+}
+
+/* Sticky Image Logic */
+.hv-sticky-portrait {
+    position: sticky;
+    top: 120px; /* Below header */
+    width: 100%;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+}
+
+.hv-img-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Socials Text Links */
+.hv-social-link-text {
+    display: inline-block;
+    margin-inline-end: 24px;
+    font-family: "Heebo", sans-serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--hv-stone);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.hv-social-link-text:hover {
+    color: var(--hv-lilac);
+}
+
+
+/* Responsive Hero */
+@media (max-width: 1024px) {
+    .hv-artist-hero-premium__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+
+    .hv-artist-hero-premium__content .hv-headline-1 {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hv-artist-hero-premium__grid {
+        grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column-reverse; /* Text first on mobile? Or Image? Usually Image on top is standard, but plan said "Hero Text". Let's do Image Top for recognition. */
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .hv-sticky-portrait {
+        position: relative;
+        top: 0;
+        aspect-ratio: 1/1; /* Square on mobile */
+    }
+
+    .hv-artist-hero-premium__content {
+        padding-top: 0;
+    }
+
+    .hv-artist-hero-premium__content .hv-headline-1 {
+        font-size: 3rem;
+        margin-bottom: 24px;
+    }
+}
+
+
+/* -------------------------------------------
+   SINGLE ARTIST: MASONRY GALLERY
+   ------------------------------------------- */
+
+.hv-masonry-gallery {
+    column-count: 3;
+    column-gap: 32px;
+    width: 100%;
+}
+
+.hv-masonry-item {
+    display: block;
+    margin-bottom: 32px;
+    position: relative;
+    break-inside: avoid;
+    overflow: hidden;
+}
+
+.hv-masonry-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.hv-masonry-item:hover img {
+    transform: scale(1.03);
+}
+
+.hv-masonry-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.hv-masonry-item:hover .hv-masonry-overlay {
+    opacity: 1;
+}
+
+.hv-masonry-overlay span {
+    color: var(--hv-white);
+    font-family: "Heebo", sans-serif;
+    font-size: 1rem;
+    text-align: center;
+    padding: 16px;
+}
+
+@media (max-width: 900px) {
+    .hv-masonry-gallery {
+        column-count: 2;
+        column-gap: 20px;
+    }
+    .hv-masonry-item {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hv-masonry-gallery {
+        column-count: 1;
+    }
+}
+
+
+/* -------------------------------------------
+   SINGLE ARTIST: SHOP PREMIUM
+   ------------------------------------------- */
+
+.hv-artist-shop-premium {
+    border-top: 1px solid var(--hv-border-light);
+}
+
+.hv-link-view-all {
+    font-family: "Heebo", sans-serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--hv-petrol);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.hv-link-view-all:hover {
+    color: var(--hv-lilac);
+    border-color: var(--hv-lilac);
+}
+
+.hv-product-grid-premium {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+}
+
+.hv-product-card-minimal {
+    display: block;
+}
+
+.hv-product-card-minimal__link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.hv-product-card-minimal__image {
+    position: relative;
+    aspect-ratio: 1/1;
+    background: var(--hv-white);
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.hv-product-card-minimal__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.hv-product-card-minimal:hover .hv-product-card-minimal__image img {
+    transform: scale(1.05);
+}
+
+.hv-product-card-minimal__details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hv-product-card-minimal__title {
+    font-family: "Heebo", sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--hv-petrol);
+    margin: 0;
+}
+
+.hv-product-card-minimal__price {
+    font-family: "Heebo", sans-serif;
+    font-size: 0.9rem;
+    color: var(--hv-stone);
+}
+
+@media (max-width: 1024px) {
+    .hv-product-grid-premium {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .hv-product-grid-premium {
+        grid-template-columns: 1fr;
+    }
+}
+

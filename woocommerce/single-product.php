@@ -61,7 +61,7 @@ while ( have_posts() ) :
                     <span class="hv-service-single-hero__label">
                         <?php echo esc_html( $is_hebrew ? 'יצירת אמנות' : 'Artwork' ); ?>
                     </span>
-                    <h1 class="hv-service-single-hero__title">
+                    <h1 class="hv-service-single-hero__title" style="view-transition-name: header-text;">
                         <?php echo esc_html( function_exists( 'handandvision_product_title' ) ? handandvision_product_title( get_the_ID() ) : get_the_title() ); ?>
                     </h1>
                 </div>

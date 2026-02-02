@@ -167,26 +167,92 @@
 
 		open: function (index) {
 			if (!this.images.length || index < 0 || index >= this.images.length) return;
+
 			this.previousActiveElement = document.activeElement;
 			this.currentIndex = index;
-			this.updateImage();
-			this.overlay.classList.add("active");
-			document.body.style.overflow = "hidden";
-			const closeBtn = this.overlay.querySelector(".hv-lightbox-close");
-			if (closeBtn) closeBtn.focus();
-			A11yUtils.announce("Image lightbox opened. Use arrow keys to navigate, Escape to close.");
+
+			const self = this;
+			const openLogic = () => {
+				self.updateImage();
+				self.overlay.classList.add("active");
+				document.body.style.overflow = "hidden";
+				const closeBtn = self.overlay.querySelector(".hv-lightbox-close");
+				if (closeBtn) closeBtn.focus();
+				A11yUtils.announce("Image lightbox opened. Use arrow keys to navigate, Escape to close.");
+			};
+
+			// View Transition Support
+			if (document.startViewTransition) {
+				// 1. Find the source thumbnail that triggered this
+				// Use a heuristic or data attribute if we stored it,
+				// or find an image with matching src in the document
+				const currentSrc = this.images[index].src;
+				const thumb = Array.from(document.querySelectorAll('a[href="' + currentSrc + '"] img, img[src="' + currentSrc + '"]')).pop();
+
+				if (thumb) {
+					// Set temporary names
+					thumb.style.viewTransitionName = 'lightbox-img';
+					this.image.style.viewTransitionName = 'lightbox-img';
+
+					const transition = document.startViewTransition(() => {
+						openLogic();
+						// Remove name from thumb during transition so it doesn't stay
+						thumb.style.viewTransitionName = '';
+					});
+
+					transition.finished.finally(() => {
+						// Cleanup lightbox name after transition
+						this.image.style.viewTransitionName = '';
+					});
+				} else {
+					openLogic();
+				}
+			} else {
+				openLogic();
+			}
 		},
 
 		close: function () {
-			this.overlay.classList.remove("active");
-			document.body.style.overflow = "";
+			const self = this;
+			const closeLogic = () => {
+				self.overlay.classList.remove("active");
+				document.body.style.overflow = "";
+				if (self.previousActiveElement) {
+					self.previousActiveElement.focus();
+				}
+				A11yUtils.announce("Lightbox closed");
+			};
 
-			// Return focus to the element that opened the lightbox
-			if (this.previousActiveElement) {
-				this.previousActiveElement.focus();
+			if (document.startViewTransition && this.overlay.classList.contains("active")) {
+				// Find target thumbnail again
+				const currentSrc = this.image.src;
+				// Need to strip host if absolute vs relative issues occur, but usually exact match works for lightbox links
+				// We look for a link pointing to this image, and find its inner img
+				const thumbLink = document.querySelector('a[href="' + currentSrc + '"]');
+				const thumb = thumbLink ? thumbLink.querySelector('img') : null;
+
+				if (thumb) {
+					// Apply names for the closing transition
+					thumb.style.viewTransitionName = 'lightbox-img';
+					this.image.style.viewTransitionName = 'lightbox-img';
+
+					const transition = document.startViewTransition(() => {
+						closeLogic();
+						// In the new state (closed), the lightbox image is gone (or hidden),
+						// and the thumb is visible.
+						// The API handles the morph from 'lightbox-img' (overlay) to 'lightbox-img' (thumb).
+					});
+
+					transition.finished.finally(() => {
+						thumb.style.viewTransitionName = '';
+						this.image.style.viewTransitionName = '';
+					});
+				} else {
+					closeLogic();
+				}
+			} else {
+				closeLogic();
 			}
-
-			A11yUtils.announce("Lightbox closed");
 		},
 
 		prev: function () {

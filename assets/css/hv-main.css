@@ -2852,12 +2852,16 @@ body.hv-hero-layout-page #content > .hv-full-width-wrapper {
 	width: 100% !important;
 	padding: 0 !important;
 	margin: 0 !important;
+	padding-top: 0 !important;
+	margin-top: 0 !important;
 }
 body.hv-hero-layout-page #primary.hv-hero-layout {
 	width: 100% !important;
 	max-width: 100% !important;
 	padding: 0 !important;
 	margin: 0 !important;
+	padding-top: 0 !important;
+	margin-top: 0 !important;
 	float: none !important;
 	flex: none !important;
 }
