@@ -91,7 +91,7 @@ function handandvision_register_service_post_type() {
         'public'             => true,
         'has_archive'        => true,
         'rewrite'            => [ 'slug' => 'services' ],
-        'supports'           => [ 'title', 'thumbnail', 'page-attributes' ],
+        'supports'           => [ 'title', 'editor', 'excerpt', 'thumbnail', 'page-attributes' ],
         'menu_icon'          => 'dashicons-art',
         'show_in_rest'       => true,
     ] );

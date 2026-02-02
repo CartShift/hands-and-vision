@@ -114,40 +114,19 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
                 foreach ( $display_services as $i => $service_item ) :
                     if ( ! is_object( $service_item ) ) continue;
                     $s_title = get_the_title( $service_item->ID );
-                    $s_desc  = get_the_excerpt( $service_item->ID );
-                    if ( empty( $s_desc ) ) {
-                        $s_desc = wp_trim_words( $service_item->post_content, 15 );
-                    }
+                    $s_desc  = get_field( 'service_short_description', $service_item->ID );
+                    if ( empty( $s_desc ) ) $s_desc = get_the_excerpt( $service_item->ID );
+                    if ( empty( $s_desc ) ) $s_desc = wp_trim_words( get_post_field( 'post_content', $service_item->ID ), 20 );
                     if ( ! handandvision_is_hebrew() ) {
                         $en_title = get_field( 'service_title_en', $service_item->ID );
                         $en_desc  = get_field( 'service_desc_en', $service_item->ID );
                         if ( ! empty( $en_title ) ) $s_title = $en_title;
                         if ( ! empty( $en_desc ) ) $s_desc = $en_desc;
                     }
-                    $s_icon   = get_field( 'service_icon', $service_item->ID ) ?: '◇';
-                    $s_link   = get_permalink( $service_item->ID );
-                    $s_img_id = 0;
-                    $s_img_field = get_field( 'service_hero_image', $service_item->ID );
-                    if ( $s_img_field && is_array( $s_img_field ) && ! empty( $s_img_field['ID'] ) ) {
-                        $s_img_id = (int) $s_img_field['ID'];
-                    } elseif ( is_numeric( $s_img_field ) ) {
-                        $s_img_id = (int) $s_img_field;
-                    } else {
-                        $s_img_id = (int) get_post_thumbnail_id( $service_item->ID );
-                    }
-                    $s_image_html = $s_img_id ? wp_get_attachment_image( $s_img_id, 'medium_large', false, array( 'loading' => 'lazy' ) ) : '';
-                    $s_image_url  = ( ! $s_img_id && $s_img_field && is_string( $s_img_field ) ) ? $s_img_field : '';
+                    $s_link = get_permalink( $service_item->ID );
                 ?>
                     <article class="hv-service-card">
-                        <?php if ( $s_image_html ) : ?>
-                            <div class="hv-service-card__media"><?php echo wp_kses_post( $s_image_html ); ?></div>
-                        <?php elseif ( $s_image_url ) : ?>
-                            <div class="hv-service-card__media">
-                                <img src="<?php echo esc_url( $s_image_url ); ?>" alt="<?php echo esc_attr( $s_title ); ?>" loading="lazy">
-                            </div>
-                        <?php else : ?>
-                            <span class="hv-service-card__icon" aria-hidden="true"><?php echo esc_html( $s_icon ); ?></span>
-                        <?php endif; ?>
+                        <span class="hv-service-card__icon"><?php echo handandvision_get_service_icon_svg( $i ); ?></span>
                         <h3 class="hv-service-card__title"><?php echo esc_html( $s_title ); ?></h3>
                         <p class="hv-service-card__desc"><?php echo esc_html( $s_desc ); ?></p>
                         <a href="<?php echo esc_url( $s_link ); ?>" class="hv-service-card__link">

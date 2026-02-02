@@ -290,6 +290,8 @@ require_once ASTRA_THEME_DIR . 'inc/ajax-handlers/contact-form.php';
 
 // Gallery Helpers
 require_once ASTRA_THEME_DIR . 'inc/gallery-helpers.php';
+// Service Helpers (icon SVGs)
+require_once ASTRA_THEME_DIR . 'inc/service-helpers.php';
 
 // Custom Breadcrumbs
 require_once ASTRA_THEME_DIR . 'inc/breadcrumb-helpers.php';
