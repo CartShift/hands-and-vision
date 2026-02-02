@@ -1,0 +1,18 @@
+## Directories to ignore
+.git/
+.github/
+.vscode/
+node_modules/
+bin/
+
+## Files to ignore
+.gitignore
+.cursorrules
+.DS_Store
+package.json
+package-lock.json
+composer.json
+composer.lock
+GEMINI.md
+README.md
+*.log
