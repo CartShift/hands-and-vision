@@ -21,7 +21,7 @@ $artists = get_posts( array(
 ));
 ?>
 
-<main id="primary" class="hv-archive-page hv-artists-archive">
+<main id="primary" class="hv-hero-layout hv-archive-page hv-artists-archive">
 
 <?php
 $is_hebrew = handandvision_is_hebrew();

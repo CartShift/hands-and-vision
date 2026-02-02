@@ -37,7 +37,7 @@ if ( ! $services ) {
 $total_services = count( $services );
 ?>
 
-<main id="primary" class="hv-services-page">
+<main id="primary" class="hv-hero-layout hv-services-page">
 
 <?php
 get_template_part( 'template-parts/hero/page-hero', null, array(

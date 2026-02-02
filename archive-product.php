@@ -18,7 +18,7 @@ if ( ! function_exists( 'handandvision_is_hebrew' ) ) {
 $is_hebrew = handandvision_is_hebrew();
 ?>
 
-<main id="primary" class="hv-shop-page">
+<main id="primary" class="hv-hero-layout hv-shop-page">
 
 <?php
 get_template_part( 'template-parts/hero/page-hero', null, array(

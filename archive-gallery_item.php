@@ -53,7 +53,7 @@ if ($gallery_items->have_posts()) {
 $is_hebrew = handandvision_is_hebrew();
 ?>
 
-<main class="hv-gallery-page" id="gallery-content">
+<main id="primary" class="hv-hero-layout hv-gallery-page">
 
 <?php
 get_template_part( 'template-parts/hero/page-hero', null, array(

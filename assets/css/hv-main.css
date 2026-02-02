@@ -30,6 +30,7 @@
 	--hv-header-height: 80px;
 	--hv-hero-padding-top: 0;
 	--hv-hero-padding-bottom: 48px;
+	--hv-page-section-padding-top: 100px;
 }
 html,
 body {
@@ -608,7 +609,7 @@ html[dir="rtl"] .hv-lightbox-next {
 
 .hv-footer__grid {
 	display: grid !important;
-	grid-template-columns: 1.5fr 1fr 1fr 1fr !important;
+	grid-template-columns: 1.5fr 1fr 1fr !important;
 	gap: 48px !important;
 	width: 100%;
 	max-width: 1400px !important;
@@ -651,6 +652,21 @@ html[dir="rtl"] .hv-lightbox-next {
 
 	.hv-footer__legal {
 		justify-content: center !important;
+		flex-wrap: wrap !important;
+	}
+}
+
+@media (max-width: 480px) {
+	.hv-footer {
+		padding: 48px 16px 20px !important;
+	}
+
+	.hv-footer__legal {
+		gap: 8px !important;
+	}
+
+	.hv-footer__legal span {
+		white-space: nowrap !important;
 	}
 }
 
@@ -767,6 +783,25 @@ html[dir="rtl"] .hv-lightbox-next {
 		flex-direction: column !important;
 		gap: 16px !important;
 		text-align: center !important;
+	}
+
+	.hv-footer__legal {
+		flex-wrap: wrap !important;
+		justify-content: center !important;
+	}
+}
+
+@media (max-width: 480px) {
+	.hv-footer {
+		padding: 48px 16px 20px !important;
+	}
+
+	.hv-footer__legal {
+		gap: 8px !important;
+	}
+
+	.hv-footer__legal span {
+		white-space: nowrap !important;
 	}
 }
 
@@ -2801,36 +2836,39 @@ img {
 	width: 100% !important;
 }
 
-/* Archive Pages Full Width */
-.archive.post-type-archive-service #content,
-.archive.post-type-archive-artist #content,
-.archive.post-type-archive-gallery_item #content,
-body.hv-archive-body #content {
+/* Hero layout pages: Services, Artists, Shop, Contact, Gallery – same layout */
+body.hv-hero-layout-page #content,
+body.hv-hero-layout-page #content.site-content {
 	width: 100% !important;
 	max-width: 100% !important;
 	padding: 0 !important;
 	margin: 0 !important;
 	display: block !important;
 }
-
-.archive.post-type-archive-service #content > .ast-container,
-.archive.post-type-archive-artist #content > .ast-container,
-.archive.post-type-archive-gallery_item #content > .ast-container,
-body.hv-archive-body #content > .ast-container {
+body.hv-hero-layout-page #content > .ast-container,
+body.hv-hero-layout-page #content > .hv-full-width-wrapper {
 	display: block !important;
 	max-width: 100% !important;
 	width: 100% !important;
 	padding: 0 !important;
 	margin: 0 !important;
 }
-
-#primary.hv-archive-page {
+body.hv-hero-layout-page #primary.hv-hero-layout {
 	width: 100% !important;
 	max-width: 100% !important;
 	padding: 0 !important;
 	margin: 0 !important;
 	float: none !important;
 	flex: none !important;
+}
+body.hv-hero-layout-page .hv-hero + .hv-services-showcase {
+	padding-top: var(--hv-page-section-padding-top);
+}
+body.hv-hero-layout-page .hv-hero + .hv-gallery-controls {
+	padding-top: var(--hv-page-section-padding-top);
+}
+body.hv-hero-layout-page .hv-hero + .hv-section {
+	padding-top: var(--hv-page-section-padding-top);
 }
 
 /* Hide Astra defaults on homepage */
@@ -4814,7 +4852,7 @@ ul.hv-nav-menu a,
 
 .hv-footer__grid {
 	display: grid !important;
-	grid-template-columns: 1.5fr 1fr 1fr 1fr !important;
+	grid-template-columns: 1.5fr 1fr 1fr !important;
 	gap: 48px !important;
 	max-width: 1400px !important;
 	margin: 0 auto 60px !important;
@@ -4932,6 +4970,25 @@ ul.hv-nav-menu a,
 		flex-direction: column !important;
 		gap: 16px !important;
 		text-align: center !important;
+	}
+
+	.hv-footer__legal {
+		flex-wrap: wrap !important;
+		justify-content: center !important;
+	}
+}
+
+@media (max-width: 480px) {
+	.hv-footer {
+		padding: 48px 16px 20px !important;
+	}
+
+	.hv-footer__legal {
+		gap: 8px !important;
+	}
+
+	.hv-footer__legal span {
+		white-space: nowrap !important;
 	}
 }
 
@@ -6853,6 +6910,10 @@ html[dir="rtl"] .hv-services-cards .hv-service-card:hover .hv-service-card__btn 
 	grid-template-columns: repeat(4, 1fr);
 	gap: 32px;
 	padding-bottom: 80px;
+}
+
+.hv-artists-archive .hv-artist-card__name {
+	white-space: nowrap !important;
 }
 
 /* Base Card Style if missing or specific override */

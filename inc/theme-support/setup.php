@@ -78,12 +78,17 @@ function handandvision_get_logo_url() {
  * @return string Container class
  */
 function handandvision_get_container_class() {
-    // Pages, Archives, and Custom Post Types should be full width
-    // The internal content will handle its own containment (e.g. .hv-container)
     if ( is_page() || is_archive() || is_home() || is_singular( [ 'artist', 'service', 'gallery_item', 'product' ] ) ) {
         return 'hv-full-width-wrapper';
     }
-
-    // Default fallback (e.g. single blog posts if standard)
     return 'ast-container';
 }
+
+function handandvision_hero_layout_body_class( $classes ) {
+    if ( is_post_type_archive( 'service' ) || is_post_type_archive( 'artist' ) || is_post_type_archive( 'product' )
+        || is_post_type_archive( 'gallery_item' ) || is_page_template( 'page-contact.php' ) ) {
+        $classes[] = 'hv-hero-layout-page';
+    }
+    return $classes;
+}
+add_filter( 'body_class', 'handandvision_hero_layout_body_class' );

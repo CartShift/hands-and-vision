@@ -162,6 +162,7 @@
 	--hv-space-6: 32px;
 	--hv-hero-padding-top: 0;
 	--hv-hero-padding-bottom: 48px;
+	--hv-page-section-padding-top: 100px;
 }
 
 *,
@@ -178,6 +179,31 @@ html {
 }
 #content.site-content {
 	padding-top: var(--hv-header-height) !important;
+}
+.hv-hero-layout {
+	width: 100% !important;
+	max-width: 100% !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	background: var(--hv-white) !important;
+	overflow-x: hidden;
+	display: block !important;
+	min-height: 0;
+}
+.hv-hero-layout.hv-shop-page,
+.hv-hero-layout.hv-gallery-page,
+.hv-hero-layout.hv-services-page {
+	background: var(--hv-white) !important;
+	padding-bottom: 0 !important;
+}
+.hv-hero-layout.hv-gallery-page {
+	min-height: 0 !important;
+	display: block !important;
+	flex-direction: unset !important;
+}
+.hv-hero-layout > .hv-hero:first-child {
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
 }
 .hv-hero {
 	margin-top: 0 !important;
@@ -3098,36 +3124,39 @@ img {
 	width: 100% !important;
 }
 
-/* Archive Pages Full Width */
-.archive.post-type-archive-service #content,
-.archive.post-type-archive-artist #content,
-.archive.post-type-archive-gallery_item #content,
-body.hv-archive-body #content {
+/* Hero layout pages: Services, Artists, Shop, Contact, Gallery – same layout */
+body.hv-hero-layout-page #content,
+body.hv-hero-layout-page #content.site-content {
 	width: 100% !important;
 	max-width: 100% !important;
 	padding: 0 !important;
 	margin: 0 !important;
 	display: block !important;
 }
-
-.archive.post-type-archive-service #content > .ast-container,
-.archive.post-type-archive-artist #content > .ast-container,
-.archive.post-type-archive-gallery_item #content > .ast-container,
-body.hv-archive-body #content > .ast-container {
+body.hv-hero-layout-page #content > .ast-container,
+body.hv-hero-layout-page #content > .hv-full-width-wrapper {
 	display: block !important;
 	max-width: 100% !important;
 	width: 100% !important;
 	padding: 0 !important;
 	margin: 0 !important;
 }
-
-#primary.hv-archive-page {
+body.hv-hero-layout-page #primary.hv-hero-layout {
 	width: 100% !important;
 	max-width: 100% !important;
 	padding: 0 !important;
 	margin: 0 !important;
 	float: none !important;
 	flex: none !important;
+}
+body.hv-hero-layout-page .hv-hero + .hv-services-showcase {
+	padding-top: var(--hv-page-section-padding-top);
+}
+body.hv-hero-layout-page .hv-hero + .hv-gallery-controls {
+	padding-top: var(--hv-page-section-padding-top);
+}
+body.hv-hero-layout-page .hv-hero + .hv-section {
+	padding-top: var(--hv-page-section-padding-top);
 }
 
 /* Hide Astra defaults on homepage */
@@ -6905,6 +6934,10 @@ html[dir="rtl"] .hv-services-cards .hv-service-card:hover .hv-service-card__btn 
 	grid-template-columns: repeat(4, 1fr);
 	gap: 32px;
 	padding-bottom: 80px;
+}
+
+.hv-artists-archive .hv-artist-card__name {
+	white-space: nowrap !important;
 }
 
 /* Base Card Style if missing or specific override */

@@ -64,25 +64,18 @@ $current_year = date( 'Y' );
             <div class="hv-footer__column">
                 <h4 class="hv-footer__heading"><?php echo esc_html( handandvision_is_hebrew() ? 'שירותים' : 'Services' ); ?></h4>
                 <ul class="hv-footer__links">
-                    <li><a href="<?php echo esc_url( get_post_type_archive_link( 'service' ) ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'אוצרות אמנות' : 'Art Curation' ); ?></a></li>
-                    <li><a href="<?php echo esc_url( get_post_type_archive_link( 'service' ) ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'עיצוב תערוכות' : 'Exhibition Design' ); ?></a></li>
-                    <li><a href="<?php echo esc_url( get_post_type_archive_link( 'service' ) ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'ייעוץ אמנותי' : 'Art Consultancy' ); ?></a></li>
-                    <li><a href="<?php echo esc_url( get_post_type_archive_link( 'service' ) ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'ייצוג אמנים' : 'Artist Representation' ); ?></a></li>
+                    <?php
+                    $services = get_posts( [
+                        'post_type'      => 'service',
+                        'posts_per_page' => 5,
+                        'orderby'        => 'menu_order',
+                        'order'          => 'ASC',
+                    ] );
+                    foreach ( $services as $service ) :
+                        ?>
+                        <li><a href="<?php echo esc_url( get_permalink( $service->ID ) ); ?>"><?php echo esc_html( $service->post_title ); ?></a></li>
+                    <?php endforeach; ?>
                 </ul>
-            </div>
-
-            <!-- Contact Column -->
-            <div class="hv-footer__column">
-                <h4 class="hv-footer__heading"><?php echo esc_html( handandvision_is_hebrew() ? 'יצירת קשר' : 'Contact' ); ?></h4>
-                <ul class="hv-footer__links">
-                    <li><?php echo esc_html( handandvision_is_hebrew() ? 'רחוב דיזנגוף 123' : '123 Dizengoff St' ); ?></li>
-                    <li><?php echo esc_html( handandvision_is_hebrew() ? 'תל אביב, ישראל' : 'Tel Aviv, Israel' ); ?></li>
-                    <li><a href="tel:03-555-1234">03-555-1234</a></li>
-                    <li><a href="mailto:hello@handandvision.co.il">hello@handandvision.co.il</a></li>
-                </ul>
-                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-btn hv-btn--ghost hv-footer__cta hv-mt-4">
-                    <?php echo esc_html( handandvision_is_hebrew() ? 'צרו קשר' : 'Get in Touch' ); ?>
-                </a>
             </div>
 
         </div>
