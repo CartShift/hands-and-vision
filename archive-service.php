@@ -12,6 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 
+// Check if handandvision_is_hebrew exists, if not create a fallback
+if ( ! function_exists( 'handandvision_is_hebrew' ) ) {
+    function handandvision_is_hebrew() {
+        return false;
+    }
+}
+
 // Safely get services
 $services = get_posts( array(
     'post_type'      => 'service',
@@ -35,9 +42,9 @@ if ( ! $services ) {
                 <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
                 <div class="hv-service-hero-archive__content">
                     <div class="hv-service-hero-archive__label">
-                        <?php 
+                        <?php
                         $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
-                        if ( $is_hebrew ) : 
+                        if ( $is_hebrew ) :
                         ?>
                             <span class="hv-fade-in">שירותים</span>
                             <span class="hv-fade-in" style="animation-delay: 0.1s;">·</span>
@@ -53,9 +60,9 @@ if ( ! $services ) {
                         <?php endif; ?>
                     </div>
                     <h1 class="hv-service-hero-archive__title">
-                        <?php 
+                        <?php
                         $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
-                        echo esc_html( $is_hebrew ? 'שירותים מקצועיים לעולם האמנות' : 'Professional Services for the Art World' ); 
+                        echo esc_html( $is_hebrew ? 'שירותים מקצועיים לעולם האמנות' : 'Professional Services for the Art World' );
                         ?>
                     </h1>
                     <p class="hv-service-hero-archive__desc">
@@ -75,12 +82,12 @@ if ( ! $services ) {
                     // Safely get ACF fields
                     $service_image = function_exists( 'get_field' ) ? get_field( 'service_hero_image', $service->ID ) : false;
                     $image_url = ( is_array( $service_image ) && isset( $service_image['url'] ) ) ? $service_image['url'] : get_the_post_thumbnail_url( $service->ID, 'large' );
-                    
+
                     $short_desc_acf = function_exists( 'get_field' ) ? get_field( 'service_short_description', $service->ID ) : '';
                     $short_desc = $short_desc_acf ?: wp_trim_words( $service->post_content, 18 );
-                    
+
                     $service_title = $service->post_title;
-                    
+
                     // Handle language-specific fields
                     if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew() ) {
                         if ( function_exists( 'get_field' ) ) {
@@ -107,10 +114,7 @@ if ( ! $services ) {
                                 <h2 class="hv-service-card-archive__title"><?php echo esc_html( $service_title ); ?></h2>
                                 <p class="hv-service-card-archive__desc"><?php echo esc_html( $short_desc ); ?></p>
                                 <span class="hv-service-card-archive__arrow">
-                                    <?php 
-                                    $arrow_is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
-                                    if ( $arrow_is_hebrew ) : 
-                                    ?>
+                                    <?php if ( handandvision_is_hebrew() ) : ?>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                                             <line x1="19" y1="12" x2="5" y2="12"></line>
                                             <polyline points="12 19 5 12 12 5"></polyline>
@@ -134,18 +138,17 @@ if ( ! $services ) {
     <section class="hv-services-cta">
         <div class="hv-container hv-container--narrow">
             <div class="hv-services-cta__content">
-                <?php $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false; ?>
                 <span class="hv-services-cta__label">
-                    <?php echo esc_html( $is_hebrew ? 'בואו נדבר' : 'Let's Talk' ); ?>
+                    <?php echo esc_html( handandvision_is_hebrew() ? 'בואו נדבר' : 'Let's Talk' ); ?>
                 </span>
                 <h2 class="hv-services-cta__title">
-                    <?php echo esc_html( $is_hebrew ? 'מוכנים להתחיל?' : 'Ready to Begin?' ); ?>
+                    <?php echo esc_html( handandvision_is_hebrew() ? 'מוכנים להתחיל?' : 'Ready to Begin?' ); ?>
                 </h2>
                 <p class="hv-services-cta__desc">
-                    <?php echo esc_html( $is_hebrew ? 'נשמח לשמוע על הפרויקט שלכם ולבנות יחד את הדרך קדימה' : 'We'd love to hear about your project and build the path forward together' ); ?>
+                    <?php echo esc_html( handandvision_is_hebrew() ? 'נשמח לשמוע על הפרויקט שלכם ולבנות יחד את הדרך קדימה' : 'We'd love to hear about your project and build the path forward together' ); ?>
                 </p>
                 <a href="<?php echo esc_url( function_exists( 'handandvision_get_contact_url' ) ? handandvision_get_contact_url() : home_url( '/contact' ) ); ?>" class="hv-services-cta__btn">
-                    <?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Get in Touch' ); ?>
+                    <?php echo esc_html( handandvision_is_hebrew() ? 'צרו קשר' : 'Get in Touch' ); ?>
                 </a>
             </div>
         </div>
