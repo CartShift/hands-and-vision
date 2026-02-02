@@ -825,60 +825,7 @@
 	});
 })();
 
-/**
- * Network Status Detection (Outside IIFE for global access)
- */
-(function () {
-	const NetworkStatus = {
-		init() {
-			this.createOfflineNotice();
-			this.bindEvents();
-			if (navigator.onLine) this.hideNotice();
-			else this.showNotice();
-		},
 
-		createOfflineNotice() {
-			const notice = document.createElement("div");
-			notice.className = "hv-offline-notice";
-			notice.setAttribute("role", "alert");
-			notice.setAttribute("aria-live", "polite");
-			// Use localized message from WordPress, with fallback
-			const offlineMsg =
-				typeof hv_i18n !== "undefined" && hv_i18n.offline_message
-					? hv_i18n.offline_message
-					: document.documentElement.lang === "he"
-						? "אין חיבור לאינטרנט. חלק מהתכנים עשויים לא להיות זמינים."
-						: "You are offline. Some content may not be available.";
-			notice.innerHTML = `
-			 <span class="hv-offline-notice__icon" aria-hidden="true">📡</span>
-			<span class="hv-offline-notice__text">${offlineMsg}</span>
-		`;
-			document.body.appendChild(notice);
-			this.notice = notice;
-		},
-
-		bindEvents() {
-			window.addEventListener("online", () => this.hideNotice());
-			window.addEventListener("offline", () => this.showNotice());
-		},
-
-		showNotice() {
-			if (this.notice) {
-				this.notice.classList.add("is-visible");
-			}
-		},
-
-		hideNotice() {
-			if (this.notice) {
-				this.notice.classList.remove("is-visible");
-			}
-		}
-	};
-
-	document.addEventListener("DOMContentLoaded", () => {
-		NetworkStatus.init();
-	});
-})();
 
 /**
  * Gallery Filter Logic

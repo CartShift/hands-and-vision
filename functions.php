@@ -701,12 +701,8 @@ function handandvision_enqueue_custom_assets() {
         null
     );
 
-    wp_enqueue_style(
-        'handandvision-unified',
-        $theme_uri . '/assets/css/hv-unified.css',
-        array(),
-        HV_THEME_VERSION
-    );
+    // We point 'astra-theme-css' to our unified file via filter (see below)
+    // to avoid duplicate loading and fix the 404 errors for missing assets.
 
 
 
@@ -748,13 +744,19 @@ function handandvision_enqueue_custom_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'handandvision_enqueue_custom_assets' );
 
-function handandvision_astra_rtl_css_fallback( $src, $handle ) {
-	if ( 'astra-theme-css' === $handle && $src && strpos( $src, 'main.min-rtl.css' ) !== false ) {
-		$src = str_replace( 'main.min-rtl.css', 'main.min.css', $src );
-	}
-	return $src;
+/**
+ * Fix Astra 404 for missing minified assets by pointing 'astra-theme-css' to our unified CSS.
+ * This also ensures RTL support as hv-unified.css includes it.
+ */
+function handandvision_astra_style_fix( $src, $handle ) {
+    if ( 'astra-theme-css' === $handle ) {
+        if ( strpos( $src, 'assets/css/minified/' ) !== false ) {
+            return get_stylesheet_directory_uri() . '/assets/css/hv-unified.css';
+        }
+    }
+    return $src;
 }
-add_filter( 'style_loader_src', 'handandvision_astra_rtl_css_fallback', 10, 2 );
+add_filter( 'style_loader_src', 'handandvision_astra_style_fix', 20, 2 );
 
 /**
  * Get current language (HE or EN)
@@ -1228,3 +1230,5 @@ function handandvision_get_container_class() {
     // Default fallback (e.g. single blog posts if standard)
     return 'ast-container';
 }
+
+

@@ -770,7 +770,7 @@ html[dir="rtl"] .hv-lightbox-next {
 	align-items: center;
 	justify-content: center;
 	overflow: hidden;
-	background: #6a8de3 !important;
+	background: #0a0a0b !important; /* Dark neutral background for luxury feel */
 }
 
 .hv-hero-video__media {
@@ -802,7 +802,7 @@ html[dir="rtl"] .hv-lightbox-next {
 	inset: 0;
 	width: 100%;
 	height: 100%;
-	background: radial-gradient(ellipse at center, rgba(36, 77, 103, 0.75) 0%, rgba(36, 77, 103, 0.88) 40%, rgba(20, 40, 60, 0.92) 100%);
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.8) 100%);
 	z-index: 2;
 }
 
@@ -874,17 +874,18 @@ html[dir="rtl"] .hv-lightbox-next {
 .hv-hero-video .hv-display,
 .hv-hero-video h1.hv-display,
 .hv-hero-video .hv-hero-title-v2 {
-	white-space: nowrap !important;
+	white-space: normal !important;
+	word-break: keep-all;
 }
 
 .hv-hero-video .hv-display {
 	color: #ffffff;
 	font-family: "Heebo", sans-serif;
-	font-size: clamp(3rem, 7vw, 6.5rem);
+	font-size: clamp(2.5rem, 8vw, 6rem);
 	font-weight: 200;
-	letter-spacing: 0.25em;
-	margin-bottom: 0;
-	line-height: 1.1;
+	letter-spacing: 0.15em; /* Slightly reduced for better readability */
+	margin-bottom: 0.2rem;
+	line-height: 1;
 	opacity: 0;
 	animation: hvSlideInTitle 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
 	text-shadow:
@@ -908,13 +909,13 @@ html[dir="rtl"] .hv-lightbox-next {
 .hv-hero-subtitle-v2 {
 	display: block;
 	font-family: "Heebo", sans-serif;
-	font-size: clamp(1.2rem, 2vw, 1.5rem);
-	font-weight: 300;
-	letter-spacing: 0.5em;
-	color: #c7b2e0;
-	text-transform: lowercase;
-	margin-top: 10px;
-	margin-bottom: 32px;
+	font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+	font-weight: 400;
+	letter-spacing: 1em; /* Extra airy for the "collective" tagline */
+	color: #ffffff;
+	text-transform: uppercase; /* More premium uppercase */
+	margin-top: 0;
+	margin-bottom: 40px;
 	opacity: 0;
 	animation: hvFadeInUp 0.8s ease-out 0.4s forwards;
 	text-shadow: 0 0 20px rgba(199, 178, 224, 0.4);
@@ -945,14 +946,21 @@ html[dir="rtl"] .hv-lightbox-next {
 	animation: hvFadeInUp 0.8s ease-out 0.8s forwards;
 }
 
+.hv-hero-video__actions .hv-btn.hv-btn--primary {
+	background: #ffffff;
+	color: #1a1a1a;
+	border-color: #ffffff;
+}
+
+.hv-hero-video__actions .hv-btn.hv-btn--primary:hover {
+	background: #f0f0f0;
+	transform: translateY(-4px);
+	box-shadow: 0 12px 40px rgba(255, 255, 255, 0.15);
+}
+
 .hv-hero-video__actions .hv-btn {
 	transform: translateY(0);
 	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hv-hero-video__actions .hv-btn:hover {
-	transform: translateY(-4px);
-	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
 }
 
 .hv-hero-video__scroll {
@@ -10713,24 +10721,8 @@ border-radius: var(--hv-radius-md, 8px);
 	margin-bottom: 32px;
 }
 
-/* Offline Error State */
-.hv-offline-notice {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	padding: 16px;
-	background: #ff6b6b;
-	color: #ffffff;
-	text-align: center;
-	z-index: 100000;
-	transform: translateY(-100%);
-	transition: transform 0.3s ease;
-}
 
-.hv-offline-notice.is-visible {
-	transform: translateY(0);
-}
+
 
 /* Print Styles for Orders */
 @media print {
