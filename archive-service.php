@@ -32,10 +32,13 @@ if ( ! $services ) {
     <section class="hv-service-hero-archive">
         <div class="hv-service-hero-archive__inner">
             <div class="hv-container">
-                <?php handandvision_breadcrumbs(); ?>
+                <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
                 <div class="hv-service-hero-archive__content">
                     <div class="hv-service-hero-archive__label">
-                        <?php if ( handandvision_is_hebrew() ) : ?>
+                        <?php 
+                        $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
+                        if ( $is_hebrew ) : 
+                        ?>
                             <span class="hv-fade-in">שירותים</span>
                             <span class="hv-fade-in" style="animation-delay: 0.1s;">·</span>
                             <span class="hv-fade-in" style="animation-delay: 0.2s;">אוצרות</span>
@@ -50,10 +53,13 @@ if ( ! $services ) {
                         <?php endif; ?>
                     </div>
                     <h1 class="hv-service-hero-archive__title">
-                        <?php echo esc_html( handandvision_is_hebrew() ? 'שירותים מקצועיים לעולם האמנות' : 'Professional Services for the Art World' ); ?>
+                        <?php 
+                        $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
+                        echo esc_html( $is_hebrew ? 'שירותים מקצועיים לעולם האמנות' : 'Professional Services for the Art World' ); 
+                        ?>
                     </h1>
                     <p class="hv-service-hero-archive__desc">
-                        <?php echo esc_html( handandvision_is_hebrew() ? 'אוצרות, ייעוץ ושירותים מותאמים אישית המשלבים מקצועיות עם תשוקה לאמנות' : 'Curation, consultancy and bespoke services combining professionalism with passion for art' ); ?>
+                        <?php echo esc_html( $is_hebrew ? 'אוצרות, ייעוץ ושירותים מותאמים אישית המשלבים מקצועיות עם תשוקה לאמנות' : 'Curation, consultancy and bespoke services combining professionalism with passion for art' ); ?>
                     </p>
                 </div>
             </div>
@@ -122,17 +128,18 @@ if ( ! $services ) {
     </section>
 
     <!-- Premium CTA -->
-    <section class="hv-services-cta">
-        <div class="hv-container hv-container--narrow">
-            <div class="hv-services-cta__content">
+    <section clas?php $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false; ?>
                 <span class="hv-services-cta__label">
-                    <?php echo esc_html( handandvision_is_hebrew() ? 'בואו נדבר' : 'Let's Talk' ); ?>
+                    <?php echo esc_html( $is_hebrew ? 'בואו נדבר' : 'Let's Talk' ); ?>
                 </span>
                 <h2 class="hv-services-cta__title">
-                    <?php echo esc_html( handandvision_is_hebrew() ? 'מוכנים להתחיל?' : 'Ready to Begin?' ); ?>
+                    <?php echo esc_html( $is_hebrew ? 'מוכנים להתחיל?' : 'Ready to Begin?' ); ?>
                 </h2>
                 <p class="hv-services-cta__desc">
-                    <?php echo esc_html( handandvision_is_hebrew() ? 'נשמח לשמוע על הפרויקט שלכם ולבנות יחד את הדרך קדימה' : 'We'd love to hear about your project and build the path forward together' ); ?>
+                    <?php echo esc_html( $is_hebrew ? 'נשמח לשמוע על הפרויקט שלכם ולבנות יחד את הדרך קדימה' : 'We'd love to hear about your project and build the path forward together' ); ?>
+                </p>
+                <a href="<?php echo esc_url( function_exists( 'handandvision_get_contact_url' ) ? handandvision_get_contact_url() : home_url( '/contact' ) ); ?>" class="hv-services-cta__btn">
+                    <?php echo esc_html( $is_hebrew ? 'נשמח לשמוע על הפרויקט שלכם ולבנות יחד את הדרך קדימה' : 'We'd love to hear about your project and build the path forward together' ); ?>
                 </p>
                 <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-services-cta__btn">
                     <?php echo esc_html( handandvision_is_hebrew() ? 'צרו קשר' : 'Get in Touch' ); ?>
