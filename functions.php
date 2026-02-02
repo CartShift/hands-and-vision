@@ -701,10 +701,17 @@ function handandvision_enqueue_custom_assets() {
         null
     );
 
-    // We point 'astra-theme-css' to our unified file via filter (see below)
-    // to avoid duplicate loading and fix the 404 errors for missing assets.
+    // Unified Main CSS - everything in one file
+    wp_enqueue_style(
+        'hv-unified',
+        $theme_uri . '/assets/css/hv-unified.css',
+        array(),
+        HV_THEME_VERSION
+    );
 
-
+    // Tell WordPress that hv-unified.css already includes RTL support
+    // This prevents 404 errors when WordPress tries to find hv-unified-rtl.css
+    wp_style_add_data( 'hv-unified', 'rtl', false );
 
     wp_enqueue_script(
         'handandvision-main',
@@ -745,18 +752,36 @@ function handandvision_enqueue_custom_assets() {
 add_action( 'wp_enqueue_scripts', 'handandvision_enqueue_custom_assets' );
 
 /**
- * Fix Astra 404 for missing minified assets by pointing 'astra-theme-css' to our unified CSS.
- * This also ensures RTL support as hv-unified.css includes it.
+ * Fix Astra 404 for missing assets and redirect to our unified CSS.
+ * This ensures all Astra components use our premium styles.
  */
 function handandvision_astra_style_fix( $src, $handle ) {
-    if ( 'astra-theme-css' === $handle ) {
-        if ( strpos( $src, 'assets/css/minified/' ) !== false ) {
-            return get_stylesheet_directory_uri() . '/assets/css/hv-unified.css';
-        }
+    // Only intercept Astra's main theme styles to avoid breaking other plugins
+    if ( strpos( $handle, 'astra-theme-css' ) !== false || strpos( $handle, 'astra-woocommerce' ) !== false ) {
+        return get_stylesheet_directory_uri() . '/assets/css/hv-unified.css';
     }
     return $src;
 }
 add_filter( 'style_loader_src', 'handandvision_astra_style_fix', 20, 2 );
+
+/**
+ * Ensure Astra handles don't try to load separate -rtl files which don't exist
+ */
+function handandvision_fix_rtl_404( $handle ) {
+    if ( strpos( $handle, 'astra' ) !== false || $handle === 'hv-unified' ) {
+        wp_style_add_data( $handle, 'rtl', false );
+    }
+}
+add_action( 'wp_enqueue_scripts', function() {
+    global $wp_styles;
+    if ( ! is_a( $wp_styles, 'WP_Styles' ) ) return;
+
+    foreach ( $wp_styles->queue as $handle ) {
+        if ( strpos( $handle, 'astra' ) !== false || $handle === 'hv-unified' ) {
+            wp_style_add_data( $handle, 'rtl', false );
+        }
+    }
+}, 999 );
 
 /**
  * Get current language (HE or EN)

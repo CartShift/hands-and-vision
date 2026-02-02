@@ -49,7 +49,7 @@ if ($gallery_items->have_posts()) {
     $gallery_items->rewind_posts();
 }
 
-$is_hebrew = function_exists('pll_current_language') && pll_current_language() === 'he';
+$is_hebrew = handandvision_is_hebrew();
 ?>
 
 <main class="hv-gallery-page" id="gallery-content">

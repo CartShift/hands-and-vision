@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ruleset name="Hands and Vision">
+  <description>WordPress Coding Standards for Hands and Vision theme.</description>
+  <file>.</file>
+  <exclude-pattern>*/vendor/*</exclude-pattern>
+  <exclude-pattern>*/node_modules/*</exclude-pattern>
+  <exclude-pattern>*/languages/*</exclude-pattern>
+  <exclude-pattern>inc/lib/bsf-analytics/*</exclude-pattern>
+  <exclude-pattern>inc/lib/nps-survey/*</exclude-pattern>
+  <rule ref="WordPress">
+    <exclude name="Generic.Files.LineLength.TooLong"/>
+  </rule>
+  <config name="testVersion" value="7.4-"/>
+  <arg name="extensions" value="php"/>
+  <arg value="sp"/>
+</ruleset>
