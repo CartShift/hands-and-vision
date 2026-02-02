@@ -29,8 +29,6 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
 	'overline'   => $page_overline,
 	'title'      => $page_title_display,
 	'subtitle'   => $page_subtitle,
-	'stats'      => null,
-	'scroll_text'=> handandvision_is_hebrew() ? 'גלול ליצירת קשר' : 'Scroll to connect',
 ) );
 ?>
 

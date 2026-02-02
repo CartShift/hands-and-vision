@@ -21,8 +21,6 @@ $is_hebrew = handandvision_is_hebrew();
 <main id="primary" class="hv-shop-page">
 
 <?php
-$artist_count = wp_count_posts( 'artist' )->publish;
-$product_count = wp_count_posts( 'product' )->publish;
 get_template_part( 'template-parts/hero/page-hero', null, array(
 	'overline'   => $is_hebrew ? 'האוסף שלנו' : 'Our Collection',
 	'title'      => array(
@@ -32,11 +30,6 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
 	'subtitle'   => $is_hebrew
 		? 'גלו יצירות אמנות ייחודיות מאמנים מובילים. כל יצירה מספרת סיפור משלה ומזמינה אתכם לחוויה אומנותית ייחודית'
 		: 'Discover unique artworks from leading artists. Each piece tells its own story and invites you to a unique artistic experience',
-	'stats'      => array(
-		array( 'number' => ( $artist_count > 0 ? $artist_count : '50' ) . '+', 'label' => $is_hebrew ? 'אמנים' : 'Artists' ),
-		array( 'number' => ( $product_count > 0 ? $product_count : '200' ) . '+', 'label' => $is_hebrew ? 'יצירות' : 'Artworks' ),
-	),
-	'scroll_text'=> $is_hebrew ? 'גלול לגילוי' : 'Scroll to discover',
 ) );
 ?>
 

@@ -160,7 +160,7 @@
 	--hv-container-wide: 1400px;
 	--hv-container-narrow: 800px;
 	--hv-space-6: 32px;
-	--hv-hero-padding-top: 24px;
+	--hv-hero-padding-top: 0;
 	--hv-hero-padding-bottom: 48px;
 }
 
@@ -178,6 +178,10 @@ html {
 }
 #content.site-content {
 	padding-top: var(--hv-header-height) !important;
+}
+.hv-hero {
+	margin-top: 0 !important;
+	padding-top: 0 !important;
 }
 
 /* ==========================================
@@ -216,6 +220,21 @@ html {
 	z-index: 2;
 	width: 100%;
 	padding: var(--hv-hero-padding-top) 0 var(--hv-hero-padding-bottom);
+}
+.hv-hero .hv-container,
+.hv-services-hero .hv-container {
+	max-width: var(--hv-container-wide);
+	margin: 0 auto;
+	padding: 0 24px;
+	box-sizing: border-box;
+}
+.hv-hero .hv-breadcrumbs,
+.hv-services-hero .hv-breadcrumbs {
+	position: static !important;
+	top: auto !important;
+	inset-inline-start: auto !important;
+	margin-bottom: 16px;
+	max-width: 100%;
 }
 .hv-hero__inner,
 .hv-services-hero__inner {
@@ -280,77 +299,6 @@ html {
 	color: var(--hv-charcoal);
 	max-width: 560px;
 	margin: 0 auto 24px;
-}
-.hv-hero__stats,
-.hv-services-hero__stats {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 32px;
-	margin-top: 24px;
-}
-.hv-hero__stat,
-.hv-services-hero__stat {
-	text-align: center;
-}
-.hv-hero__stat-number,
-.hv-services-hero__stat-number {
-	display: block;
-	font-family: "Heebo", "Inter", sans-serif;
-	font-size: 1.5rem;
-	font-weight: 200;
-	color: var(--hv-petrol);
-	line-height: 1;
-	margin-bottom: 4px;
-}
-.hv-hero__stat-label,
-.hv-services-hero__stat-label {
-	display: block;
-	font-size: 0.6875rem;
-	font-weight: 500;
-	letter-spacing: 0.15em;
-	text-transform: uppercase;
-	color: var(--hv-stone);
-}
-.hv-hero__stat-divider,
-.hv-services-hero__stat-divider {
-	width: 1px;
-	height: 36px;
-	background: rgba(38, 70, 83, 0.12);
-}
-.hv-hero__scroll,
-.hv-services-hero__scroll {
-	position: absolute;
-	bottom: 24px;
-	left: 50%;
-	transform: translateX(-50%);
-	z-index: 3;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 8px;
-	color: var(--hv-stone);
-	animation: scrollBounce 2s ease-in-out infinite;
-	cursor: pointer;
-}
-.hv-hero__scroll span,
-.hv-services-hero__scroll span {
-	font-size: 0.625rem;
-	letter-spacing: 0.15em;
-	text-transform: uppercase;
-}
-.hv-hero__scroll svg,
-.hv-services-hero__scroll svg {
-	opacity: 0.5;
-}
-@keyframes scrollBounce {
-	0%,
-	100% {
-		transform: translateX(-50%) translateY(0);
-	}
-	50% {
-		transform: translateX(-50%) translateY(8px);
-	}
 }
 
 /* ==========================================

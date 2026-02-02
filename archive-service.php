@@ -49,11 +49,6 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
 	'subtitle'   => $is_hebrew
 		? 'אנו מציעים מגוון שירותים מותאמים אישית לעולם האמנות – מאוצרות תערוכות ועד ייעוץ איסוף, הכל עם תשוקה למצוינות.'
 		: 'We offer a range of bespoke services for the art world — from exhibition curation to collection advisory, all with a passion for excellence.',
-	'stats'      => array(
-		array( 'number' => $total_services, 'label' => $is_hebrew ? 'שירותים' : 'Services' ),
-		array( 'number' => '∞', 'label' => $is_hebrew ? 'אפשרויות' : 'Possibilities' ),
-	),
-	'scroll_text'=> $is_hebrew ? 'גלול לגילוי' : 'Scroll to discover',
 ) );
 ?>
 

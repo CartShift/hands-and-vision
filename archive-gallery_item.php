@@ -60,8 +60,6 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
 	'overline'   => $is_hebrew ? 'עבודות נבחרות' : 'Selected Works',
 	'title'      => $is_hebrew ? 'גלריה' : 'Gallery',
 	'subtitle'   => $is_hebrew ? 'עבודות נבחרות מהקולקטיב שלנו' : 'Selected works from our collective',
-	'stats'      => null,
-	'scroll_text'=> $is_hebrew ? 'גלול לגילוי' : 'Scroll to discover',
 ) );
 ?>
 

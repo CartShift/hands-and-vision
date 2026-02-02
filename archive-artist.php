@@ -31,8 +31,6 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
 	'subtitle'   => $is_hebrew
 		? 'פגשו את היוצרים המוכשרים שמרכיבים את קהילת Hand & Vision - אמנים מגוונים המביאים חזון ייחודי לכל יצירה'
 		: 'Meet the talented creators who make up the Hand & Vision community - diverse artists bringing a unique vision to every piece',
-	'stats'      => null,
-	'scroll_text'=> $is_hebrew ? 'גלול לגילוי' : 'Scroll to discover',
 ) );
 ?>
 

@@ -28,7 +28,7 @@
 }
 :root {
 	--hv-header-height: 80px;
-	--hv-hero-padding-top: 24px;
+	--hv-hero-padding-top: 0;
 	--hv-hero-padding-bottom: 48px;
 }
 html,
@@ -3345,6 +3345,21 @@ html[dir="rtl"] {
 	z-index: 2;
 	width: 100%;
 	padding: var(--hv-hero-padding-top) 0 var(--hv-hero-padding-bottom);
+}
+.hv-hero .hv-container,
+.hv-services-hero .hv-container {
+	max-width: var(--hv-container-wide, 1200px);
+	margin: 0 auto;
+	padding: 0 24px;
+	box-sizing: border-box;
+}
+.hv-hero .hv-breadcrumbs,
+.hv-services-hero .hv-breadcrumbs {
+	position: static !important;
+	top: auto !important;
+	inset-inline-start: auto !important;
+	margin-bottom: 16px;
+	max-width: 100%;
 }
 .hv-hero__inner,
 .hv-services-hero__inner {
