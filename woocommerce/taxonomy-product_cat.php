@@ -22,20 +22,8 @@ if ( ! $term || ! isset( $term->name ) ) {
 
 <main id="primary" class="hv-shop-category-archive">
 
-    <!-- Category Hero -->
-    <section class="hv-shop-hero">
-        <div class="hv-container">
-            <div class="hv-shop-hero__content hv-text-center">
-                <span class="hv-overline hv-reveal"><?php echo esc_html( $is_hebrew ? 'קטגוריה' : 'Category' ); ?></span>
-                <h1 class="hv-headline-1 hv-reveal"><?php echo esc_html( $term->name ); ?></h1>
-                <?php if ( ! empty( $term->description ) ) : ?>
-                    <p class="hv-subtitle hv-reveal" style="margin: var(--hv-space-5) auto 0; max-width: 650px;">
-                        <?php echo wp_kses_post( $term->description ); ?>
-                    </p>
-                <?php endif; ?>
-            </div>
-        </div>
-    </section>
+    <!-- Shop Filters (Tabs) -->
+    <?php get_template_part( 'template-parts/shop-filters' ); ?>
 
     <!-- Products Grid -->
     <section class="hv-shop-all">

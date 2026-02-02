@@ -85,32 +85,8 @@ $is_hebrew = handandvision_is_hebrew();
     </section>
 
     <?php
-    $all_categories = get_terms( array(
-        'taxonomy'   => 'product_cat',
-        'hide_empty' => true,
-        'exclude'    => array( get_option( 'default_product_cat', 0 ) ),
-    ) );
-    if ( ! empty( $all_categories ) && ! is_wp_error( $all_categories ) ) :
+    get_template_part( 'template-parts/shop-filters' );
     ?>
-    <section class="hv-shop-filters-wrap">
-        <div class="hv-container">
-            <nav class="hv-shop-filters hv-reveal" aria-label="<?php echo esc_attr( $is_hebrew ? 'ניווט קטגוריות' : 'Category navigation' ); ?>">
-                <div class="hv-shop-filters__categories">
-                    <a href="<?php echo esc_url( get_permalink( wc_get_page_id( 'shop' ) ) ); ?>"
-                       class="hv-filter-btn <?php echo ! is_tax( 'product_cat' ) ? 'hv-filter-btn--active' : ''; ?>">
-                        <?php echo esc_html( $is_hebrew ? 'הכל' : 'All' ); ?>
-                    </a>
-                    <?php foreach ( $all_categories as $cat ) : ?>
-                        <a href="<?php echo esc_url( get_term_link( $cat ) ); ?>"
-                           class="hv-filter-btn <?php echo ( is_tax( 'product_cat', $cat->term_id ) ) ? 'hv-filter-btn--active' : ''; ?>">
-                            <?php echo esc_html( $cat->name ); ?>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            </nav>
-        </div>
-    </section>
-    <?php endif; ?>
 
     <?php
     // Get all product categories (excluding 'uncategorized')
@@ -135,6 +111,17 @@ $is_hebrew = handandvision_is_hebrew();
                 ),
                 'post_status'    => 'publish',
             );
+
+            // Apply Artist Filter
+            if ( ! empty( $_GET['filter_artist'] ) ) {
+                $args['meta_query'] = array(
+                    array(
+                        'key'     => '_handandvision_artist_id',
+                        'value'   => absint( $_GET['filter_artist'] ),
+                        'compare' => '=',
+                    ),
+                );
+            }
 
             $products = new WP_Query( $args );
 

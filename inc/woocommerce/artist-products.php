@@ -149,3 +149,34 @@ function handandvision_invalidate_artist_products_cache( $artist_ids ) {
         delete_transient( 'hv_artist_products_' . $aid );
     }
 }
+
+/**
+ * Filter product query by artist if GET param present
+ *
+ * @param WP_Query \
+ */
+function handandvision_filter_products_by_artist_query( \ ) {
+    if ( is_admin() || ! \->is_main_query() ) {
+        return;
+    }
+    // Only target product queries (shop, category, tag)
+    if ( ! is_shop() && ! is_product_category() && ! is_product_tag() ) {
+        return;
+    }
+
+    if ( ! empty( \['filter_artist'] ) ) {
+        \ = absint( \['filter_artist'] );
+        \ = \->get( 'meta_query' );
+        if ( ! is_array( \ ) ) {
+            \ = [];
+        }
+        \[] = [
+            'key'     => '_handandvision_artist_id',
+            'value'   => \,
+            'compare' => '='
+        ];
+        \->set( 'meta_query', \ );
+    }
+}
+add_action( 'woocommerce_product_query', 'handandvision_filter_products_by_artist_query' );
+

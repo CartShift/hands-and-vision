@@ -3232,13 +3232,6 @@ html[dir="rtl"] {
 	margin-top: var(--hv-space-5);
 }
 
-/* Filter Bar */
-.hv-shop-filters {
-	margin-top: var(--hv-space-10);
-	padding-top: var(--hv-space-10);
-	border-top: 1px solid var(--hv-silver);
-}
-
 .hv-shop-filters__categories {
 	display: flex;
 	flex-wrap: wrap;

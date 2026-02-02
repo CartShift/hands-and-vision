@@ -16,7 +16,7 @@
 
 .hv-shop-hero-premium {
     position: relative;
-    min-height: 80vh; /* Slightly shorter than services 90vh */
+    min-height: 60vh; /* Matches compact unified style */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -88,7 +88,7 @@
     position: relative;
     z-index: 2;
     width: 100%;
-    padding: 180px 0 100px;
+    padding: 140px 0 80px;
 }
 
 .hv-shop-hero-premium__inner {
@@ -131,7 +131,7 @@
 .hv-shop-hero-premium__title-line {
     display: block;
     font-family: 'Heebo', 'Inter', sans-serif;
-    font-size: clamp(3rem, 7vw, 6rem);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
     font-weight: 200;
     line-height: 1.05;
     letter-spacing: -0.03em;
@@ -169,7 +169,7 @@
 .hv-shop-hero-premium__stat-number {
     display: block;
     font-family: 'Heebo', 'Inter', sans-serif;
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     font-weight: 100;
     color: var(--hv-petrol);
     line-height: 1;
@@ -243,13 +243,23 @@
 
 .hv-shop-filters {
     padding: 24px 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
 }
 
 .hv-shop-filters__categories {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 12px;
     flex-wrap: wrap;
+    flex: 1;
+}
+
+.hv-shop-filters__artist {
+    flex-shrink: 0;
 }
 
 .hv-filter-btn {
@@ -264,6 +274,7 @@
     border: 1px solid transparent;
     border-radius: 100px;
     transition: all 0.3s ease;
+    white-space: nowrap;
 }
 
 .hv-filter-btn:hover {
@@ -275,6 +286,75 @@
     color: var(--hv-white);
     background: var(--hv-petrol);
     box-shadow: 0 4px 12px rgba(37, 75, 97, 0.2);
+}
+
+/* Select Styling */
+.hv-select-wrapper {
+    position: relative;
+    min-width: 200px;
+}
+
+.hv-select {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    padding: 10px 40px 10px 20px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--hv-stone);
+    background: transparent;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.hv-select:hover, .hv-select:focus {
+    border-color: var(--hv-lilac);
+    outline: none;
+    color: var(--hv-petrol);
+}
+
+.hv-select-arrow {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--hv-stone);
+    transition: color 0.3s ease;
+}
+
+.hv-select:hover + .hv-select-arrow {
+    color: var(--hv-lilac);
+}
+
+/* RTL Support for Select */
+html[dir="rtl"] .hv-select {
+    padding: 10px 20px 10px 40px;
+}
+
+html[dir="rtl"] .hv-select-arrow {
+    right: auto;
+    left: 16px;
+}
+
+@media (max-width: 768px) {
+    .hv-shop-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .hv-shop-filters__categories {
+        justify-content: center;
+    }
+
+    .hv-shop-filters__artist {
+        width: 100%;
+    }
 }
 
 /* ==========================================================================
@@ -445,7 +525,7 @@
 
 .hv-shop-cta-premium {
     position: relative;
-    padding: 180px 0;
+    padding: 120px 0;
     background: var(--hv-warm-cream); /* Beige */
     overflow: hidden;
     color: var(--hv-petrol);
@@ -490,7 +570,7 @@
 
 .hv-shop-cta-premium__title {
     font-family: 'Heebo', sans-serif;
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-size: clamp(2rem, 4vw, 3.5rem);
     font-weight: 100;
     line-height: 1.1;
     color: var(--hv-petrol);
