@@ -40,8 +40,13 @@ $features = is_array( $features ) ? $features : array();
 
 // Normalize gallery grid items safely
 $gallery_grid_items = array();
-if ( function_exists( 'handandvision_normalize_gallery_grid_items' ) ) {
+if ( ! empty( $gallery ) && is_array( $gallery ) && function_exists( 'handandvision_normalize_gallery_grid_items' ) ) {
     $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, array() );
+}
+
+// Ensure related_artists is an array
+if ( ! is_array( $related_artists ) ) {
+    $related_artists = array();
 }
 
 // Handle language-specific title
