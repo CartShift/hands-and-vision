@@ -59,7 +59,7 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
                     <span class="hv-word-1">CURATION</span> · <span class="hv-word-2">ART</span> · <span class="hv-word-3">VISION</span>
                 <?php endif; ?>
             </span>
-            <h1 class="hv-display hv-hero-title-v2" dir="ltr"><?php echo esc_html( $hero_title ?: 'Hand and Vision' ); ?></h1>
+            <h1 class="hv-display hv-hero-title-v2" dir="ltr"><?php echo esc_html( $hero_title ?: 'HANDS AND VISION' ); ?></h1>
             <span class="hv-hero-subtitle-v2" dir="ltr">collective</span>
             <?php if ( $hero_subtitle ) : ?><p class="hv-subtitle hv-mt-0"><?php echo esc_html( $hero_subtitle ); ?></p><?php endif; ?>
             <div class="hv-hero-video__actions">
@@ -86,7 +86,7 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
             <h2 id="intro-heading" class="hv-sr-only"><?php echo esc_html( handandvision_is_hebrew() ? 'אודותינו' : 'About Us' ); ?></h2>
             <?php if ( $intro_logo_url ) : ?>
             <div class="hv-intro-logo">
-                <img src="<?php echo esc_url( $intro_logo_url ); ?>" alt="Hand and Vision" class="hv-intro-logo__img" width="160" height="80">
+                <img src="<?php echo esc_url( $intro_logo_url ); ?>" alt="Hands and Vision" class="hv-intro-logo__img" width="160" height="80">
             </div>
             <?php endif; ?>
             <?php if ( $intro_text ) : ?>
