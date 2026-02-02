@@ -149,12 +149,12 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
             <?php
             $display_artists = ! empty( $featured_artists ) ? $featured_artists : get_posts( array(
                 'post_type'      => 'artist',
-                'posts_per_page' => 4,
+                'posts_per_page' => 20,
                 'orderby'        => 'date',
                 'order'          => 'ASC',
                 'post_status'    => 'publish',
             ) );
-            $display_artists = array_slice( is_array( $display_artists ) ? $display_artists : array(), 0, 4 );
+            $display_artists = is_array( $display_artists ) ? $display_artists : array();
             ?>
             <?php if ( ! empty( $display_artists ) ) : ?>
             <div class="hv-artists-showcase-bleed">

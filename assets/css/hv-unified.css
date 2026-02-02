@@ -1195,7 +1195,7 @@ html[dir="rtl"] .hv-lightbox-next {
 
 .hv-artists-showcase {
 	display: flex;
-	justify-content: center;
+	justify-content: flex-start;
 	gap: 24px;
 	overflow-x: auto;
 	overflow-y: visible;
