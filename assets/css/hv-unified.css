@@ -7891,10 +7891,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 	max-width: 1300px;
 }
 
-.hv-breadcrumbs {
-	padding: 24px 0;
-	background: #fafbfc;
-}
+/* Legacy Breadcrumbs Removed */
 
 .woocommerce-breadcrumb {
 	font-size: 0.85rem;
@@ -8495,384 +8492,9 @@ html[dir="rtl"] .hv-gallery-filters__count {
    Elegant, professional breadcrumb navigation
    ======================================== */
 
-.hv-breadcrumbs {
-	background: #ffffff;
-    padding: 14px 0;
-    border-bottom: 1px solid #e5e7eb;
-    position: relative;
-    z-index: 100;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
-    margin-bottom: 0;
-}
+/* Legacy Breadcrumb Styles Removed - Consolidated below in Integration section */
 
-.hv-breadcrumbs::before {
-	content: "";
-	position: absolute;
-	bottom: 0;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 80%;
-	height: 1px;
-	background: linear-gradient(90deg, transparent 0%, rgba(44, 95, 45, 0.15) 50%, transparent 100%);
-	opacity: 0.6;
-}
-
-.hv-breadcrumb-trail {
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 6px;
-	font-size: 0.8125rem;
-	line-height: 1.6;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-	letter-spacing: 0.01em;
-}
-
-.hv-breadcrumb-item {
-	color: #6b7280;
-	text-decoration: none;
-	transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-	position: relative;
-	display: inline-flex;
-	align-items: center;
-	font-weight: 500;
-	padding: 4px 2px;
-}
-
-.hv-breadcrumb-item:not(.hv-breadcrumb-current) {
-	cursor: pointer;
-}
-
-.hv-breadcrumb-item:hover {
-	color: var(--hv-primary, #2c5f2d);
-}
-
-.hv-breadcrumb-item:focus {
-	outline: 2px solid var(--hv-primary, #2c5f2d);
-	outline-offset: 3px;
-	border-radius: 4px;
-}
-
-/* Home icon style */
-.hv-breadcrumb-home {
-	font-weight: 600;
-	color: #374151;
-	position: relative;
-}
-
-.hv-breadcrumb-home::after {
-	content: "";
-	position: absolute;
-	bottom: 2px;
-	left: 0;
-	right: 0;
-	height: 1px;
-	background: var(--hv-primary, #2c5f2d);
-	transform: scaleX(0);
-	transform-origin: left;
-	transition: transform 0.3s ease;
-}
-
-.hv-breadcrumb-home:hover {
-	color: var(--hv-primary, #2c5f2d);
-}
-
-.hv-breadcrumb-home:hover::after {
-	transform: scaleX(1);
-}
-
-/* Current page/item styling */
-.hv-breadcrumb-current {
-	color: #111827;
-	font-weight: 600;
-	cursor: default;
-	position: relative;
-}
-
-.hv-breadcrumb-current::before {
-	content: "";
-	position: absolute;
-	bottom: 2px;
-	left: 0;
-	right: 0;
-	height: 2px;
-	background: var(--hv-primary, #2c5f2d);
-	border-radius: 1px;
-}
-
-/* Separator */
-.hv-breadcrumb-separator {
-	display: inline-flex;
-	align-items: center;
-	color: #d1d5db;
-	flex-shrink: 0;
-	transition: color 0.25s ease;
-	margin: 0 4px;
-	opacity: 0.7;
-}
-
-.hv-breadcrumb-item:hover + .hv-breadcrumb-separator {
-	color: #9ca3af;
-	opacity: 1;
-}
-
-/* Subtle hover effect for links */
-.hv-breadcrumb-item:not(.hv-breadcrumb-current):not(.hv-breadcrumb-home)::after {
-	content: "";
-	position: absolute;
-	bottom: 2px;
-	left: 0;
-	right: 0;
-	height: 1px;
-	background: var(--hv-primary, #2c5f2d);
-	transform: scaleX(0);
-	transform-origin: right;
-	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hv-breadcrumb-item:not(.hv-breadcrumb-current):not(.hv-breadcrumb-home):hover::after {
-	transform: scaleX(1);
-	transform-origin: left;
-}
-
-/* Dark background variant */
-.hv-breadcrumbs--dark {
-	background: #1f2937;
-	border-bottom-color: rgba(255, 255, 255, 0.1);
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-.hv-breadcrumbs--dark::before {
-	background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.15) 50%, transparent 100%);
-}
-
-.hv-breadcrumbs--dark .hv-breadcrumb-item {
-	color: #d1d5db;
-}
-
-.hv-breadcrumbs--dark .hv-breadcrumb-item:hover {
-	color: #ffffff;
-}
-
-.hv-breadcrumbs--dark .hv-breadcrumb-home {
-	color: #e5e7eb;
-}
-
-.hv-breadcrumbs--dark .hv-breadcrumb-current {
-	color: #ffffff;
-}
-
-.hv-breadcrumbs--dark .hv-breadcrumb-separator {
-	color: #4b5563;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-	.hv-breadcrumbs {
-        padding: 12px 0;
-    }
-
-    .hv-breadcrumb-trail {
-        font-size: 0.75rem;
-        gap: 4px;
-    }
-
-    .hv-breadcrumb-separator {
-        width: 14px;
-        height: 14px;
-        margin: 0 2px;
-    }
-
-    .hv-breadcrumb-item {
-        padding: 3px 1px;
-    }
-
-    /* Reduce hero padding on mobile */
-    .hv-page-hero {
-        padding: 40px 24px 60px !important;
-@media (max-width: 480px) {
-	.hv-breadcrumbs {
-        padding: 10px 0;
-    }
-
-    .hv-breadcrumb-trail {
-        font-size: 0.7rem;
-        gap: 3px;
-    }
-
-    /* Simplify breadcrumbs on small screens */
-    .hv-breadcrumb-trail .hv-breadcrumb-item:not(.hv-breadcrumb-home):not(.hv-breadcrumb-current):not(:nth-last-child(2)) {
-        display: none;
-    }
-
-    .hv-breadcrumb-trail .hv-breadcrumb-separator:has(+ .hv-breadcrumb-item:not(.hv-breadcrumb-home):not(.hv-breadcrumb-current):not(:nth-last-child(2))) {
-        display: none;
-    }
-
-    .hv-page-hero {
-        padding: 30px 20px 50px !important;
-    }
-}
-
-/* Adjust spacing for pages with breadcrumbs + hero */
-.hv-breadcrumbs + .hv-page-hero,
-.hv-breadcrumbs + * .hv-page-hero {
-    padding-top: 50px !important;
-}
-
-@media (max-width: 768px) {
-    .hv-breadcrumbs + .hv-page-hero,
-    .hv-breadcrumbs + * .hv-page-hero {
-        padding-top: 40px !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .hv-breadcrumbs + .hv-page-hero,
-    .hv-breadcrumbs + * .hv-page-hero {
-        padding-top: 30px !important;
-    }
-}
-
-/* For sections that directly follow breadcrumbs (no hero) */
-.hv-breadcrumbs + section:not(.hv-page-hero),
-.hv-breadcrumbs + .hv-section {
-    margin-top: 0;
-    padding-top: 60px;
-}
-
-@media (max-width: 768px) {
-    .hv-breadcrumbs + section:not(.hv-page-hero),
-    .hv-breadcrumbs + .hv-section {
-        padding-top: 40px;
-    }
-}
-
-[dir="rtl"] .hv-breadcrumb-item:not(.hv-breadcrumb-current)::after,
-[dir="rtl"] .hv-breadcrumb-home::after {
-	transform-origin: right;
-}
-
-[dir="rtl"] .hv-breadcrumb-item:not(.hv-breadcrumb-current):hover::after,
-[dir="rtl"] .hv-breadcrumb-home:hover::after {
-	transform-origin: left;
-}
-
-/* RTL: Reverse slide animation direction */
-[dir="rtl"] .hv-breadcrumb-item {
-	animation-name: breadcrumbSlideInRTL;
-}
-
-@keyframes breadcrumbSlideInRTL {
-	from {
-		opacity: 0;
-		transform: translateX(8px);
-	}
-	to {
-		opacity: 1;
-		transform: translateX(0);
-	}
-}
-
-/* RTL: Adjust separator margins for proper spacing */
-[dir="rtl"] .hv-breadcrumb-separator {
-	margin: 0 4px;
-}
-
-/* RTL: Fix hover effects origin */
-[dir="rtl"] .hv-breadcrumb-item:not(.hv-breadcrumb-current):not(.hv-breadcrumb-home)::after {
-	transform-origin: left;
-}
-
-[dir="rtl"] .hv-breadcrumb-item:not(.hv-breadcrumb-current):not(.hv-breadcrumb-home):hover::after {
-	transform-origin: right;
-}
-
-/* RTL: Ensure proper text alignment */
-[dir="rtl"] .hv-breadcrumb-trail {
-	direction: rtl;
-}
-
-[dir="rtl"] .hv-breadcrumbs .hv-container {
-	direction: rtl;
-}
-
-/* Smooth entrance animation */
-.hv-breadcrumb-item {
-	animation: breadcrumbSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
-}
-
-.hv-breadcrumb-item:nth-child(1) {
-	animation-delay: 0.05s;
-}
-.hv-breadcrumb-item:nth-child(3) {
-	animation-delay: 0.1s;
-}
-.hv-breadcrumb-item:nth-child(5) {
-	animation-delay: 0.15s;
-}
-.hv-breadcrumb-item:nth-child(7) {
-	animation-delay: 0.2s;
-}
-.hv-breadcrumb-item:nth-child(9) {
-	animation-delay: 0.25s;
-}
-
-.hv-breadcrumb-separator {
-	animation: breadcrumbFadeIn 0.3s ease backwards;
-}
-
-.hv-breadcrumb-separator:nth-child(2) {
-	animation-delay: 0.08s;
-}
-.hv-breadcrumb-separator:nth-child(4) {
-	animation-delay: 0.13s;
-}
-.hv-breadcrumb-separator:nth-child(6) {
-	animation-delay: 0.18s;
-}
-.hv-breadcrumb-separator:nth-child(8) {
-	animation-delay: 0.23s;
-}
-
-@keyframes breadcrumbSlideIn {
-	from {
-		opacity: 0;
-		transform: translateX(-8px);
-	}
-	to {
-		opacity: 1;
-		transform: translateX(0);
-	}
-}
-
-@keyframes breadcrumbFadeIn {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 0.7;
-	}
-}
-
-/* Accessibility improvements */
-@media (prefers-reduced-motion: reduce) {
-	.hv-breadcrumb-item,
-	.hv-breadcrumb-separator {
-		animation: none !important;
-		opacity: 1;
-		transform: none;
-	}
-
-	.hv-breadcrumb-item::after,
-	.hv-breadcrumb-home::after {
-		transition: none;
-	}
-
-	.hv-breadcrumb-separator {
-		opacity: 0.7;
-	}
-}
+/* Legacy Breadcrumb Styles and Animations Removed */
 
 /* ==========================================================================
    BASE COMPONENTS - Container, Button, Typography Utilities
@@ -11874,24 +11496,24 @@ background-color: var(--hv-cream);
     position: relative !important;
 }
 
+/* Position exactly at top-start of the container with no visual clutter */
 .hv-breadcrumbs {
     position: absolute !important;
-    top: 0 !important;
-    inset-inline-start: 0 !important;
+    top: 20px !important;
+    inset-inline-start: 15px !important;
     z-index: 20;
     width: auto !important;
     padding: 0 !important;
     margin: 0 !important;
     border: none !important;
     background: transparent !important;
+    box-shadow: none !important;
 }
 
-/* Fix for nested containers or inner wrappers */
-.hv-container .hv-breadcrumbs .hv-container {
-    padding: 0 !important;
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
+/* Remove decorative elements */
+.hv-breadcrumbs::before,
+.hv-breadcrumbs::after {
+    display: none !important;
 }
 
 .hv-breadcrumb-trail {
@@ -11899,21 +11521,14 @@ background-color: var(--hv-cream);
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
-    font-family: "Heebo", sans-serif;
-    font-size: 0.75rem;
+    font-family: "Inter", "Heebo", sans-serif;
+    font-size: 0.7rem;
     font-weight: 400;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     color: inherit;
-    opacity: 0.7;
+    opacity: 0.6;
     transition: opacity 0.3s ease;
-    border: none !important;
-    background: transparent !important;
-}
-
-.hv-section--white .hv-breadcrumb-trail,
-.hv-product-main .hv-breadcrumb-trail {
-    color: #1a1a1a;
 }
 
 .hv-breadcrumb-trail:hover {
@@ -11922,38 +11537,43 @@ background-color: var(--hv-cream);
 
 .hv-breadcrumb-item {
     color: inherit;
-    text-decoration: none !important; /* Force remove underline */
+    text-decoration: none !important;
     transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     border: none !important;
     background: transparent !important;
+    padding: 0;
 }
 
-.hv-breadcrumb-item:hover,
-.hv-breadcrumb-item:focus,
-.hv-breadcrumb-item:active {
-    text-decoration: none !important;
-    opacity: 0.8;
-    border: none !important;
-    outline: none !important;
+.hv-breadcrumb-item:hover {
+    opacity: 1;
+}
+
+/* Remove all underlines and pseudo-effects */
+.hv-breadcrumb-item::before,
+.hv-breadcrumb-item::after,
+.hv-breadcrumb-home::before,
+.hv-breadcrumb-home::after,
+.hv-breadcrumb-current::before,
+.hv-breadcrumb-current::after {
+    display: none !important;
 }
 
 .hv-breadcrumb-separator {
     width: 12px;
     height: 12px;
-    opacity: 0.5;
+    opacity: 0.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .hv-breadcrumb-current {
-    font-weight: 600;
-    opacity: 0.9;
+    font-weight: 500;
+    opacity: 1;
     cursor: default;
-    text-decoration: none !important;
-    border: none !important;
-}
-.hv-breadcrumb-current:hover {
-    text-decoration: none !important;
+    color: inherit;
 }
 
 /* Context-Specific Styling */

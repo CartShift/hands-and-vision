@@ -10,7 +10,7 @@ if ( function_exists( 'astra_content_bottom' ) ) {
 	astra_content_bottom();
 }
 ?>
-	</div><!-- .ast-container -->
+	</div><!-- .site-content wrapper (ast-container or hv-full-width-wrapper) -->
 	</div><!-- #content -->
 
 <?php

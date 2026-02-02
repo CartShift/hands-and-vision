@@ -470,8 +470,8 @@ function handandvision_save_product_artist( $post_id ) {
 
     $old_artist_id = get_post_meta( $post_id, '_handandvision_artist_id', true );
     if ( isset( $_POST['handandvision_product_artist'] ) ) {
-        $artist_id = sanitize_text_field( wp_unslash( $_POST['handandvision_product_artist'] ) );
-        update_post_meta( $post_id, '_handandvision_artist_id', $artist_id );
+        $artist_id = absint( $_POST['handandvision_product_artist'] );
+        update_post_meta( $post_id, '_handandvision_artist_id', $artist_id ? $artist_id : '' );
         handandvision_invalidate_artist_products_cache( array_filter( array( $old_artist_id, $artist_id ) ) );
     } else {
         delete_post_meta( $post_id, '_handandvision_artist_id' );
@@ -612,14 +612,6 @@ function handandvision_cart_count_fragments( $fragments ) {
 add_filter( 'woocommerce_add_to_cart_fragments', 'handandvision_cart_count_fragments' );
 
 /**
- * Customize cart item quantity input HTML for better styling
- */
-function handandvision_cart_item_quantity( $product_quantity, $cart_item_key, $cart_item ) {
-    return $product_quantity;
-}
-add_filter( 'woocommerce_cart_item_quantity', 'handandvision_cart_item_quantity', 10, 3 );
-
-/**
  * Add custom classes to cart page body
  */
 function handandvision_cart_page_body_class( $classes ) {
@@ -663,19 +655,6 @@ function handandvision_return_to_shop_text() {
     return $is_hebrew ? 'חזרה לחנות' : 'Return to Shop';
 }
 add_filter( 'woocommerce_return_to_shop_text', 'handandvision_return_to_shop_text' );
-
-/**
- * Redirect to cart after add to cart (optional, can be controlled via Customizer)
- */
-function handandvision_cart_redirect_after_add() {
-    // Only redirect if not using AJAX add to cart
-    if ( ! wp_doing_ajax() ) {
-        return wc_get_cart_url();
-    }
-    return '';
-}
-// Uncomment to enable auto-redirect to cart
-// add_filter( 'woocommerce_add_to_cart_redirect', 'handandvision_cart_redirect_after_add' );
 
 /**
  * Enable Flexible Logo Support (Prevent forced cropping)
@@ -764,14 +743,6 @@ function handandvision_astra_style_fix( $src, $handle ) {
 }
 add_filter( 'style_loader_src', 'handandvision_astra_style_fix', 20, 2 );
 
-/**
- * Ensure Astra handles don't try to load separate -rtl files which don't exist
- */
-function handandvision_fix_rtl_404( $handle ) {
-    if ( strpos( $handle, 'astra' ) !== false || $handle === 'hv-unified' ) {
-        wp_style_add_data( $handle, 'rtl', false );
-    }
-}
 add_action( 'wp_enqueue_scripts', function() {
     global $wp_styles;
     if ( ! is_a( $wp_styles, 'WP_Styles' ) ) return;
@@ -1214,7 +1185,6 @@ function handandvision_create_contact_page() {
             'post_status'    => 'publish',
             'post_type'      => 'page',
             'post_content'   => '',
-            'page_template'  => 'page-contact.php',
         ) );
 
         if ( $page_id && ! is_wp_error( $page_id ) ) {

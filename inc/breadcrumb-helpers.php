@@ -39,7 +39,7 @@ function handandvision_breadcrumbs( $args = array() ) {
     $breadcrumb = handandvision_build_breadcrumb_trail( $args );
 
     if ( $args['echo'] ) {
-        echo $breadcrumb;
+        echo $breadcrumb; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trail built from esc_url/esc_html and hardcoded markup
     } else {
         return $breadcrumb;
     }
@@ -182,7 +182,6 @@ function handandvision_build_breadcrumb_trail( $args ) {
 
     // Build final HTML
     $output = '<nav class="hv-breadcrumbs" aria-label="' . esc_attr( handandvision_is_hebrew() ? 'ניווט מסלול' : 'Breadcrumb navigation' ) . '">';
-    $output .= '<div class="hv-container">';
     $output .= '<div class="hv-breadcrumb-trail">';
 
     $total_items = count( $items );
@@ -195,7 +194,6 @@ function handandvision_build_breadcrumb_trail( $args ) {
         }
     }
 
-    $output .= '</div>';
     $output .= '</div>';
 
     // Add JSON-LD Schema
