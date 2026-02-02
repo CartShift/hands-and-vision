@@ -237,7 +237,7 @@
 	 */
 	const ScrollAnimations = {
 		init: function () {
-			// Check for reduced motion preference
+			document.documentElement.classList.add("hv-js-ready");
 			if (A11yUtils.prefersReducedMotion()) {
 				// Immediately show all animated elements without animation
 				document.querySelectorAll(".hv-animate, .hv-reveal, .hv-stagger, .hv-line-draw").forEach(function (el) {
