@@ -1214,7 +1214,9 @@ html[dir="rtl"] .hv-lightbox-next {
 
 .hv-artist-card {
 	flex-shrink: 0;
-	width: 200px;
+	/* Desktop: 6 items visible */
+	width: calc(100% / 6 - 20px);
+	min-width: 160px; /* Ensure cards don't get too squashed */
 	text-align: center;
 	scroll-snap-align: start;
 	transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1225,12 +1227,10 @@ html[dir="rtl"] .hv-lightbox-next {
 }
 
 .hv-artist-card__portrait {
-	width: 160px;
-	height: 160px;
-	min-width: 160px;
-	min-height: 160px;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 1;
 	max-width: 160px;
-	max-height: 160px;
 	border-radius: 50%;
 	overflow: hidden;
 	margin: 0 auto 20px auto;
@@ -1283,6 +1283,36 @@ html[dir="rtl"] .hv-lightbox-next {
 	font-size: 0.85rem;
 	display: block;
 	margin-bottom: 8px;
+}
+
+/* Mobile adjustments for Artists Carousel */
+@media (max-width: 900px) {
+	.hv-artist-card {
+		/* Mobile: 4 items visible */
+		width: calc(100% / 4 - 15px);
+		min-width: 0 !important; /* Override the desktop min-width */
+	}
+	
+	.hv-artist-card__portrait {
+		margin-bottom: 12px;
+	}
+
+	.hv-artist-card__name {
+		font-size: 0.8rem;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.hv-artist-card__discipline {
+		font-size: 0.7rem;
+	}
+    
+    .hv-artists-showcase {
+        gap: 12px;
+        padding: 20px;
+        margin: 0 -20px;
+    }
 }
 
 /* Gallery Grid */

@@ -147,13 +147,17 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
             </header>
 
             <?php
-            $display_artists = ! empty( $featured_artists ) ? $featured_artists : get_posts( array(
+            $display_artists = get_posts( array(
                 'post_type'      => 'artist',
                 'posts_per_page' => 20,
                 'orderby'        => 'date',
                 'order'          => 'ASC',
                 'post_status'    => 'publish',
             ) );
+            // Fallback: If for some reason get_posts returns nothing, check featured_artists
+            if ( empty( $display_artists ) && ! empty( $featured_artists ) ) {
+                $display_artists = $featured_artists;
+            }
             $display_artists = is_array( $display_artists ) ? $display_artists : array();
             ?>
             <?php if ( ! empty( $display_artists ) ) : ?>
