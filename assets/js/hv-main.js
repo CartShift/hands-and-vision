@@ -1030,12 +1030,15 @@
 		startFlyAnimation: function (sourceImg) {
 			if (!this.cartIcon) return;
 
+			// Ensure source image is actually visible in viewport
+			const rect = sourceImg.getBoundingClientRect();
+			if (rect.width === 0 || rect.height === 0) return;
+
 			// Clone image
 			const flyImg = sourceImg.cloneNode(true);
-			const rect = sourceImg.getBoundingClientRect();
-			const cartRect = this.cartIcon.getBoundingClientRect();
 
 			// Style clone
+			flyImg.setAttribute("aria-hidden", "true");
 			flyImg.style.position = "fixed";
 			flyImg.style.left = rect.left + "px";
 			flyImg.style.top = rect.top + "px";

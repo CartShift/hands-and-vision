@@ -16,7 +16,13 @@ $artist_id = get_the_ID();
 // Artist Data
 $portrait = get_field( 'artist_portrait', $artist_id );
 $portrait_url = ( is_array( $portrait ) && isset( $portrait['url'] ) ) ? $portrait['url'] : get_the_post_thumbnail_url( $artist_id, 'full' );
-$discipline = get_field( 'artist_discipline', $artist_id ) ?: ( handandvision_is_hebrew() ? 'אמן/ית' : 'Artist' );
+if ( ! $portrait_url ) {
+    $portrait_url = handandvision_get_placeholder_image(); // Defined in functions.php or hardcoded fallback
+}
+$discipline = get_field( 'artist_discipline', $artist_id );
+if ( empty( $discipline ) ) {
+    $discipline = handandvision_is_hebrew() ? 'אמן/ית' : 'Artist';
+}
 $bio_raw = get_field( 'artist_biography', $artist_id ) ?: get_field( 'artist_bio', $artist_id ) ?: '';
 
 // Socials
@@ -43,7 +49,7 @@ if ( empty( $social ) || ! is_array( $social ) ) {
 
                 <!-- Sticky Portrait Side -->
                 <div class="hv-artist-hero-premium__visual">
-                    <div class="hv-sticky-portrait" style="view-transition-name: artist-portrait-<?php echo esc_attr( $artist_id ); ?>">
+                    <div class="hv-sticky-portrait" style="view-transition-name: artist-portrait-<?php echo esc_attr( $artist_id ); ?>; top: calc(var(--hv-header-height, 80px) + 40px);">
                          <?php if ( $portrait_url ) : ?>
                             <img src="<?php echo esc_url( $portrait_url ); ?>" alt="<?php the_title_attribute(); ?>" class="hv-img-cover">
                         <?php else : ?>

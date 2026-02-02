@@ -14195,7 +14195,7 @@ html[dir="rtl"] .hv-footer__links a:hover {
 /* Sticky Image Logic */
 .hv-sticky-portrait {
 	position: sticky;
-	top: 120px; /* Below header */
+	top: calc(var(--hv-header-height) + 40px);
 	width: 100%;
 	aspect-ratio: 3/4;
 	overflow: hidden;
@@ -14218,10 +14218,26 @@ html[dir="rtl"] .hv-footer__links a:hover {
 	color: var(--hv-stone);
 	text-decoration: none;
 	transition: color 0.3s ease;
+	position: relative;
+}
+
+.hv-social-link-text::after {
+	content: '';
+	position: absolute;
+	bottom: -4px;
+	left: 0;
+	width: 0;
+	height: 1px;
+	background-color: var(--hv-lilac);
+	transition: width 0.3s ease;
 }
 
 .hv-social-link-text:hover {
 	color: var(--hv-lilac);
+}
+
+.hv-social-link-text:hover::after {
+	width: 100%;
 }
 
 /* Responsive Hero */

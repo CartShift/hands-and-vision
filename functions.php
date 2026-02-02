@@ -271,6 +271,9 @@ add_action( 'acf/init', 'handandvision_load_acf_fields', 5 );
 // IMPORTANT: Load accessibility first - other modules depend on handandvision_is_hebrew()
 require_once ASTRA_THEME_DIR . 'inc/accessibility/language-rtl.php';
 
+// SEO Module - Lightweight Open Graph & Meta Tags
+require_once ASTRA_THEME_DIR . 'inc/seo/class-hv-seo.php';
+
 // Custom Post Types
 require_once ASTRA_THEME_DIR . 'inc/post-types/register-cpts.php';
 
