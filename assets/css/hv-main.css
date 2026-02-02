@@ -28,6 +28,8 @@
 }
 :root {
 	--hv-header-height: 80px;
+	--hv-hero-padding-top: 56px;
+	--hv-hero-padding-bottom: 80px;
 }
 html,
 body {
@@ -2339,7 +2341,7 @@ html[dir="ltr"] .hv-artist-hero__container {
 
 /* Archive Pages */
 .hv-archive-header {
-	padding: 120px 20px 80px;
+	padding: var(--hv-hero-padding-top) 20px var(--hv-hero-padding-bottom);
 	background-color: #f7f7f5;
 	text-align: center;
 }
@@ -2400,7 +2402,7 @@ html[dir="ltr"] .hv-artist-hero__container {
 
 /* Contact Page */
 .hv-contact-header {
-	padding: 120px 20px 80px;
+	padding: var(--hv-hero-padding-top) 20px var(--hv-hero-padding-bottom);
 	background-color: #f7f7f5;
 	text-align: center;
 }
@@ -2962,7 +2964,7 @@ html[dir="rtl"] {
 	.hv-archive-header,
 	.hv-contact-header,
 	.hv-page-hero {
-		padding: 24px 20px 60px;
+		padding: var(--hv-hero-padding-top) 20px 60px;
 	}
 
 	.hv-archive-header__title,
@@ -3190,7 +3192,7 @@ html[dir="rtl"] {
 /* Shop Hero Section */
 .hv-shop-hero {
 	background: linear-gradient(135deg, var(--hv-white) 0%, var(--hv-off-white) 100%);
-	padding: var(--hv-space-16) var(--hv-space-6) var(--hv-space-12);
+	padding: var(--hv-hero-padding-top) var(--hv-space-6) var(--hv-hero-padding-bottom);
 	margin-bottom: var(--hv-space-12);
 }
 
@@ -4698,7 +4700,7 @@ ul.hv-nav-menu a,
 
 .hv-page-hero {
 	background: #ffffff !important;
-	padding: 24px 24px 80px !important;
+	padding: var(--hv-hero-padding-top) 24px var(--hv-hero-padding-bottom) !important;
 }
 
 /* Service hero */
@@ -5944,7 +5946,7 @@ input[type="submit"] {
 	background: #fff;
 }
 .hv-gallery-hero {
-	padding: 160px 5% 56px;
+	padding: var(--hv-hero-padding-top) 5% var(--hv-hero-padding-bottom);
 	text-align: center;
 	position: relative;
 }
@@ -6153,7 +6155,7 @@ html[dir="rtl"] .hv-text-right {
 }
 @media (max-width: 600px) {
 	.hv-gallery-hero {
-		padding: 120px 20px 40px;
+		padding: var(--hv-hero-padding-top) 20px 40px;
 	}
 	.hv-gallery-hero__title {
 		font-size: 2rem;
@@ -6861,7 +6863,7 @@ html[dir="rtl"] .hv-services-cards .hv-service-card:hover .hv-service-card__btn 
 
 /* Shop Hero Section */
 .hv-shop-hero {
-	padding: clamp(80px, 12vh, 140px) 0 clamp(60px, 8vh, 100px);
+	padding: var(--hv-hero-padding-top) 0 var(--hv-hero-padding-bottom);
 	background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
 	position: relative;
 	overflow: hidden;
@@ -7896,7 +7898,7 @@ body.hv-lightbox-open {
 	}
 
 	.hv-gallery-hero {
-		padding: 120px 20px 32px;
+		padding: var(--hv-hero-padding-top) 20px 32px;
 	}
 
 	.hv-gallery-hero__title {
@@ -8511,7 +8513,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 
 @media (max-width: 900px) {
 	.hv-shop-hero {
-		padding: 60px 0 50px;
+		padding: var(--hv-hero-padding-top) 0 50px;
 	}
 
 	.hv-shop-category {
@@ -8544,7 +8546,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 
 @media (max-width: 600px) {
 	.hv-shop-hero {
-		padding: 50px 0 40px;
+		padding: var(--hv-hero-padding-top) 0 40px;
 	}
 
 	.hv-shop-category {
@@ -8888,7 +8890,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 
 /* Shop Hero Section */
 .hv-shop-hero {
-	padding: var(--hv-space-10) 0 var(--hv-space-9);
+	padding: var(--hv-hero-padding-top) 0 var(--hv-hero-padding-bottom);
 	background: linear-gradient(180deg, var(--hv-white) 0%, var(--hv-cream) 100%);
 	position: relative;
 	overflow: hidden;
@@ -9375,7 +9377,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 
 @media (max-width: 900px) {
 	.hv-shop-hero {
-		padding: var(--hv-space-8) 0 var(--hv-space-7);
+		padding: var(--hv-hero-padding-top) 0 var(--hv-space-7);
 	}
 
 	.hv-shop-category {
@@ -11671,9 +11673,7 @@ html[dir="rtl"] .hv-footer__links a:hover {
 
 .hv-shop-hero__content,
 .hv-artist-hero__grid,
-.hv-service-hero__content,
-.hv-page-hero,
-.hv-gallery-hero {
+.hv-service-hero__content {
 	padding-top: 0 !important;
 }
 
