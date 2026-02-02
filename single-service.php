@@ -42,6 +42,7 @@ if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew()
         }
     }
 }
+$is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
 ?>
 
 <main id="primary" class="hv-single-service">
@@ -60,7 +61,6 @@ if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew()
             <div class="hv-container">
                 <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
                 <div class="hv-service-single-hero__inner">
-                    <?php $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false; ?>
                     <span class="hv-service-single-hero__label">
                         <?php echo esc_html( $is_hebrew ? 'שירות' : 'Service' ); ?>
                     </span>
@@ -92,7 +92,6 @@ if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew()
     <?php if ( ! empty( $features ) ) : ?>
     <section class="hv-service-features-section">
         <div class="hv-container">
-            <?php $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false; ?>
             <div class="hv-service-features-header">
                 <span class="hv-service-features-label">
                     <?php echo esc_html( $is_hebrew ? 'תחומי פעילות' : 'Areas of Expertise' ); ?>
@@ -119,14 +118,13 @@ if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew()
     <!-- Gallery -->
     <?php if ( ! empty( $gallery_grid_items ) ) : ?>
     <section class="hv-service-gallery-section">
-        <div ?php $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false; ?>
+        <div class="hv-container">
             <div class="hv-service-gallery-header">
                 <span class="hv-service-gallery-label">
                     <?php echo esc_html( $is_hebrew ? 'פרויקטים' : 'Projects' ); ?>
                 </span>
                 <h2 class="hv-service-gallery-title">
-                    <?php echo esc_html( $is_hebrew
-                    <?php echo esc_html( handandvision_is_hebrew() ? 'עבודות לדוגמה' : 'Selected Works' ); ?>
+                    <?php echo esc_html( $is_hebrew ? 'עבודות לדוגמה' : 'Selected Works' ); ?>
                 </h2>
             </div>
             <div class="hv-service-gallery-grid">
@@ -160,15 +158,14 @@ if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew()
 
     <!-- Related Artists -->
     <?php if ( ! empty( $related_artists ) ) : ?>
-    <section ?php $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false; ?>
+    <section class="hv-service-artists-section">
+        <div class="hv-container">
             <div class="hv-service-artists-header">
                 <span class="hv-service-artists-label">
                     <?php echo esc_html( $is_hebrew ? 'שיתופי פעולה' : 'Collaborations' ); ?>
                 </span>
                 <h2 class="hv-service-artists-title">
-                    <?php echo esc_html( $is_hebrew
-                <h2 class="hv-service-artists-title">
-                    <?php echo esc_html( handandvision_is_hebrew() ? 'אמנים שעובדים איתנו' : 'Artists We Work With' ); ?>
+                    <?php echo esc_html( $is_hebrew ? 'אמנים שעובדים איתנו' : 'Artists We Work With' ); ?>
                 </h2>
             </div>
             <div class="hv-service-artists-grid">
