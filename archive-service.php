@@ -16,7 +16,8 @@ $services = get_posts( array(
     'posts_per_page' => -1,
     'orderby'        => 'menu_order',
     'order'          => 'ASC',
-));
+    'post_status'    => 'publish',
+) );
 ?>
 
 <main id="primary" class="hv-archive-page hv-service-archive">

@@ -64,34 +64,36 @@ $is_hebrew = handandvision_is_hebrew();
                 </div>
             </div>
 
-            <!-- Filter Bar -->
-            <div class="hv-shop-filters hv-reveal">
-                <?php
-                $current_category = get_queried_object();
-                $all_categories = get_terms( array(
-                    'taxonomy'   => 'product_cat',
-                    'hide_empty' => true,
-                    'exclude'    => array( get_option( 'default_product_cat', 0 ) ),
-                ) );
-
-                if ( ! empty( $all_categories ) && ! is_wp_error( $all_categories ) ) :
-                ?>
-                    <div class="hv-shop-filters__categories">
-                        <a href="<?php echo esc_url( get_permalink( wc_get_page_id( 'shop' ) ) ); ?>"
-                           class="hv-filter-btn <?php echo ! is_tax( 'product_cat' ) ? 'hv-filter-btn--active' : ''; ?>">
-                            <?php echo esc_html( $is_hebrew ? 'הכל' : 'All' ); ?>
-                        </a>
-                        <?php foreach ( $all_categories as $cat ) : ?>
-                            <a href="<?php echo esc_url( get_term_link( $cat ) ); ?>"
-                               class="hv-filter-btn <?php echo ( is_tax( 'product_cat', $cat->term_id ) ) ? 'hv-filter-btn--active' : ''; ?>">
-                                <?php echo esc_html( $cat->name ); ?>
-                            </a>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-            </div>
         </div>
     </section>
+
+    <?php
+    $all_categories = get_terms( array(
+        'taxonomy'   => 'product_cat',
+        'hide_empty' => true,
+        'exclude'    => array( get_option( 'default_product_cat', 0 ) ),
+    ) );
+    if ( ! empty( $all_categories ) && ! is_wp_error( $all_categories ) ) :
+    ?>
+    <section class="hv-shop-filters-wrap">
+        <div class="hv-container">
+            <nav class="hv-shop-filters hv-reveal" aria-label="<?php echo esc_attr( $is_hebrew ? 'ניווט קטגוריות' : 'Category navigation' ); ?>">
+                <div class="hv-shop-filters__categories">
+                    <a href="<?php echo esc_url( get_permalink( wc_get_page_id( 'shop' ) ) ); ?>"
+                       class="hv-filter-btn <?php echo ! is_tax( 'product_cat' ) ? 'hv-filter-btn--active' : ''; ?>">
+                        <?php echo esc_html( $is_hebrew ? 'הכל' : 'All' ); ?>
+                    </a>
+                    <?php foreach ( $all_categories as $cat ) : ?>
+                        <a href="<?php echo esc_url( get_term_link( $cat ) ); ?>"
+                           class="hv-filter-btn <?php echo ( is_tax( 'product_cat', $cat->term_id ) ) ? 'hv-filter-btn--active' : ''; ?>">
+                            <?php echo esc_html( $cat->name ); ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </nav>
+        </div>
+    </section>
+    <?php endif; ?>
 
     <?php
     // Get all product categories (excluding 'uncategorized')
@@ -123,7 +125,7 @@ $is_hebrew = handandvision_is_hebrew();
     ?>
 
     <!-- Category Section: <?php echo esc_attr( $category->name ); ?> -->
-    <section class="hv-shop-category">
+    <section class="hv-shop-category hv-reveal">
         <div class="hv-container">
             <header class="hv-shop-category__header">
                 <div class="hv-shop-category__title-wrap">

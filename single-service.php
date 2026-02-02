@@ -19,7 +19,7 @@ $hero_image = get_field( 'service_hero_image', $service_id );
 $hero_url = ( is_array( $hero_image ) && isset( $hero_image['url'] ) ) ? $hero_image['url'] : get_the_post_thumbnail_url( $service_id, 'full' );
 $short_desc = get_field( 'service_short_description', $service_id );
 $full_desc = get_field( 'service_full_description', $service_id );
-$features = get_field( 'service_features', $service_id );
+$features = get_field( 'service_what_we_do', $service_id );
 $gallery = get_field( 'service_gallery', $service_id );
 $related_artists = get_field( 'service_related_artists', $service_id );
 $cta_text = get_field( 'service_cta_text', $service_id );
@@ -76,7 +76,7 @@ $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, arra
 
             <div class="hv-features-grid hv-stagger">
                 <?php foreach ( $features as $i => $feature ) :
-                    $feature_text = is_array( $feature ) ? ( $feature['feature_text'] ?? '' ) : (string) $feature;
+                    $feature_text = is_array( $feature ) ? ( $feature['point'] ?? '' ) : (string) $feature;
                     if ( $feature_text === '' ) continue;
                 ?>
                     <div class="hv-feature-item">
@@ -106,31 +106,27 @@ $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, arra
             </header>
 
             <div class="hv-artists-grid hv-stagger" style="max-width: 1000px; margin: 0 auto;">
-                <?php
-                if ( ! empty( $related_artists ) ) {
-                    foreach ( $related_artists as $artist ) {
-                        $artist_id = is_object( $artist ) ? $artist->ID : $artist;
-                        $artist_name = is_object( $artist ) ? $artist->post_title : get_the_title( $artist_id );
-                        $portrait = get_field( 'artist_portrait', $artist_id );
-                        $portrait_url = ( is_array( $portrait ) && isset( $portrait['url'] ) ) ? $portrait['url'] : get_the_post_thumbnail_url( $artist_id, 'medium' );
-                        ?>
-                        <article class="hv-card hv-card--artist hv-card--dark">
-                            <a href="<?php echo esc_url( get_permalink( $artist_id ) ); ?>">
-                                <div class="hv-card__media">
-                                    <?php if ( $portrait_url ) : ?>
-                                        <img src="<?php echo esc_url( $portrait_url ); ?>" alt="<?php echo esc_attr( $artist_name ); ?>">
-                                    <?php else : ?>
-                                        <div class="hv-card__placeholder hv-card__placeholder--artist"></div>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="hv-card__content">
-                                    <h3 class="hv-card__title hv-text-white"><?php echo esc_html( $artist_name ); ?></h3>
-                                </div>
-                            </a>
-                        </article>
-                        <?php
-                }
-                ?>
+                <?php foreach ( $related_artists as $artist ) :
+                    $artist_id = is_object( $artist ) ? $artist->ID : $artist;
+                    $artist_name = is_object( $artist ) ? $artist->post_title : get_the_title( $artist_id );
+                    $portrait = get_field( 'artist_portrait', $artist_id );
+                    $portrait_url = ( is_array( $portrait ) && isset( $portrait['url'] ) ) ? $portrait['url'] : get_the_post_thumbnail_url( $artist_id, 'medium' );
+                    ?>
+                    <article class="hv-card hv-card--artist hv-card--dark">
+                        <a href="<?php echo esc_url( get_permalink( $artist_id ) ); ?>">
+                            <div class="hv-card__media">
+                                <?php if ( $portrait_url ) : ?>
+                                    <img src="<?php echo esc_url( $portrait_url ); ?>" alt="<?php echo esc_attr( $artist_name ); ?>">
+                                <?php else : ?>
+                                    <div class="hv-card__placeholder hv-card__placeholder--artist"></div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="hv-card__content">
+                                <h3 class="hv-card__title hv-text-white"><?php echo esc_html( $artist_name ); ?></h3>
+                            </div>
+                        </a>
+                    </article>
+                <?php endforeach; ?>
             </div>
         </div>
     </section>
@@ -140,14 +136,8 @@ $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, arra
         <div class="hv-container hv-container--narrow hv-text-center">
             <span class="hv-overline hv-reveal"><?php echo handandvision_is_hebrew() ? 'מתחילים?' : 'Getting Started?'; ?></span>
             <?php
-            // Determine CTA Headline
             $default_cta = handandvision_is_hebrew() ? 'בואו נדבר על הפרויקט שלכם' : "Let's Talk About Your Project";
             $display_cta = $cta_text ?: $default_cta;
-
-            // Fix: Override "Get in Touch" content if in Hebrew mode
-            if ( handandvision_is_hebrew() && strcasecmp( trim( $display_cta ), 'Get in Touch' ) === 0 ) {
-                $display_cta = $default_cta;
-            }
             ?>
             <h2 class="hv-headline-2 hv-reveal"><?php echo esc_html( $display_cta ); ?></h2>
             <p class="hv-subtitle hv-reveal" style="margin: var(--hv-space-5) auto var(--hv-space-7); max-width: 550px;">
