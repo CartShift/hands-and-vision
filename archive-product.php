@@ -27,8 +27,8 @@ $is_hebrew = handandvision_is_hebrew();
             <div class="hv-services-hero__lines"></div>
         </div>
         <div class="hv-services-hero__content">
+            <?php handandvision_breadcrumbs(); ?>
             <div class="hv-container">
-                <?php handandvision_breadcrumbs(); ?>
                 <div class="hv-services-hero__inner">
                     <div class="hv-services-hero__overline">
                         <span class="hv-services-hero__line"></span>

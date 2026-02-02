@@ -49,8 +49,8 @@ $total_services = count( $services );
             <div class="hv-services-hero__lines"></div>
         </div>
         <div class="hv-services-hero__content">
+            <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
             <div class="hv-container">
-                <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
                 <div class="hv-services-hero__inner">
                     <div class="hv-services-hero__overline">
                         <span class="hv-services-hero__line"></span>

@@ -34,8 +34,8 @@ $page_subtitle = get_field( 'page_subtitle', $page_id ) ?: ( handandvision_is_he
             <div class="hv-services-hero__lines"></div>
         </div>
         <div class="hv-services-hero__content">
+            <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
             <div class="hv-container">
-                <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
                 <div class="hv-services-hero__inner">
                     <?php if ( $page_overline ) : ?>
                     <div class="hv-services-hero__overline">

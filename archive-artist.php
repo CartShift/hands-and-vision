@@ -25,8 +25,8 @@ $artists = get_posts( array(
 
     <!-- Hero Header -->
     <section class="hv-page-hero">
+        <?php handandvision_breadcrumbs(); ?>
         <div class="hv-container hv-text-center">
-            <?php handandvision_breadcrumbs(); ?>
             <span class="hv-overline hv-reveal"><?php echo handandvision_is_hebrew() ? 'הקולקטיב שלנו' : 'Our Collective'; ?></span>
             <h1 class="hv-headline-1 hv-reveal"><?php echo handandvision_is_hebrew() ? 'האמנים' : 'Artists'; ?></h1>
             <p class="hv-intro-text hv-reveal">

@@ -27,8 +27,8 @@ $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, arra
 
     <!-- Artist Hero -->
     <section class="hv-artist-hero">
+        <?php handandvision_breadcrumbs(); ?>
         <div class="hv-container">
-            <?php handandvision_breadcrumbs(); ?>
             <div class="hv-artist-hero__grid">
                 <div class="hv-artist-hero__portrait hv-reveal">
                     <?php if ( $portrait_url ) : ?>

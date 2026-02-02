@@ -153,10 +153,10 @@ function handandvision_invalidate_artist_products_cache( $artist_ids ) {
 /**
  * Filter product query by artist if GET param present
  *
- * @param WP_Query \
+ * @param WP_Query $q
  */
-function handandvision_filter_products_by_artist_query( \ ) {
-    if ( is_admin() || ! \->is_main_query() ) {
+function handandvision_filter_products_by_artist_query( $q ) {
+    if ( is_admin() || ! $q->is_main_query() ) {
         return;
     }
     // Only target product queries (shop, category, tag)
@@ -164,18 +164,18 @@ function handandvision_filter_products_by_artist_query( \ ) {
         return;
     }
 
-    if ( ! empty( \['filter_artist'] ) ) {
-        \ = absint( \['filter_artist'] );
-        \ = \->get( 'meta_query' );
-        if ( ! is_array( \ ) ) {
-            \ = [];
+    if ( ! empty( $_GET['filter_artist'] ) ) {
+        $artist_id = absint( $_GET['filter_artist'] );
+        $meta_query = $q->get( 'meta_query' );
+        if ( ! is_array( $meta_query ) ) {
+            $meta_query = [];
         }
-        \[] = [
+        $meta_query[] = [
             'key'     => '_handandvision_artist_id',
-            'value'   => \,
+            'value'   => $artist_id,
             'compare' => '='
         ];
-        \->set( 'meta_query', \ );
+        $q->set( 'meta_query', $meta_query );
     }
 }
 add_action( 'woocommerce_product_query', 'handandvision_filter_products_by_artist_query' );

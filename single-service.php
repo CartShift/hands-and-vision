@@ -75,8 +75,8 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
             <?php endif; ?>
         </div>
         <div class="hv-service-single-hero__content">
+            <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
             <div class="hv-container">
-                <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
                 <div class="hv-service-single-hero__inner">
                     <span class="hv-service-single-hero__label">
                         <?php echo esc_html( $is_hebrew ? 'שירות' : 'Service' ); ?>
