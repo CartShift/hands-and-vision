@@ -21,6 +21,130 @@
  * @package HandAndVision
  */
 
+/* ==========================================================================
+   DESIGN SYSTEM - COLOR PALETTE (CLIENT APPROVED)
+   ==========================================================================
+
+   Updated: February 2026
+
+   PRIMARY PALETTE:
+   - Deep Red      (#D02E04) → Primary/CTA accent
+   - Warm Orange   (#EFAF12) → Highlights, energy
+   - Light Yellow  (#FAE4AF) → Warm backgrounds, hover states
+   - Light Pink    (#F8CEC8) → Soft accents
+   - Soft Pink     (#F5E0E9) → Light backgrounds, cards
+   - Lilac         (#D9B6DC) → Brand accent, overlays
+   - Light Purple  (#B6A5E7) → Secondary accent
+   - Blue-Violet   (#8B95F3) → Links, interactive states
+   - Petrol Blue   (#254B61) → Dark accent, headings, footer
+
+   USAGE GUIDE:
+   - Use --hv-primary for CTAs and important actions
+   - Use --hv-petrol for headers, footers, and dark text
+   - Use --hv-lilac / --hv-purple for brand touches
+   - Use --hv-cream / --hv-pink-soft for backgrounds
+   ========================================================================== */
+
+:root {
+	/* ===================================
+	   CLIENT COLOR PALETTE
+	   =================================== */
+
+	/* Primary Colors */
+	--hv-primary: #D02E04;              /* Deep Red - Main CTA/Primary */
+	--hv-primary-hover: #B52803;        /* Darker Red for hover */
+	--hv-primary-soft: rgba(208, 46, 4, 0.12);
+
+	/* Accent Colors */
+	--hv-orange: #EFAF12;               /* Warm Orange */
+	--hv-orange-soft: rgba(239, 175, 18, 0.15);
+	--hv-yellow: #FAE4AF;               /* Light Yellow */
+	--hv-yellow-soft: rgba(250, 228, 175, 0.5);
+
+	/* Pink Spectrum */
+	--hv-pink: #F8CEC8;                 /* Light Pink */
+	--hv-pink-soft: #F5E0E9;            /* Soft Pink-White */
+	--hv-pink-subtle: rgba(245, 224, 233, 0.5);
+
+	/* Purple Spectrum (Brand) */
+	--hv-lilac: #D9B6DC;                /* Lilac - Brand Signature */
+	--hv-lilac-soft: rgba(217, 182, 220, 0.15);
+	--hv-purple: #B6A5E7;               /* Light Purple */
+	--hv-purple-soft: rgba(182, 165, 231, 0.15);
+
+	/* Blue Spectrum */
+	--hv-blue: #8B95F3;                 /* Blue-Violet */
+	--hv-blue-soft: rgba(139, 149, 243, 0.12);
+	--hv-petrol: #254B61;               /* Dark Petrol Blue - Dark accent */
+	--hv-petrol-soft: rgba(37, 75, 97, 0.08);
+
+	/* ===================================
+	   SEMANTIC COLOR ALIASES
+	   =================================== */
+
+	/* Neutrals - Keep for UI */
+	--hv-black: #0d0d0d;
+	--hv-charcoal: #1a1a1a;
+	--hv-graphite: #2d2d2d;
+	--hv-slate: #4a4a4a;
+	--hv-stone: #6a6a6a;
+	--hv-silver: #9a9a9a;
+	--hv-platinum: #c5c5c5;
+	--hv-pearl: #e5e5e5;
+	--hv-snow: #f7f7f5;
+	--hv-white: #ffffff;
+	--hv-cream: #faf8f5;
+	--hv-warm-cream: #f5f1ea;
+
+	/* Semantic Mapping */
+	--hv-text-primary: var(--hv-petrol);
+	--hv-text-secondary: var(--hv-slate);
+	--hv-text-muted: var(--hv-stone);
+	--hv-text-light: var(--hv-silver);
+	--hv-text-inverse: var(--hv-white);
+
+	--hv-bg-primary: var(--hv-white);
+	--hv-bg-secondary: var(--hv-pink-soft);
+	--hv-bg-tertiary: var(--hv-yellow);
+	--hv-bg-dark: var(--hv-petrol);
+	--hv-bg-accent: var(--hv-lilac-soft);
+
+	--hv-border-light: var(--hv-pearl);
+	--hv-border-medium: var(--hv-platinum);
+	--hv-border-accent: var(--hv-lilac);
+
+	/* Interactive States */
+	--hv-link: var(--hv-blue);
+	--hv-link-hover: var(--hv-purple);
+	--hv-focus-ring: var(--hv-blue);
+
+	/* Legacy Aliases (for backwards compatibility) */
+	--brand-lilac: var(--hv-lilac);
+	--brand-purple: var(--hv-purple);
+	--brand-blue: var(--hv-blue);
+	--brand-gold: var(--hv-orange);
+	--brand-pink: var(--hv-pink);
+	--brand-dark: var(--hv-petrol);
+	--brand-white: var(--hv-white);
+	--brand-cream: var(--hv-cream);
+	--brand-lilac-text: var(--hv-lilac);
+
+	/* Gradient Definitions */
+	--hv-gradient-primary: linear-gradient(135deg, var(--hv-primary) 0%, var(--hv-orange) 100%);
+	--hv-gradient-warm: linear-gradient(135deg, var(--hv-orange) 0%, var(--hv-yellow) 100%);
+	--hv-gradient-soft: linear-gradient(135deg, var(--hv-pink-soft) 0%, var(--hv-lilac-soft) 100%);
+	--hv-gradient-brand: linear-gradient(135deg, var(--hv-lilac) 0%, var(--hv-purple) 100%);
+	--hv-gradient-cool: linear-gradient(135deg, var(--hv-purple) 0%, var(--hv-blue) 100%);
+	--hv-gradient-petrol: linear-gradient(135deg, var(--hv-petrol) 0%, var(--hv-blue) 100%);
+
+	/* Shadow with brand colors */
+	--hv-shadow-primary: 0 8px 24px rgba(208, 46, 4, 0.2);
+	--hv-shadow-lilac: 0 8px 24px rgba(217, 182, 220, 0.25);
+	--hv-shadow-purple: 0 8px 24px rgba(182, 165, 231, 0.2);
+	--hv-shadow-blue: 0 8px 24px rgba(139, 149, 243, 0.2);
+	--hv-shadow-petrol: 0 8px 24px rgba(37, 75, 97, 0.15);
+}
+
 *,
 *::before,
 *::after {
@@ -92,7 +216,7 @@ html {
 }
 
 .hv-lang-link {
-	color: #1a1a1a;
+	color: var(--hv-petrol);
 	text-decoration: none;
 	padding: 0 5px;
 	transition: all 0.3s ease;
@@ -100,7 +224,7 @@ html {
 
 .hv-lang-link:hover,
 .hv-lang-link.active {
-	color: var(--brand-gold, #c7b2e0);
+	color: var(--hv-orange);
 	font-weight: 500;
 }
 
@@ -126,7 +250,7 @@ html {
 	font-size: 1.5rem;
 	font-weight: 300;
 	letter-spacing: 0.2em;
-	color: #1a1a1a;
+	color: var(--hv-petrol);
 	text-decoration: none;
 	white-space: nowrap;
 }
@@ -149,7 +273,7 @@ ul.hv-nav-menu {
 }
 
 .hv-nav-menu li a {
-	color: #1a1a1a;
+	color: var(--hv-petrol);
 	text-decoration: none;
 	font-family: "Heebo", sans-serif;
 	font-size: 0.875rem;
@@ -160,7 +284,7 @@ ul.hv-nav-menu {
 }
 
 .hv-nav-menu li a:hover {
-	color: var(--brand-lilac-text, #7a5fa3);
+	color: var(--hv-lilac);
 }
 
 @media (max-width: 1024px) {
@@ -201,7 +325,7 @@ ul.hv-nav-menu {
 
 .hv-nav-menu a:hover,
 .hv-header__nav a:hover {
-	color: var(--brand-lilac-text, #7a5fa3) !important;
+	color: var(--hv-lilac) !important;
 }
 
 /* Mobile Menu Button - hidden on desktop */
@@ -298,14 +422,14 @@ ul.hv-nav-menu {
 	align-items: center;
 	justify-content: center;
 	text-decoration: none;
-	color: #1a1a1a;
+	color: var(--hv-petrol);
 	transition: all 0.3s ease;
 	padding: 8px;
 	border-radius: 50%;
 }
 
 .hv-header__cart:hover {
-	color: var(--brand-gold, #c7b2e0);
+	color: var(--hv-orange);
 	transform: scale(1.1);
 }
 
@@ -332,8 +456,8 @@ ul.hv-nav-menu {
 	font-family: "Heebo", sans-serif;
 	line-height: 18px;
 	text-align: center;
-	color: #ffffff;
-	background: #1a1a1a;
+	color: var(--hv-white);
+	background: var(--hv-petrol);
 	border-radius: 999px;
 	opacity: 0;
 	transform: scale(0.5);
@@ -344,9 +468,9 @@ ul.hv-nav-menu {
 .hv-cart-count.has-items {
 	opacity: 1;
 	transform: scale(1);
-	color: #fff;
-	background: linear-gradient(135deg, #bd93f9, #ff79c6);
-	box-shadow: 0 2px 8px rgba(189, 147, 249, 0.4);
+	color: var(--hv-white);
+	background: var(--hv-gradient-primary);
+	box-shadow: var(--hv-shadow-primary);
 }
 
 /* Cart icon animation on add to cart */
@@ -595,8 +719,8 @@ html[dir="rtl"] .hv-lightbox-next {
 
 /* Critical Footer CSS */
 .hv-footer {
-	background: #1a1a1a !important;
-	color: #acacac !important;
+	background: var(--hv-petrol) !important;
+	color: var(--hv-silver) !important;
 	padding: 80px 24px 32px !important;
 }
 
@@ -685,13 +809,13 @@ html[dir="rtl"] .hv-lightbox-next {
 
 .hv-footer__links a,
 .hv-footer__links li {
-	color: #acacac !important;
+	color: var(--hv-silver) !important;
 	text-decoration: none !important;
 	font-size: 0.875rem !important;
 }
 
 .hv-footer__links a:hover {
-	color: #b8a4d9 !important;
+	color: var(--hv-lilac) !important;
 }
 
 .hv-footer__bottom {
@@ -713,17 +837,17 @@ html[dir="rtl"] .hv-lightbox-next {
 }
 
 .hv-footer__legal a {
-	color: #6a6a6a !important;
+	color: var(--hv-stone) !important;
 	text-decoration: none !important;
 }
 
 .hv-footer__legal a:hover {
-	color: #b8a4d9 !important;
+	color: var(--hv-lilac) !important;
 }
 
 .hv-social-link--dark {
-	background: #2a2a2a !important;
-	color: #acacac !important;
+	background: rgba(255, 255, 255, 0.1) !important;
+	color: var(--hv-silver) !important;
 	width: 40px !important;
 	height: 40px !important;
 	border-radius: 50% !important;
@@ -734,8 +858,8 @@ html[dir="rtl"] .hv-lightbox-next {
 }
 
 .hv-social-link--dark:hover {
-	background: #c7b2e0 !important;
-	color: #ffffff !important;
+	background: var(--hv-lilac) !important;
+	color: var(--hv-white) !important;
 }
 
 @media (max-width: 900px) {
@@ -1054,7 +1178,7 @@ html[dir="rtl"] .hv-lightbox-next {
 }
 
 .hv-btn--ghost-light:hover {
-	color: #c7b2e0;
+	color: var(--hv-lilac);
 	transform: translateY(-2px);
 }
 
@@ -1073,7 +1197,7 @@ html[dir="rtl"] .hv-lightbox-next {
 .hv-intro__text {
 	font-size: clamp(1.125rem, 2vw, 1.375rem);
 	line-height: 1.9;
-	color: #1a1a1a;
+	color: var(--hv-petrol);
 }
 
 /* Services Carousel */
@@ -1111,17 +1235,15 @@ html[dir="rtl"] .hv-lightbox-next {
 	top: 0;
 	inset-inline: 0;
 	height: 3px;
-	background: linear-gradient(90deg, #b8a4d9, #d4c9e8, #b8a4d9);
+	background: var(--hv-gradient-brand);
 	transform: scaleX(0);
 	transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hv-service-card:hover {
 	transform: translateY(-8px) scale(1.02);
-	box-shadow:
-		0 20px 60px rgba(184, 164, 217, 0.2),
-		0 8px 24px rgba(0, 0, 0, 0.1);
-	border-color: rgba(184, 164, 217, 0.2);
+	box-shadow: var(--hv-shadow-lilac);
+	border-color: rgba(217, 182, 220, 0.2);
 }
 
 .hv-service-card:hover::before {
@@ -2671,40 +2793,31 @@ img {
 
 /* Selection Color */
 ::selection {
-	background: rgba(0, 0, 0, 0.1);
-	color: #1a1a1a;
+	background: var(--hv-lilac-soft);
+	color: var(--hv-petrol);
 }
 
-/* Brand Colors */
-:root {
-	--brand-lilac: #c7b2e0;
-	--brand-purple: #9593e0;
-	--brand-blue: #6a8de3;
-	--brand-cream: #e6deca;
-	--brand-gold: #c7b2e0;
-	--brand-pink: #e8a4b8;
-	--brand-dark: #1a1a1a;
-	--brand-white: #ffffff;
-}
+/* Legacy Brand Colors - Now referencing main design system (at top of file) */
+/* All --brand-* variables are defined in the main :root block */
 
 /* Scroll To Top Customization */
 #ast-scroll-top {
-	background-color: #ce9aff;
-	color: #ffffff;
+	background-color: var(--hv-purple);
+	color: var(--hv-white);
 	opacity: 1;
 	transition: all 0.3s ease;
 }
 
 #ast-scroll-top:hover {
-	background-color: #b07ccf;
-	color: #ffffff;
+	background-color: var(--hv-lilac);
+	color: var(--hv-white);
 	transform: translateY(-5px);
 }
 
 @media (max-width: 921px) {
 	#ast-scroll-top {
 		display: block;
-		background-color: #ce9aff;
+		background-color: var(--hv-purple);
 	}
 }
 
@@ -4791,69 +4904,58 @@ ul.hv-nav-menu a,
 /* ========================================
    Brand Colors & Global Styles
    ======================================== */
-:root {
-	/* Palette extracted from Logo */
-	--brand-lilac: #c7b2e0;
-	--brand-purple: #9593e0;
-	--brand-blue: #6a8de3;
-	--brand-cream: #e6deca;
-	--brand-gold: #c7b2e0;
-	--brand-pink: #e8a4b8;
-
-	/* Utils */
-	--brand-dark: #1a1a1a;
-	--brand-white: #ffffff;
-}
+/* NOTE: All brand color variables are defined in the main :root block at the top of this file */
+/* The following styles use those variables for consistent theming */
 
 /* Update selection color */
 ::selection {
-	background: var(--brand-gold);
-	color: var(--brand-dark);
+	background: var(--hv-lilac-soft);
+	color: var(--hv-petrol);
 }
 
 /* Typography Highlights */
 .hv-overline,
 .hv-subtitle {
-	color: var(--brand-gold) !important;
+	color: var(--hv-orange) !important;
 }
 
-/* Buttons Gradients */
+/* Buttons Gradients - Using new primary colors */
 .hv-btn--primary,
 button[type="submit"],
 input[type="submit"] {
-	background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-purple) 100%) !important;
+	background: var(--hv-gradient-cool) !important;
 	color: white !important;
 	border: none !important;
 	transition: all 0.3s ease !important;
 }
 
 .hv-btn--primary:hover {
-	background: linear-gradient(135deg, var(--brand-purple) 0%, var(--brand-lilac) 100%) !important;
+	background: var(--hv-gradient-brand) !important;
 	transform: translateY(-2px);
-	box-shadow: 0 10px 20px rgba(106, 141, 227, 0.3);
+	box-shadow: var(--hv-shadow-purple);
 }
 
-/* Service Icons - Rainbow Distribution */
+/* Service Icons - Rainbow Distribution using client palette */
 .hv-services-grid .hv-service-card:nth-child(1) .hv-service-card__icon,
 .hv-services-grid .hv-service-block:nth-child(1) .hv-overline {
-	color: var(--brand-lilac);
+	color: var(--hv-primary);
 }
 .hv-services-grid .hv-service-card:nth-child(2) .hv-service-card__icon,
 .hv-services-grid .hv-service-block:nth-child(2) .hv-overline {
-	color: var(--brand-blue);
+	color: var(--hv-orange);
 }
 .hv-services-grid .hv-service-card:nth-child(3) .hv-service-card__icon,
 .hv-services-grid .hv-service-block:nth-child(3) .hv-overline {
-	color: var(--brand-gold);
+	color: var(--hv-lilac);
 }
 .hv-services-grid .hv-service-card:nth-child(4) .hv-service-card__icon,
 .hv-services-grid .hv-service-block:nth-child(4) .hv-overline {
-	color: var(--brand-pink);
+	color: var(--hv-blue);
 }
 
 /* Gallery Overlays */
 .hv-gallery-item__overlay::before {
-	background: linear-gradient(to top, rgba(26, 26, 26, 0.9), rgba(106, 141, 227, 0.2)) !important;
+	background: linear-gradient(to top, rgba(37, 75, 97, 0.9), rgba(139, 149, 243, 0.2)) !important;
 }
 
 /* ========================================
@@ -6120,8 +6222,8 @@ html[dir="rtl"] .hv-text-right {
 	position: relative;
 	border-radius: 6px;
 	overflow: hidden;
-	transform: translateY(24px);
-	opacity: 0;
+	opacity: 1;
+	transform: translateY(0);
 	transition:
 		transform 0.5s ease-out,
 		opacity 0.5s ease-out,
@@ -6130,9 +6232,16 @@ html[dir="rtl"] .hv-text-right {
 	display: block;
 	min-height: 200px;
 }
+
+/* Optional JS-enhanced animation: start hidden, reveal on scroll */
+.hv-js-ready .hv-gallery-bento__item:not(.revealed) {
+	opacity: 0;
+	transform: translateY(24px);
+}
+
 .hv-gallery-bento__item.revealed {
-	transform: translateY(0);
-	opacity: 1;
+	opacity: 1 !important;
+	transform: translateY(0) !important;
 }
 .hv-gallery-bento__item:hover {
 	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
@@ -6149,6 +6258,26 @@ html[dir="rtl"] .hv-text-right {
 	grid-row: span 2;
 	min-height: 320px;
 }
+
+/* Link wrapper - fill the entire item */
+.hv-gallery-bento__link {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	text-decoration: none;
+	color: inherit;
+}
+
+/* Media container - full size with proper overflow */
+.hv-gallery-bento__media {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	min-height: inherit;
+}
+
 .hv-gallery-bento__img {
 	width: 100%;
 	height: 100%;
@@ -6163,6 +6292,22 @@ html[dir="rtl"] .hv-text-right {
 .hv-gallery-bento__item:hover .hv-gallery-bento__img {
 	transform: scale(1.06);
 }
+
+/* Placeholder for items without images */
+.hv-gallery-bento__placeholder {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.hv-gallery-bento__placeholder-icon {
+	color: #ccc;
+	opacity: 0.6;
+}
+
 .hv-gallery-bento__overlay {
 	position: absolute;
 	inset: 0;
@@ -6190,6 +6335,11 @@ html[dir="rtl"] .hv-text-right {
 	font-size: 0.85rem;
 	letter-spacing: 0.03em;
 }
+
+.hv-gallery-bento__year {
+	opacity: 0.8;
+}
+
 .hv-gallery-bento__item:hover .hv-gallery-bento__title {
 	transform: translateY(0);
 }
@@ -8769,22 +8919,10 @@ html[dir="rtl"] .hv-gallery-filters__count {
    ========================================================================== */
 
 /* Design Tokens */
+/* NOTE: Color tokens are now defined in the main :root block at the top of this file */
+/* The following are layout/spacing tokens that complement the color system */
 :root {
-	--hv-charcoal: #1a1a1a;
-	--hv-dark-gray: #2a2a2a;
-	--hv-medium-gray: #4a4a4a;
-	--hv-gray: #6a6a6a;
-	--hv-light-gray: #9a9a9a;
-	--hv-silver: #c5c5c5;
-	--hv-off-white: #f5f4f2;
-	--hv-cream: #faf9f7;
-	--hv-white: #ffffff;
-	--hv-gold: #c7b2e0;
-	--hv-gold-light: #d8ccea;
-	--hv-gold-dark: #9b7fcc;
-	--hv-rose: #d4a5b8;
-	--hv-sage: #a5c4b8;
-
+	/* Layout Spacing Scale */
 	--hv-space-1: 4px;
 	--hv-space-2: 8px;
 	--hv-space-3: 12px;
@@ -8796,26 +8934,31 @@ html[dir="rtl"] .hv-gallery-filters__count {
 	--hv-space-9: 96px;
 	--hv-space-10: 128px;
 
+	/* Container Sizes */
 	--hv-container-wide: 1400px;
 	--hv-container-narrow: 800px;
 
+	/* Border Radius */
 	--hv-radius-sm: 4px;
 	--hv-radius-md: 8px;
 	--hv-radius-lg: 16px;
 	--hv-radius-xl: 24px;
 	--hv-radius-full: 9999px;
 
+	/* Neutral Shadows (kept for non-branded use) */
 	--hv-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
 	--hv-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
 	--hv-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
 	--hv-shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.16);
-	--hv-shadow-gold: 0 8px 32px rgba(199, 178, 224, 0.3);
+	--hv-shadow-gold: 0 8px 32px rgba(217, 182, 220, 0.3); /* Updated to new lilac */
 
+	/* Animation */
 	--hv-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 	--hv-duration-fast: 200ms;
 	--hv-duration-normal: 350ms;
 	--hv-duration-slow: 500ms;
 
+	/* Typography Scale */
 	--hv-text-xs: 0.75rem;
 	--hv-text-sm: 0.875rem;
 	--hv-text-base: 1rem;
@@ -8849,7 +8992,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: 0.25em;
-	color: var(--hv-gold);
+	color: var(--hv-orange);
 	display: inline-block;
 	margin-bottom: var(--hv-space-3);
 }
@@ -10609,44 +10752,10 @@ html[dir="rtl"] .hv-gallery-filters__count {
    1. REFINED CSS CUSTOM PROPERTIES (DESIGN TOKENS)
    ========================================================================== */
 
+/* NOTE: All color tokens are defined in the main :root block at the top of this file */
+/* The following are typography/animation refinement tokens */
 :root {
-	/* Enhanced Color Palette - More Luxurious */
-	--hv-black: #0d0d0d;
-	--hv-charcoal: #1a1a1a;
-	--hv-graphite: #2d2d2d;
-	--hv-slate: #4a4a4a;
-	--hv-stone: #6a6a6a;
-	--hv-silver: #9a9a9a;
-	--hv-platinum: #c5c5c5;
-	--hv-pearl: #e5e5e5;
-	--hv-snow: #f7f7f5;
-	--hv-white: #ffffff;
-
-	/* Brand Colors - Refined */
-	--hv-lilac: #c7b2e0;
-	--hv-lilac-soft: rgba(199, 178, 224, 0.12);
-	--hv-lilac-subtle: rgba(199, 178, 224, 0.06);
-	--hv-purple: #9593e0;
-	--hv-purple-soft: rgba(149, 147, 224, 0.15);
-	--hv-blue: #6a8de3;
-	--hv-blue-soft: rgba(106, 141, 227, 0.12);
-	--hv-cream: #faf8f5;
-	--hv-warm-cream: #f5f1ea;
-
-	/* Premium Shadows - Multi-layer */
-	--hv-shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.04);
-	--hv-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
-	--hv-shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
-	--hv-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04);
-	--hv-shadow-elevated: 0 16px 48px rgba(0, 0, 0, 0.1), 0 6px 16px rgba(0, 0, 0, 0.05);
-	--hv-shadow-floating: 0 24px 64px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.06);
-
-	/* Brand-tinted Shadows */
-	--hv-shadow-lilac: 0 8px 24px rgba(199, 178, 224, 0.18), 0 4px 8px rgba(199, 178, 224, 0.08);
-	--hv-shadow-purple: 0 8px 24px rgba(149, 147, 224, 0.18), 0 4px 8px rgba(149, 147, 224, 0.08);
-	--hv-shadow-blue: 0 8px 24px rgba(106, 141, 227, 0.18), 0 4px 8px rgba(106, 141, 227, 0.08);
-
-	/* Refined Typography Scale */
+	/* Typography Fonts */
 	--hv-font-display: "Heebo", -apple-system, BlinkMacSystemFont, sans-serif;
 	--hv-font-body: "Heebo", -apple-system, BlinkMacSystemFont, sans-serif;
 
@@ -10665,45 +10774,29 @@ html[dir="rtl"] .hv-gallery-filters__count {
 	--hv-leading-relaxed: 1.7;
 	--hv-leading-loose: 2;
 
-	/* Spacing Scale - 4px base */
-	--hv-space-1: 4px;
-	--hv-space-2: 8px;
-	--hv-space-3: 12px;
-	--hv-space-4: 16px;
-	--hv-space-5: 20px;
-	--hv-space-6: 24px;
-	--hv-space-8: 32px;
-	--hv-space-10: 40px;
-	--hv-space-12: 48px;
-	--hv-space-16: 64px;
-	--hv-space-20: 80px;
-	--hv-space-24: 96px;
-	--hv-space-32: 128px;
+	/* Premium Shadows - Multi-layer (kept for refinement layer) */
+	--hv-shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.04);
+	--hv-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+	--hv-shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+	--hv-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04);
+	--hv-shadow-elevated: 0 16px 48px rgba(0, 0, 0, 0.1), 0 6px 16px rgba(0, 0, 0, 0.05);
+	--hv-shadow-floating: 0 24px 64px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.06);
 
-	/* Timing Functions - Refined Easing */
+	/* Extended Timing Functions */
 	--hv-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-	--hv-ease-out: cubic-bezier(0, 0, 0.2, 1);
-	--hv-ease-in: cubic-bezier(0.4, 0, 1, 1);
 	--hv-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 	--hv-ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 	--hv-ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
 
-	/* Durations */
+	/* Extended Durations */
 	--hv-duration-instant: 100ms;
-	--hv-duration-fast: 150ms;
-	--hv-duration-normal: 250ms;
-	--hv-duration-slow: 400ms;
 	--hv-duration-slower: 600ms;
 	--hv-duration-elegant: 800ms;
 
-	/* Border Radii */
+	/* Extended Border Radii */
 	--hv-radius-none: 0;
-	--hv-radius-sm: 4px;
-	--hv-radius-md: 8px;
 	--hv-radius-lg: 12px;
-	--hv-radius-xl: 16px;
 	--hv-radius-2xl: 24px;
-	--hv-radius-full: 9999px;
 }
 
 /* ==========================================================================
@@ -13617,17 +13710,17 @@ html[dir="rtl"] .hv-footer__links a:hover {
     font-weight: 300;
     line-height: 1.2;
     letter-spacing: -0.02em;
-    color: #1a1a1a;
+    color: var(--hv-petrol);
     margin: 0 0 20px;
     transition: color 0.3s ease;
 }
 
 .hv-service-showcase-card:hover .hv-service-showcase-card__title {
-    color: #6b5b8a;
+    color: var(--hv-purple);
 }
 
 .hv-service-showcase-card--featured:hover .hv-service-showcase-card__title {
-    color: #b8a4d9;
+    color: var(--hv-lilac);
 }
 
 .hv-service-showcase-card__desc {
@@ -13647,17 +13740,17 @@ html[dir="rtl"] .hv-footer__links a:hover {
     font-weight: 500;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: #1a1a1a;
+    color: var(--hv-petrol);
     background: transparent;
-    border: 1px solid #1a1a1a;
+    border: 1px solid var(--hv-petrol);
     border-radius: 100px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     align-self: flex-start;
 }
 
 .hv-service-showcase-card__cta:hover {
-    background: #1a1a1a;
-    color: #ffffff;
+    background: var(--hv-petrol);
+    color: var(--hv-white);
 }
 
 .hv-service-showcase-card__cta-arrow {

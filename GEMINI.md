@@ -13,7 +13,12 @@ You are **Antigravity**, an elite, agentic AI coding assistant specializing in *
    - **Pattern**: `$is_hebrew ? 'Hebrew' : 'English'` for simple UI text.
    - Use `[dir="rtl"]` overrides in CSS.
 2. **Design Language**:
-   - **Colors**: Defined in `assets/css/hv-unified.css` (e.g., `--hv-primary`, `--brand-gold`).
+   - **Colors**: Client-approved palette in `assets/css/hv-unified.css`:
+     - **Primary**: `--hv-primary` (#D02E04 Deep Red) - CTAs
+     - **Accent**: `--hv-orange` (#EFAF12 Warm Orange) - Highlights
+     - **Soft**: `--hv-yellow` (#FAE4AF), `--hv-pink` (#F8CEC8), `--hv-pink-soft` (#F5E0E9)
+     - **Brand**: `--hv-lilac` (#D9B6DC), `--hv-purple` (#B6A5E7), `--hv-blue` (#8B95F3)
+     - **Dark**: `--hv-petrol` (#254B61) - Headers, footers, dark text
    - **Typography**: Inter / Heebo. High contrast.
    - **CSS Strategy**: `hv-unified.css` is the **Main Source of Truth**. Check partials in `assets/css/` first, but if empty, edit `hv-unified.css` directly.
    - **Vibe**: Art Gallery. Lots of whitespace. Sophisticated.
