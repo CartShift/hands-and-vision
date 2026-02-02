@@ -324,14 +324,38 @@ function handandvision_enqueue_custom_assets() {
     wp_style_add_data( 'hv-unified', 'rtl', false );
 
     // Premium Store CSS - only load on WooCommerce pages
-    if ( class_exists( 'WooCommerce' ) && ( is_woocommerce() || is_shop() || is_product_category() || is_product_tag() || is_product() || is_cart() || is_checkout() || is_account_page() ) ) {
-        wp_enqueue_style(
-            'hv-store-premium',
-            $theme_uri . '/assets/css/hv-store-premium.css',
-            array( 'hv-unified' ),
-            HV_THEME_VERSION
-        );
-        wp_style_add_data( 'hv-store-premium', 'rtl', false );
+    // Use function_exists checks to avoid errors if WooCommerce is not fully loaded
+    if ( class_exists( 'WooCommerce' ) ) {
+        $is_wc_page = false;
+
+        // Check if we're on any WooCommerce page
+        if ( function_exists( 'is_woocommerce' ) && is_woocommerce() ) {
+            $is_wc_page = true;
+        } elseif ( function_exists( 'is_shop' ) && is_shop() ) {
+            $is_wc_page = true;
+        } elseif ( function_exists( 'is_product_category' ) && is_product_category() ) {
+            $is_wc_page = true;
+        } elseif ( function_exists( 'is_product_tag' ) && is_product_tag() ) {
+            $is_wc_page = true;
+        } elseif ( function_exists( 'is_product' ) && is_product() ) {
+            $is_wc_page = true;
+        } elseif ( function_exists( 'is_cart' ) && is_cart() ) {
+            $is_wc_page = true;
+        } elseif ( function_exists( 'is_checkout' ) && is_checkout() ) {
+            $is_wc_page = true;
+        } elseif ( function_exists( 'is_account_page' ) && is_account_page() ) {
+            $is_wc_page = true;
+        }
+
+        if ( $is_wc_page ) {
+            wp_enqueue_style(
+                'hv-store-premium',
+                $theme_uri . '/assets/css/hv-store-premium.css',
+                array( 'hv-unified' ),
+                HV_THEME_VERSION
+            );
+            wp_style_add_data( 'hv-store-premium', 'rtl', false );
+        }
     }
 
     wp_enqueue_script(
