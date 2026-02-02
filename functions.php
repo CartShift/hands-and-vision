@@ -602,4 +602,4 @@ function handandvision_custom_footer() {
 		return;
 	}
 	get_template_part( 'footer' );
-
+}
