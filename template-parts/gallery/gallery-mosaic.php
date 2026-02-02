@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	return;
 }
 $args = get_query_var( 'args', array() );
-$items = isset( $args['items'] ) ? $args['items'] : array();
+$items = isset( $args['items'] ) && is_array( $args['items'] ) ? $args['items'] : ( function_exists( 'handandvision_get_home_gallery_images' ) ? handandvision_get_home_gallery_images( (int) get_option( 'page_on_front' ) ?: get_the_ID() ) : array() );
 ?>
 <section class="hv-section hv-section--dark">
 	<div class="hv-container">

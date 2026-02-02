@@ -43,21 +43,15 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
         <div class="hv-hero-video__media">
             <?php
             $poster_url = ( is_array( $hero_poster ) && isset( $hero_poster['url'] ) ) ? $hero_poster['url'] : ( is_string( $hero_poster ) ? $hero_poster : '' );
+            if ( $hero_video_url ) :
             ?>
-            <video
-                autoplay
-                muted
-                loop
-                playsinline
-                poster="<?php echo $poster_url ? esc_url( $poster_url ) : ''; ?>"
-            >
-                <?php if ( $hero_video_url ) : ?>
+            <video autoplay muted loop playsinline poster="<?php echo $poster_url ? esc_url( $poster_url ) : ''; ?>">
                 <source src="<?php echo esc_url( $hero_video_url ); ?>" type="video/mp4">
-                <?php endif; ?>
             </video>
+            <?php endif; ?>
             <div class="hv-hero-video__overlay"></div>
         </div>
-        <div class="hv-hero-video__content hv-flex-center">
+        <div class="hv-hero-video__content hv-hero-video__content--center">
             <span class="hv-overline hv-hero-overline-v2">
                 <?php if ( handandvision_is_hebrew() ) : ?>
                     <span class="hv-word-1">אוצרות</span> · <span class="hv-word-2">אמנות</span> · <span class="hv-word-3">חזון</span>
@@ -65,7 +59,7 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
                     <span class="hv-word-1">CURATION</span> · <span class="hv-word-2">ART</span> · <span class="hv-word-3">VISION</span>
                 <?php endif; ?>
             </span>
-            <?php if ( $hero_title ) : ?><h1 class="hv-display hv-hero-title-v2" dir="ltr"><?php echo esc_html( $hero_title ); ?></h1><?php endif; ?>
+            <h1 class="hv-display hv-hero-title-v2" dir="ltr"><?php echo esc_html( $hero_title ?: ( handandvision_is_hebrew() ? 'יד וראייה' : 'Hand and Vision' ) ); ?></h1>
             <span class="hv-hero-subtitle-v2" dir="ltr">collective</span>
             <?php if ( $hero_subtitle ) : ?><p class="hv-subtitle hv-mt-0"><?php echo esc_html( $hero_subtitle ); ?></p><?php endif; ?>
             <div class="hv-hero-video__actions">
@@ -75,7 +69,7 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
         </div>
         <div class="hv-hero-video__scroll">
             <span><?php echo handandvision_is_hebrew() ? 'גלול' : 'Scroll'; ?></span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <polyline points="19 12 12 19 5 12"></polyline>
             </svg>
@@ -186,35 +180,20 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
                 <h2 class="hv-headline-2"><?php echo handandvision_is_hebrew() ? 'האמנים שלנו' : 'Our Artists'; ?></h2>
             </header>
 
+            <?php
+            $display_artists = ! empty( $featured_artists ) ? $featured_artists : get_posts( array(
+                'post_type'      => 'artist',
+                'posts_per_page' => 4,
+                'orderby'        => 'date',
+                'order'          => 'ASC',
+                'post_status'    => 'publish',
+            ) );
+            $display_artists = array_slice( is_array( $display_artists ) ? $display_artists : array(), 0, 4 );
+            ?>
+            <?php if ( ! empty( $display_artists ) ) : ?>
             <div class="hv-artists-showcase-bleed">
             <div class="hv-artists-showcase">
-                <?php
-                // Logic: 1. Manual Selection (ACF) -> 2. Auto-fetch Latest Artists (CPT) -> 3. Hardcoded Default
-                $display_artists = array();
-
-                // 1. Check for manual selection
-                if ( ! empty( $featured_artists ) ) {
-                    $display_artists = $featured_artists;
-                } else {
-                    // 2. Auto-fetch latest artists from 'artist' post type
-                    $artist_query_args = array(
-                        'post_type'      => 'artist',
-                        'posts_per_page' => 4,
-                        'orderby'        => 'date',
-                        'order'          => 'ASC',
-                        'post_status'    => 'publish',
-                    );
-                    $dynamic_artists = get_posts( $artist_query_args );
-
-                    if ( empty( $dynamic_artists ) ) {
-                        $display_artists = $default_artists;
-                    } else {
-                        $display_artists = $dynamic_artists;
-                    }
-                }
-                $display_artists = array_slice( $display_artists, 0, 4 );
-
-                foreach ( $display_artists as $i => $artist_item ) :
+                <?php foreach ( $display_artists as $i => $artist_item ) :
                     if ( ! is_object( $artist_item ) ) continue;
                     $a_image_html = '';
                     $a_image_url = '';
@@ -275,10 +254,12 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
                 <?php endforeach; ?>
             </div>
             </div>
-
             <div class="hv-text-center hv-mt-8">
                 <a href="<?php echo esc_url( get_post_type_archive_link( 'artist' ) ); ?>" class="hv-btn hv-btn--outline"><?php echo handandvision_is_hebrew() ? 'לכל האמנים' : 'All Artists'; ?></a>
             </div>
+            <?php else : ?>
+            <p class="hv-text-center hv-muted hv-mt-4"><?php echo esc_html( handandvision_is_hebrew() ? 'האמנים שלנו יוצגו כאן בקרוב.' : 'Our artists will be featured here soon.' ); ?></p>
+            <?php endif; ?>
         </div>
     </section>
 

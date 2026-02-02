@@ -437,18 +437,19 @@
 			// Click outside to close
 			this.overlay.querySelector(".hv-lightbox-backdrop").addEventListener("click", () => this.close());
 
-			// Keyboard navigation
 			document.addEventListener("keydown", e => {
 				if (!this.overlay.classList.contains("active")) return;
-
 				switch (e.key) {
 					case "Escape":
+						e.preventDefault();
 						this.close();
 						break;
 					case "ArrowLeft":
+						e.preventDefault();
 						this.prev();
 						break;
 					case "ArrowRight":
+						e.preventDefault();
 						this.next();
 						break;
 				}
@@ -514,18 +515,25 @@
 			const meta = item.querySelector(".hv-gallery-bento__meta")?.textContent || "";
 
 			if (!fullSrc || fullSrc === "#") {
-				this.loader.classList.remove("active");
+				this.hideLoader();
 				this.image.removeAttribute("src");
 				return;
 			}
 
 			this.loader.classList.add("active");
-			this.image.src = fullSrc;
 			this.image.alt = title;
 			this.caption.textContent = title + (meta ? ` — ${meta}` : "");
 			this.counterEl.textContent = `${this.currentIndex + 1} / ${this.visibleItems.length}`;
-			this.image.onload = () => this.loader.classList.remove("active");
-			this.image.onerror = () => this.loader.classList.remove("active");
+
+			const hideLoader = () => this.loader.classList.remove("active");
+			this.image.onload = hideLoader;
+			this.image.onerror = hideLoader;
+			this.image.src = fullSrc;
+			if (this.image.complete) hideLoader();
+		}
+
+		hideLoader() {
+			if (this.loader) this.loader.classList.remove("active");
 		}
 
 		/**
