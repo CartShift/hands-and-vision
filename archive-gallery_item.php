@@ -143,8 +143,16 @@ $is_hebrew = handandvision_is_hebrew();
                 while ($gallery_items->have_posts()) : $gallery_items->the_post();
                     $index++;
 
-                    // Get ACF fields
                     $image = get_field('gallery_image');
+                    if ( ! $image || empty( $image['url'] ) ) {
+                        $thumb_id = get_post_thumbnail_id( get_the_ID() );
+                        if ( $thumb_id ) {
+                            $image = [
+                                'ID'  => $thumb_id,
+                                'url' => wp_get_attachment_image_url( $thumb_id, 'full' ),
+                            ];
+                        }
+                    }
                     $caption = get_field('gallery_caption');
                     $artist_id = get_field('gallery_artist');
                     $year = get_field('gallery_year');

@@ -1,7 +1,7 @@
 <?php
 /**
  * ACF Field Group Configuration for Gallery Items
- * 
+ *
  * This file registers ACF fields for the Gallery Item post type.
  * Labels and instructions in Hebrew.
  *
@@ -24,6 +24,16 @@ function handandvision_register_acf_gallery_fields() {
         'key' => 'group_gallery_item_fields',
         'title' => 'פרטי פריט הגלריה',
         'fields' => array(
+            array(
+                'key' => 'field_gallery_image',
+                'label' => 'תמונת גלריה',
+                'name' => 'gallery_image',
+                'type' => 'image',
+                'return_format' => 'array',
+                'preview_size' => 'medium',
+                'required' => 1,
+                'instructions' => 'תמונה לפריט גלריה. מומלץ: 1200x800 פיקסלים או יותר.',
+            ),
             array(
                 'key' => 'field_gallery_caption',
                 'label' => 'כיתוב',

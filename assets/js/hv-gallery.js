@@ -664,8 +664,6 @@
 		new Gallery();
 		new GalleryLightbox();
 		new GallerySearch();
-
-		console.log("Hand & Vision Gallery initialized");
 	}
 
 	// Initialize when DOM is ready
