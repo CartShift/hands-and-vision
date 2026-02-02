@@ -359,41 +359,11 @@
 		}
 
 		init() {
-			// Initialize GLightbox if available
-			if (typeof GLightbox !== "undefined") {
-				this.initGLightbox();
-			} else {
-				this.initCustomLightbox();
-			}
+			this.initCustomLightbox();
 		}
 
 		/**
-		 * Initialize GLightbox
-		 */
-		initGLightbox() {
-			this.lightbox = GLightbox({
-				selector: ".hv-gallery-bento__link[href][href!='#']",
-				touchNavigation: true,
-				loop: true,
-				zoomable: true,
-				draggable: true,
-				svg: {
-					close:
-						'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>',
-					next: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>',
-					prev: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>'
-				},
-				onOpen: () => {
-					document.body.classList.add("hv-lightbox-open");
-				},
-				onClose: () => {
-					document.body.classList.remove("hv-lightbox-open");
-				}
-			});
-		}
-
-		/**
-		 * Initialize custom lightbox fallback
+		 * Initialize custom lightbox
 		 */
 		initCustomLightbox() {
 			this.items.forEach(item => {
@@ -545,20 +515,17 @@
 
 			if (!fullSrc || fullSrc === "#") {
 				this.loader.classList.remove("active");
+				this.image.removeAttribute("src");
 				return;
 			}
 
 			this.loader.classList.add("active");
-			const tempImg = new Image();
-			tempImg.onload = () => {
-				this.image.src = fullSrc;
-				this.image.alt = title;
-				this.caption.textContent = title + (meta ? ` — ${meta}` : "");
-				this.counterEl.textContent = `${this.currentIndex + 1} / ${this.visibleItems.length}`;
-				this.loader.classList.remove("active");
-			};
-			tempImg.onerror = () => this.loader.classList.remove("active");
-			tempImg.src = fullSrc;
+			this.image.src = fullSrc;
+			this.image.alt = title;
+			this.caption.textContent = title + (meta ? ` — ${meta}` : "");
+			this.counterEl.textContent = `${this.currentIndex + 1} / ${this.visibleItems.length}`;
+			this.image.onload = () => this.loader.classList.remove("active");
+			this.image.onerror = () => this.loader.classList.remove("active");
 		}
 
 		/**

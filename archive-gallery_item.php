@@ -293,7 +293,6 @@ $is_hebrew = handandvision_is_hebrew();
 </main>
 
 <?php
-// Enqueue gallery-specific assets
 wp_enqueue_script(
     'hv-gallery',
     get_template_directory_uri() . '/assets/js/hv-gallery.js',
@@ -301,22 +300,5 @@ wp_enqueue_script(
     '2.0.0',
     true
 );
-
-// Conditionally enqueue GLightbox if available
-if (!wp_script_is('glightbox', 'registered')) {
-    wp_enqueue_style(
-        'glightbox',
-        'https://cdn.jsdelivr.net/npm/glightbox@3.2.0/dist/css/glightbox.min.css',
-        [],
-        '3.2.0'
-    );
-    wp_enqueue_script(
-        'glightbox',
-        'https://cdn.jsdelivr.net/npm/glightbox@3.2.0/dist/js/glightbox.min.js',
-        [],
-        '3.2.0',
-        true
-    );
-}
 
 get_footer();
