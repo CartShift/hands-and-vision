@@ -23,19 +23,18 @@ $artists = get_posts( array(
 
 <main id="primary" class="hv-archive-page hv-artists-archive">
 
-    <!-- Hero Header -->
-    <section class="hv-page-hero">
-        <?php handandvision_breadcrumbs(); ?>
-        <div class="hv-container hv-text-center">
-            <span class="hv-overline hv-reveal"><?php echo handandvision_is_hebrew() ? 'הקולקטיב שלנו' : 'Our Collective'; ?></span>
-            <h1 class="hv-headline-1 hv-reveal"><?php echo handandvision_is_hebrew() ? 'האמנים' : 'Artists'; ?></h1>
-            <p class="hv-intro-text hv-reveal">
-                <?php echo handandvision_is_hebrew()
-                    ? 'פגשו את היוצרים המוכשרים שמרכיבים את קהילת Hand & Vision - אמנים מגוונים המביאים חזון ייחודי לכל יצירה'
-                    : 'Meet the talented creators who make up the Hand & Vision community - diverse artists bringing a unique vision to every piece'; ?>
-            </p>
-        </div>
-    </section>
+<?php
+$is_hebrew = handandvision_is_hebrew();
+get_template_part( 'hero/page-hero', null, array(
+	'overline'   => $is_hebrew ? 'הקולקטיב שלנו' : 'Our Collective',
+	'title'      => $is_hebrew ? 'האמנים' : 'Artists',
+	'subtitle'   => $is_hebrew
+		? 'פגשו את היוצרים המוכשרים שמרכיבים את קהילת Hand & Vision - אמנים מגוונים המביאים חזון ייחודי לכל יצירה'
+		: 'Meet the talented creators who make up the Hand & Vision community - diverse artists bringing a unique vision to every piece',
+	'stats'      => null,
+	'scroll_text'=> $is_hebrew ? 'גלול לגילוי' : 'Scroll to discover',
+) );
+?>
 
     <!-- Artists Grid -->
     <section class="hv-section hv-section--cream">
@@ -51,8 +50,12 @@ $artists = get_posts( array(
                             <div class="hv-artist-card__portrait">
                                 <?php if ( $image_url ) : ?>
                                     <img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $artist->post_title ); ?>" class="hv-artist-card__img" loading="lazy">
-                                <?php else : ?>
+                                <?php else :
+                                    $card_ph = function_exists( 'handandvision_acf_image_placeholder_html' ) ? handandvision_acf_image_placeholder_html( handandvision_is_hebrew() ? 'תמונת אמן' : 'Artist image' ) : '';
+                                    echo $card_ph;
+                                    if ( ! $card_ph ) : ?>
                                     <div class="hv-artist-card__placeholder" style="background: linear-gradient(135deg, hsl(<?php echo (int) rand(30, 60); ?>, 15%, 75%) 0%, hsl(<?php echo (int) rand(40, 70); ?>, 20%, 65%) 100%);"></div>
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             </div>
                             <div class="hv-artist-card__info">

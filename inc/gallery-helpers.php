@@ -44,7 +44,8 @@ function handandvision_get_home_gallery_images( $front_page_id = 0 ) {
 		$url = wp_get_attachment_image_url( $img_id, 'large' );
 		if ( ! $url && ! $img_id ) continue;
 
-		$artist_id = get_field( 'gallery_artist', $post_item->ID );
+		$artist_raw = get_field( 'gallery_artist', $post_item->ID );
+		$artist_id = is_object( $artist_raw ) ? (int) $artist_raw->ID : (int) $artist_raw;
 		$caption = $artist_id ? get_the_title( $artist_id ) : ( get_field( 'gallery_caption', $post_item->ID ) ?: '' );
 		$out[] = array(
 			'id'      => $img_id,

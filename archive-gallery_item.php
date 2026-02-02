@@ -41,7 +41,8 @@ if ($gallery_items->have_posts()) {
     while ($gallery_items->have_posts()) {
         $gallery_items->the_post();
         $total_count++;
-        $artist_id = get_field('gallery_artist');
+        $artist_raw = get_field('gallery_artist');
+        $artist_id = is_object($artist_raw) ? (int) $artist_raw->ID : (int) $artist_raw;
         if ($artist_id) {
             $artist_counts[$artist_id] = ($artist_counts[$artist_id] ?? 0) + 1;
         }
@@ -54,19 +55,15 @@ $is_hebrew = handandvision_is_hebrew();
 
 <main class="hv-gallery-page" id="gallery-content">
 
-    <!-- Gallery Hero Section -->
-    <section class="hv-gallery-hero" aria-labelledby="gallery-heading">
-        <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) handandvision_breadcrumbs(); ?>
-        <div class="hv-gallery-hero__line" aria-hidden="true"></div>
-        <h1 class="hv-gallery-hero__title" id="gallery-heading">
-            <?php echo esc_html( $is_hebrew ? 'גלריה' : 'Gallery' ); ?>
-        </h1>
-        <p class="hv-gallery-hero__sub">
-            <?php echo esc_html( $is_hebrew
-                ? 'עבודות נבחרות מהקולקטיב שלנו'
-                : 'Selected works from our collective' ); ?>
-        </p>
-    </section>
+<?php
+get_template_part( 'hero/page-hero', null, array(
+	'overline'   => $is_hebrew ? 'עבודות נבחרות' : 'Selected Works',
+	'title'      => $is_hebrew ? 'גלריה' : 'Gallery',
+	'subtitle'   => $is_hebrew ? 'עבודות נבחרות מהקולקטיב שלנו' : 'Selected works from our collective',
+	'stats'      => null,
+	'scroll_text'=> $is_hebrew ? 'גלול לגילוי' : 'Scroll to discover',
+) );
+?>
 
     <!-- Gallery Controls -->
     <section class="hv-gallery-controls" aria-label="Gallery controls">
@@ -154,11 +151,14 @@ $is_hebrew = handandvision_is_hebrew();
                         }
                     }
                     $caption = get_field('gallery_caption');
-                    $artist_id = get_field('gallery_artist');
+                    $artist_raw = get_field('gallery_artist');
+                    $artist_id = is_object($artist_raw) ? (int) $artist_raw->ID : (int) $artist_raw;
                     $year = get_field('gallery_year');
                     $project = get_field('gallery_project');
+                    $caption_display = ( function_exists( 'handandvision_acf_display_value' ) && function_exists( 'handandvision_acf_empty' ) && handandvision_acf_empty( $caption ) )
+                        ? handandvision_acf_display_value( $caption, $is_hebrew ? 'כיתוב' : 'Caption', 'html' )
+                        : ( $caption ?: get_the_title() );
 
-                    // Determine artist info
                     $artist_name = $artist_id && isset($artist_map[$artist_id])
                         ? $artist_map[$artist_id]['name']
                         : '';
@@ -199,7 +199,9 @@ $is_hebrew = handandvision_is_hebrew();
                         ); ?>"
                     >
                         <div class="hv-gallery-bento__media">
-                            <?php if ($image) : ?>
+                            <?php
+                            $img_ph = ( ! $image && function_exists( 'handandvision_acf_image_placeholder_html' ) ) ? handandvision_acf_image_placeholder_html( $is_hebrew ? 'תמונת גלריה' : 'Gallery image' ) : '';
+                            if ($image) : ?>
                                 <img
                                     class="hv-gallery-bento__img"
                                     src="<?php echo esc_url($image['url']); ?>"
@@ -210,7 +212,9 @@ $is_hebrew = handandvision_is_hebrew();
                                     <?php if ($srcset) : ?>srcset="<?php echo esc_attr($srcset); ?>"<?php endif; ?>
                                     <?php if ($sizes) : ?>sizes="<?php echo esc_attr($sizes); ?>"<?php endif; ?>
                                 >
-                            <?php else : ?>
+                            <?php else :
+                                echo $img_ph;
+                                if ( ! $img_ph ) : ?>
                                 <div class="hv-gallery-bento__placeholder">
                                     <span class="hv-gallery-bento__placeholder-icon" aria-hidden="true">
                                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
@@ -220,12 +224,13 @@ $is_hebrew = handandvision_is_hebrew();
                                         </svg>
                                     </span>
                                 </div>
+                                <?php endif; ?>
                             <?php endif; ?>
 
                             <!-- Hover Overlay -->
                             <div class="hv-gallery-bento__overlay" aria-hidden="true">
                                 <h3 class="hv-gallery-bento__title">
-                                    <?php echo esc_html($caption ?: get_the_title()); ?>
+                                    <?php echo ( $caption_display && strpos( $caption_display, '<' ) !== false ) ? wp_kses_post( $caption_display ) : esc_html( $caption_display ?: get_the_title() ); ?>
                                 </h3>
                                 <?php if ($artist_name) : ?>
                                     <span class="hv-gallery-bento__meta">

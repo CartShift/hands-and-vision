@@ -24,48 +24,15 @@ $page_subtitle = get_field( 'page_subtitle', $page_id ) ?: ( handandvision_is_he
 
 <main id="primary" class="site-main hv-contact-page">
 
-    <!-- Immersive Hero Section (Services Style) -->
-    <section class="hv-services-hero">
-        <div class="hv-services-hero__bg">
-            <div class="hv-services-hero__gradient"></div>
-            <div class="hv-services-hero__orb hv-services-hero__orb--1"></div>
-            <div class="hv-services-hero__orb hv-services-hero__orb--2"></div>
-            <div class="hv-services-hero__orb hv-services-hero__orb--3"></div>
-            <div class="hv-services-hero__lines"></div>
-        </div>
-        <div class="hv-services-hero__content">
-            <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
-            <div class="hv-container">
-                <div class="hv-services-hero__inner">
-                    <?php if ( $page_overline ) : ?>
-                    <div class="hv-services-hero__overline">
-                        <span class="hv-services-hero__line"></span>
-                        <span class="hv-services-hero__text">
-                            <?php echo esc_html( $page_overline ); ?>
-                        </span>
-                        <span class="hv-services-hero__line"></span>
-                    </div>
-                    <?php endif; ?>
-
-                    <h1 class="hv-services-hero__title">
-                        <span class="hv-services-hero__title-line hv-services-hero__title-line--accent"><?php echo esc_html( $page_title_display ); ?></span>
-                    </h1>
-
-                    <?php if ( $page_subtitle ) : ?>
-                    <p class="hv-services-hero__subtitle">
-                        <?php echo esc_html( $page_subtitle ); ?>
-                    </p>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-        <div class="hv-services-hero__scroll">
-            <span><?php echo esc_html( handandvision_is_hebrew() ? 'גלול ליצירת קשר' : 'Scroll to connect' ); ?></span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M12 5v14M5 12l7 7 7-7"/>
-            </svg>
-        </div>
-    </section>
+<?php
+get_template_part( 'hero/page-hero', null, array(
+	'overline'   => $page_overline,
+	'title'      => $page_title_display,
+	'subtitle'   => $page_subtitle,
+	'stats'      => null,
+	'scroll_text'=> handandvision_is_hebrew() ? 'גלול ליצירת קשר' : 'Scroll to connect',
+) );
+?>
 
     <!-- Contact Content -->
     <section class="hv-section hv-section--white">

@@ -17,72 +17,25 @@ $is_hebrew = handandvision_is_hebrew();
 
 <main id="primary" class="hv-shop-page">
 
-    <!-- Immersive Shop Hero -->
-    <section class="hv-services-hero">
-        <div class="hv-services-hero__bg">
-            <div class="hv-services-hero__gradient"></div>
-            <div class="hv-services-hero__orb hv-services-hero__orb--1"></div>
-            <div class="hv-services-hero__orb hv-services-hero__orb--2"></div>
-            <div class="hv-services-hero__orb hv-services-hero__orb--3"></div>
-            <div class="hv-services-hero__lines"></div>
-        </div>
-        <div class="hv-services-hero__content">
-            <?php handandvision_breadcrumbs(); ?>
-            <div class="hv-container">
-                <div class="hv-services-hero__inner">
-                    <div class="hv-services-hero__overline">
-                        <span class="hv-services-hero__line"></span>
-                        <span class="hv-services-hero__text">
-                            <?php echo esc_html( $is_hebrew ? 'האוסף שלנו' : 'Our Collection' ); ?>
-                        </span>
-                        <span class="hv-services-hero__line"></span>
-                    </div>
-                    <h1 class="hv-services-hero__title">
-                        <?php if ( $is_hebrew ) : ?>
-                            <span class="hv-services-hero__title-line">חנות</span>
-                            <span class="hv-services-hero__title-line hv-services-hero__title-line--accent">האמנות</span>
-                        <?php else : ?>
-                            <span class="hv-services-hero__title-line">Art Gallery</span>
-                            <span class="hv-services-hero__title-line hv-services-hero__title-line--accent">Shop</span>
-                        <?php endif; ?>
-                    </h1>
-                    <p class="hv-services-hero__subtitle">
-                        <?php echo esc_html( $is_hebrew
-                            ? 'גלו יצירות אמנות ייחודיות מאמנים מובילים. כל יצירה מספרת סיפור משלה ומזמינה אתכם לחוויה אומנותית ייחודית'
-                            : 'Discover unique artworks from leading artists. Each piece tells its own story and invites you to a unique artistic experience'
-                        ); ?>
-                    </p>
-                    <div class="hv-services-hero__stats">
-                        <div class="hv-services-hero__stat">
-                            <span class="hv-services-hero__stat-number">
-                                <?php
-                                $artist_count = wp_count_posts( 'artist' )->publish;
-                                echo esc_html( $artist_count > 0 ? $artist_count : '50' );
-                                ?>+
-                            </span>
-                            <span class="hv-services-hero__stat-label"><?php echo esc_html( $is_hebrew ? 'אמנים' : 'Artists' ); ?></span>
-                        </div>
-                        <div class="hv-services-hero__stat-divider"></div>
-                        <div class="hv-services-hero__stat">
-                            <span class="hv-services-hero__stat-number">
-                                <?php
-                                $product_count = wp_count_posts( 'product' )->publish;
-                                echo esc_html( $product_count > 0 ? $product_count : '200' );
-                                ?>+
-                            </span>
-                            <span class="hv-services-hero__stat-label"><?php echo esc_html( $is_hebrew ? 'יצירות' : 'Artworks' ); ?></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="hv-services-hero__scroll">
-            <span><?php echo esc_html( $is_hebrew ? 'גלול לגילוי' : 'Scroll to discover' ); ?></span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M12 5v14M5 12l7 7 7-7"/>
-            </svg>
-        </div>
-    </section>
+<?php
+$artist_count = wp_count_posts( 'artist' )->publish;
+$product_count = wp_count_posts( 'product' )->publish;
+get_template_part( 'hero/page-hero', null, array(
+	'overline'   => $is_hebrew ? 'האוסף שלנו' : 'Our Collection',
+	'title'      => array(
+		array( 'text' => $is_hebrew ? 'חנות' : 'Art Gallery', 'accent' => false ),
+		array( 'text' => $is_hebrew ? 'האמנות' : 'Shop', 'accent' => true ),
+	),
+	'subtitle'   => $is_hebrew
+		? 'גלו יצירות אמנות ייחודיות מאמנים מובילים. כל יצירה מספרת סיפור משלה ומזמינה אתכם לחוויה אומנותית ייחודית'
+		: 'Discover unique artworks from leading artists. Each piece tells its own story and invites you to a unique artistic experience',
+	'stats'      => array(
+		array( 'number' => ( $artist_count > 0 ? $artist_count : '50' ) . '+', 'label' => $is_hebrew ? 'אמנים' : 'Artists' ),
+		array( 'number' => ( $product_count > 0 ? $product_count : '200' ) . '+', 'label' => $is_hebrew ? 'יצירות' : 'Artworks' ),
+	),
+	'scroll_text'=> $is_hebrew ? 'גלול לגילוי' : 'Scroll to discover',
+) );
+?>
 
     <?php
     get_template_part( 'template-parts/shop-filters' );

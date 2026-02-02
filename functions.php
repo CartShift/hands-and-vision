@@ -290,6 +290,7 @@ require_once ASTRA_THEME_DIR . 'inc/ajax-handlers/contact-form.php';
 
 // Gallery Helpers
 require_once ASTRA_THEME_DIR . 'inc/gallery-helpers.php';
+require_once ASTRA_THEME_DIR . 'inc/acf-display-helper.php';
 // Service Helpers (icon SVGs)
 require_once ASTRA_THEME_DIR . 'inc/service-helpers.php';
 
@@ -501,18 +502,16 @@ function handandvision_custom_header() {
                 </nav>
             </div>
 
-            <!-- Cart Icon -->
-            <?php if ( class_exists( 'WooCommerce' ) ) : ?>
-                <a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="hv-header__cart" id="hv-header-cart" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'עגלת קניות' : 'Shopping Cart' ); ?>">
-                    <svg class="hv-cart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <path d="M16 10a4 4 0 0 1-8 0"></path>
-                    </svg>
-                    <?php $cart_count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0; ?>
-                    <span class="hv-cart-count<?php echo $cart_count > 0 ? ' has-items' : ''; ?>" id="hv-cart-count"><?php echo esc_html( $cart_count ); ?></span>
-                </a>
-            <?php endif; ?>
+            <?php
+            if ( class_exists( 'WooCommerce' ) ) {
+                $cart_count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
+                ?>
+                <div id="hv-header-cart-wrap"><?php
+                if ( $cart_count > 0 ) {
+                    handandvision_header_cart_markup( $cart_count );
+                }
+                ?></div>
+            <?php } ?>
 
             <!-- Mobile Menu Toggle -->
             <button class="hv-header__menu-toggle" id="hv-menu-toggle" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'תפריט' : 'Menu' ); ?>">

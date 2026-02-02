@@ -253,9 +253,11 @@
 
 			if (visibleCount === 0) {
 				this.emptyState.classList.remove(CONFIG.classes.hidden);
+				this.emptyState.hidden = false;
 				this.grid.classList.add(CONFIG.classes.noResults);
 			} else {
 				this.emptyState.classList.add(CONFIG.classes.hidden);
+				this.emptyState.hidden = true;
 				this.grid.classList.remove(CONFIG.classes.noResults);
 			}
 		}

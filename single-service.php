@@ -70,13 +70,17 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
             <?php if ( $hero_url ) : ?>
                 <img src="<?php echo esc_url( $hero_url ); ?>" alt="<?php echo esc_attr( $service_title ); ?>">
                 <div class="hv-service-single-hero__overlay"></div>
-            <?php else : ?>
+            <?php else :
+                $hero_ph = function_exists( 'handandvision_acf_image_placeholder_html' ) ? handandvision_acf_image_placeholder_html( $is_hebrew ? 'תמונת באנר' : 'Hero image' ) : '';
+                echo $hero_ph;
+                if ( ! $hero_ph ) : ?>
                 <div class="hv-service-single-hero__gradient"></div>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
         <div class="hv-service-single-hero__content">
-            <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
             <div class="hv-container">
+                <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
                 <div class="hv-service-single-hero__inner">
                     <span class="hv-service-single-hero__label">
                         <?php echo esc_html( $is_hebrew ? 'שירות' : 'Service' ); ?>
@@ -84,9 +88,13 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
                     <h1 class="hv-service-single-hero__title">
                         <?php echo esc_html( $service_title ); ?>
                     </h1>
-                    <?php if ( $short_desc ) : ?>
+                    <?php
+                    $short_desc_display = function_exists( 'handandvision_acf_display_value' )
+                        ? handandvision_acf_display_value( $short_desc, $is_hebrew ? 'תיאור קצר' : 'Short description', 'html' )
+                        : $short_desc;
+                    if ( $short_desc_display ) : ?>
                         <p class="hv-service-single-hero__subtitle">
-                            <?php echo esc_html( $short_desc ); ?>
+                            <?php echo $short_desc_display === $short_desc ? esc_html( $short_desc ) : wp_kses_post( $short_desc_display ); ?>
                         </p>
                     <?php endif; ?>
                 </div>
@@ -95,18 +103,26 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
     </section>
 
     <!-- Main Content -->
-    <?php if ( $full_desc ) : ?>
+    <?php
+    $full_desc_display = function_exists( 'handandvision_acf_display_value' )
+        ? handandvision_acf_display_value( $full_desc, $is_hebrew ? 'תיאור מלא' : 'Full description', 'html' )
+        : $full_desc;
+    if ( $full_desc_display ) : ?>
     <section class="hv-service-content-section">
         <div class="hv-container hv-container--narrow">
             <div class="hv-service-content-text">
-                <?php echo wp_kses_post( wpautop( $full_desc ) ); ?>
+                <?php echo $full_desc_display === $full_desc ? wp_kses_post( wpautop( $full_desc ) ) : wp_kses_post( wpautop( $full_desc_display ) ); ?>
             </div>
         </div>
     </section>
     <?php endif; ?>
 
     <!-- Features -->
-    <?php if ( ! empty( $features ) ) : ?>
+    <?php
+    $features_placeholder = ( empty( $features ) && function_exists( 'handandvision_acf_can_show_placeholder' ) && handandvision_acf_can_show_placeholder() && function_exists( 'handandvision_acf_display_value' ) )
+        ? handandvision_acf_display_value( array(), $is_hebrew ? 'מה אנחנו עושים' : 'What we do', 'html' )
+        : '';
+    if ( ! empty( $features ) || $features_placeholder ) : ?>
     <section class="hv-service-features-section">
         <div class="hv-container">
             <div class="hv-service-features-header">
@@ -119,6 +135,9 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
             </div>
             <div class="hv-service-features-grid">
                 <?php
+                if ( $features_placeholder && empty( $features ) ) {
+                    echo '<div class="hv-service-feature-item">' . $features_placeholder . '</div>';
+                }
                 $counter = 0;
                 foreach ( $features as $feature ) :
                     $counter++;
@@ -136,7 +155,11 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
     <?php endif; ?>
 
     <!-- Gallery -->
-    <?php if ( ! empty( $gallery_grid_items ) ) : ?>
+    <?php
+    $gallery_placeholder = ( empty( $gallery_grid_items ) && function_exists( 'handandvision_acf_can_show_placeholder' ) && handandvision_acf_can_show_placeholder() && function_exists( 'handandvision_acf_display_value' ) )
+        ? handandvision_acf_display_value( array(), $is_hebrew ? 'תמונות גלריה' : 'Gallery images', 'html' )
+        : '';
+    if ( ! empty( $gallery_grid_items ) || $gallery_placeholder ) : ?>
     <section class="hv-service-gallery-section">
         <div class="hv-container">
             <div class="hv-service-gallery-header">
@@ -148,7 +171,11 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
                 </h2>
             </div>
             <div class="hv-service-gallery-grid">
-                <?php foreach ( $gallery_grid_items as $item ) :
+                <?php
+                if ( $gallery_placeholder && empty( $gallery_grid_items ) ) {
+                    echo '<div class="hv-service-gallery-item"><div class="hv-service-gallery-media"><div class="hv-field-placeholder hv-field-placeholder--image">' . $gallery_placeholder . '</div></div></div>';
+                }
+                foreach ( $gallery_grid_items as $item ) :
                     $image_url = isset( $item['image'] ) ? $item['image'] : '';
                     $title = isset( $item['title'] ) ? $item['title'] : '';
                     $link = isset( $item['link'] ) ? $item['link'] : '';
@@ -177,7 +204,11 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
     <?php endif; ?>
 
     <!-- Related Artists -->
-    <?php if ( ! empty( $related_artists ) ) : ?>
+    <?php
+    $related_placeholder = ( empty( $related_artists ) && function_exists( 'handandvision_acf_can_show_placeholder' ) && handandvision_acf_can_show_placeholder() && function_exists( 'handandvision_acf_display_value' ) )
+        ? handandvision_acf_display_value( array(), $is_hebrew ? 'אמנים קשורים' : 'Related artists', 'html' )
+        : '';
+    if ( ! empty( $related_artists ) || $related_placeholder ) : ?>
     <section class="hv-service-artists-section">
         <div class="hv-container">
             <div class="hv-service-artists-header">
@@ -189,7 +220,11 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
                 </h2>
             </div>
             <div class="hv-service-artists-grid">
-                <?php foreach ( $related_artists as $artist ) :
+                <?php
+                if ( $related_placeholder && empty( $related_artists ) ) {
+                    echo '<div class="hv-service-artist-card"><div class="hv-service-artist-media"><div class="hv-field-placeholder hv-field-placeholder--image">' . $related_placeholder . '</div></div></div>';
+                }
+                foreach ( $related_artists as $artist ) :
                     $artist_id = is_object( $artist ) ? $artist->ID : (int) $artist;
                     if ( ! $artist_id ) continue;
 

@@ -39,61 +39,23 @@ $total_services = count( $services );
 
 <main id="primary" class="hv-services-page">
 
-    <!-- Immersive Hero Section -->
-    <section class="hv-services-hero">
-        <div class="hv-services-hero__bg">
-            <div class="hv-services-hero__gradient"></div>
-            <div class="hv-services-hero__orb hv-services-hero__orb--1"></div>
-            <div class="hv-services-hero__orb hv-services-hero__orb--2"></div>
-            <div class="hv-services-hero__orb hv-services-hero__orb--3"></div>
-            <div class="hv-services-hero__lines"></div>
-        </div>
-        <div class="hv-services-hero__content">
-            <?php if ( function_exists( 'handandvision_breadcrumbs' ) ) { handandvision_breadcrumbs(); } ?>
-            <div class="hv-container">
-                <div class="hv-services-hero__inner">
-                    <div class="hv-services-hero__overline">
-                        <span class="hv-services-hero__line"></span>
-                        <span class="hv-services-hero__text">
-                            <?php echo esc_html( $is_hebrew ? 'שירותים מקצועיים' : 'Professional Services' ); ?>
-                        </span>
-                        <span class="hv-services-hero__line"></span>
-                    </div>
-                    <h1 class="hv-services-hero__title">
-                        <?php if ( $is_hebrew ) : ?>
-                            <span class="hv-services-hero__title-line">אוצרות, ייעוץ</span>
-                            <span class="hv-services-hero__title-line hv-services-hero__title-line--accent">ואמנות בתנועה</span>
-                        <?php else : ?>
-                            <span class="hv-services-hero__title-line">Curation, Consultancy</span>
-                            <span class="hv-services-hero__title-line hv-services-hero__title-line--accent">& Art in Motion</span>
-                        <?php endif; ?>
-                    </h1>
-                    <p class="hv-services-hero__subtitle">
-                        <?php echo esc_html( $is_hebrew
-                            ? 'אנו מציעים מגוון שירותים מותאמים אישית לעולם האמנות – מאוצרות תערוכות ועד ייעוץ איסוף, הכל עם תשוקה למצוינות.'
-                            : 'We offer a range of bespoke services for the art world — from exhibition curation to collection advisory, all with a passion for excellence.' ); ?>
-                    </p>
-                    <div class="hv-services-hero__stats">
-                        <div class="hv-services-hero__stat">
-                            <span class="hv-services-hero__stat-number"><?php echo esc_html( $total_services ); ?></span>
-                            <span class="hv-services-hero__stat-label"><?php echo esc_html( $is_hebrew ? 'שירותים' : 'Services' ); ?></span>
-                        </div>
-                        <div class="hv-services-hero__stat-divider"></div>
-                        <div class="hv-services-hero__stat">
-                            <span class="hv-services-hero__stat-number">∞</span>
-                            <span class="hv-services-hero__stat-label"><?php echo esc_html( $is_hebrew ? 'אפשרויות' : 'Possibilities' ); ?></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="hv-services-hero__scroll">
-            <span><?php echo esc_html( $is_hebrew ? 'גלול לגילוי' : 'Scroll to discover' ); ?></span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M12 5v14M5 12l7 7 7-7"/>
-            </svg>
-        </div>
-    </section>
+<?php
+get_template_part( 'hero/page-hero', null, array(
+	'overline'   => $is_hebrew ? 'שירותים מקצועיים' : 'Professional Services',
+	'title'      => array(
+		array( 'text' => $is_hebrew ? 'אוצרות, ייעוץ' : 'Curation, Consultancy', 'accent' => false ),
+		array( 'text' => $is_hebrew ? 'ואמנות בתנועה' : '& Art in Motion', 'accent' => true ),
+	),
+	'subtitle'   => $is_hebrew
+		? 'אנו מציעים מגוון שירותים מותאמים אישית לעולם האמנות – מאוצרות תערוכות ועד ייעוץ איסוף, הכל עם תשוקה למצוינות.'
+		: 'We offer a range of bespoke services for the art world — from exhibition curation to collection advisory, all with a passion for excellence.',
+	'stats'      => array(
+		array( 'number' => $total_services, 'label' => $is_hebrew ? 'שירותים' : 'Services' ),
+		array( 'number' => '∞', 'label' => $is_hebrew ? 'אפשרויות' : 'Possibilities' ),
+	),
+	'scroll_text'=> $is_hebrew ? 'גלול לגילוי' : 'Scroll to discover',
+) );
+?>
 
     <!-- Services Showcase -->
     <section class="hv-services-showcase">
@@ -129,7 +91,10 @@ $total_services = count( $services );
                         <div class="hv-service-showcase-card__media">
                             <?php if ( $image_url ) : ?>
                                 <img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $service_title ); ?>" loading="lazy">
-                            <?php else : ?>
+                            <?php else :
+                                $card_img_ph = function_exists( 'handandvision_acf_image_placeholder_html' ) ? handandvision_acf_image_placeholder_html( $is_hebrew ? 'תמונת באנר' : 'Hero image' ) : '';
+                                echo $card_img_ph;
+                                if ( ! $card_img_ph ) : ?>
                                 <div class="hv-service-showcase-card__placeholder">
                                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
                                         <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -137,6 +102,7 @@ $total_services = count( $services );
                                         <path d="M21 15l-5-5L5 21"/>
                                     </svg>
                                 </div>
+                                <?php endif; ?>
                             <?php endif; ?>
                             <div class="hv-service-showcase-card__media-overlay"></div>
                         </div>
@@ -148,7 +114,12 @@ $total_services = count( $services );
                                 </span>
                             </div>
                             <h2 class="hv-service-showcase-card__title"><?php echo esc_html( $service_title ); ?></h2>
-                            <p class="hv-service-showcase-card__desc"><?php echo esc_html( $short_desc ); ?></p>
+                            <p class="hv-service-showcase-card__desc"><?php
+                                $short_display = ( function_exists( 'handandvision_acf_display_value' ) && function_exists( 'handandvision_acf_empty' ) && handandvision_acf_empty( $short_desc ) )
+                                    ? handandvision_acf_display_value( $short_desc, $is_hebrew ? 'תיאור קצר' : 'Short description', 'html' )
+                                    : $short_desc;
+                                echo $short_display === $short_desc ? esc_html( $short_desc ) : wp_kses_post( $short_display );
+                            ?></p>
                             <div class="hv-service-showcase-card__cta">
                                 <span class="hv-service-showcase-card__cta-text">
                                     <?php echo esc_html( $is_hebrew ? 'גלה עוד' : 'Discover More' ); ?>

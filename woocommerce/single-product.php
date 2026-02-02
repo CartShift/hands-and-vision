@@ -52,8 +52,8 @@ while ( have_posts() ) :
             <?php endif; ?>
         </div>
         <div class="hv-service-single-hero__content">
-            <?php handandvision_breadcrumbs(); ?>
             <div class="hv-container">
+                <?php handandvision_breadcrumbs(); ?>
                 <div class="hv-service-single-hero__inner">
                     <span class="hv-service-single-hero__label">
                         <?php echo esc_html( $is_hebrew ? 'יצירת אמנות' : 'Artwork' ); ?>

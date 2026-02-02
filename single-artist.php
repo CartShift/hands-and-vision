@@ -13,13 +13,22 @@ get_header();
 
 $artist_id = get_the_ID();
 
-// Get ACF fields with defaults
 $portrait = get_field( 'artist_portrait', $artist_id );
 $portrait_url = ( is_array( $portrait ) && isset( $portrait['url'] ) ) ? $portrait['url'] : get_the_post_thumbnail_url( $artist_id, 'large' );
 $discipline = get_field( 'artist_discipline', $artist_id ) ?: ( handandvision_is_hebrew() ? 'אמן/ית רב-תחומי/ת' : 'Multidisciplinary Artist' );
-$bio = get_field( 'artist_bio', $artist_id ) ?: '';
+$bio_raw = get_field( 'artist_biography', $artist_id ) ?: get_field( 'artist_bio', $artist_id ) ?: '';
 $gallery = get_field( 'artist_gallery', $artist_id );
 $social = get_field( 'artist_social', $artist_id );
+if ( empty( $social ) || ! is_array( $social ) ) {
+	$ig = get_field( 'artist_instagram', $artist_id );
+	$fb = get_field( 'artist_facebook', $artist_id );
+	$web = get_field( 'artist_website', $artist_id );
+	$social = array_filter( array(
+		'instagram' => $ig ?: '',
+		'facebook'   => $fb ?: '',
+		'website'    => $web ?: '',
+	) );
+}
 $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, array() );
 ?>
 
@@ -27,21 +36,30 @@ $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, arra
 
     <!-- Artist Hero -->
     <section class="hv-artist-hero">
-        <?php handandvision_breadcrumbs(); ?>
         <div class="hv-container">
+            <?php handandvision_breadcrumbs(); ?>
             <div class="hv-artist-hero__grid">
                 <div class="hv-artist-hero__portrait hv-reveal">
                     <?php if ( $portrait_url ) : ?>
                         <img src="<?php echo esc_url( $portrait_url ); ?>" alt="<?php the_title_attribute(); ?>">
-                    <?php else : ?>
+                    <?php else :
+                        $portrait_ph = function_exists( 'handandvision_acf_image_placeholder_html' ) ? handandvision_acf_image_placeholder_html( handandvision_is_hebrew() ? 'תמונת דיוקן' : 'Portrait image' ) : '';
+                        echo $portrait_ph;
+                        if ( ! $portrait_ph ) : ?>
                         <div class="hv-artist-hero__placeholder"></div>
+                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
                 <div class="hv-artist-hero__content">
                     <span class="hv-overline hv-reveal"><?php echo esc_html( $discipline ); ?></span>
                     <h1 class="hv-headline-1 hv-reveal"><?php echo esc_html( get_the_title() ); ?></h1>
                     <div class="hv-artist-hero__bio hv-reveal">
-                        <?php echo wp_kses_post( wpautop( $bio ) ); ?>
+                        <?php
+                        $bio_display = function_exists( 'handandvision_acf_display_value' )
+                            ? handandvision_acf_display_value( $bio_raw, handandvision_is_hebrew() ? 'ביוגרפיה' : 'Biography', 'html' )
+                            : $bio_raw;
+                        echo $bio_display ? wp_kses_post( wpautop( $bio_display ) ) : '';
+                        ?>
                     </div>
                     <?php if ( ! empty( $social ) && is_array( $social ) ) : ?>
                         <div class="hv-artist-hero__social hv-reveal">

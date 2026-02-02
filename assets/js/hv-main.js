@@ -787,61 +787,46 @@
 	 */
 	const HeaderCart = {
 		cartIcon: null,
+		pendingAnimate: false,
 
 		init: function () {
 			this.cartIcon = document.getElementById("hv-header-cart");
-			if (!this.cartIcon) return;
-
 			this.bindEvents();
 		},
 
 		bindEvents: function () {
 			const self = this;
-
-			// Native JavaScript event delegation for WooCommerce add to cart
-			// This replaces jQuery(document.body).on("added_to_cart")
-			document.body.addEventListener("added_to_cart", function (event) {
-				self.animateCart();
+			document.body.addEventListener("added_to_cart", function () {
+				self.pendingAnimate = true;
 				A11yUtils.announce("Item added to cart");
 			});
-
-			// Listen for fragment refresh (cart update)
-			document.body.addEventListener("wc_fragments_refreshed", function (event) {
-				// Re-select the cart count in case it was replaced
+			document.body.addEventListener("wc_fragments_refreshed", function () {
+				self.cartIcon = document.getElementById("hv-header-cart");
 				const cartCount = document.getElementById("hv-cart-count");
-				if (cartCount) {
-					cartCount.classList.add("has-items");
+				if (cartCount) cartCount.classList.add("has-items");
+				if (self.pendingAnimate && self.cartIcon) {
+					self.pendingAnimate = false;
+					self.animateCart();
 				}
 			});
-
-			// Fallback: Listen for wc_cart_fragments_refreshed (alternative WooCommerce event)
-			document.body.addEventListener("wc_cart_fragments_refreshed", function (event) {
+			document.body.addEventListener("wc_cart_fragments_refreshed", function () {
+				self.cartIcon = document.getElementById("hv-header-cart");
 				const cartCount = document.getElementById("hv-cart-count");
-				if (cartCount) {
-					cartCount.classList.add("has-items");
+				if (cartCount) cartCount.classList.add("has-items");
+				if (self.pendingAnimate && self.cartIcon) {
+					self.pendingAnimate = false;
+					self.animateCart();
 				}
 			});
 		},
 
 		animateCart: function () {
-			if (!this.cartIcon) {
-				console.error("Header cart icon not found - cannot animate cart");
-				return;
-			}
-
-			// Remove class if already applied
-			this.cartIcon.classList.remove("added");
-
-			// Trigger reflow to restart animation
-			void this.cartIcon.offsetWidth;
-
-			// Add animation class
-			this.cartIcon.classList.add("added");
-
-			// Remove class after animation completes
-			setTimeout(() => {
-				this.cartIcon.classList.remove("added");
-			}, 500);
+			const el = this.cartIcon || document.getElementById("hv-header-cart");
+			if (!el) return;
+			el.classList.remove("added");
+			void el.offsetWidth;
+			el.classList.add("added");
+			setTimeout(() => el.classList.remove("added"), 500);
 		}
 	};
 

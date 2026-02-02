@@ -76,23 +76,11 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
         </div>
     </section>
 
-    <?php
-    $intro_logo_url = handandvision_get_logo_url();
-    $intro_has_content = $intro_logo_url || $intro_text;
-    if ( $intro_has_content ) :
-    ?>
+    <?php if ( $intro_text ) : ?>
     <section class="hv-section hv-section--white" aria-labelledby="intro-heading">
         <div class="hv-container hv-container--narrow hv-text-center">
             <h2 id="intro-heading" class="hv-headline-2 hv-animate"><?php echo esc_html( handandvision_is_hebrew() ? 'אודותינו' : 'About Us' ); ?></h2>
-            <?php if ( $intro_logo_url ) : ?>
-            <div class="hv-intro-logo">
-                <img src="<?php echo esc_url( $intro_logo_url ); ?>" alt="Hands and Vision" class="hv-intro-logo__img" width="160" height="80">
-            </div>
-            <?php endif; ?>
-            <?php if ( $intro_text ) : ?>
             <div class="hv-intro-statement hv-animate"><?php echo wp_kses_post( $intro_text ); ?></div>
-            <?php endif; ?>
-            <div class="hv-divider" aria-hidden="true"></div>
         </div>
     </section>
     <?php endif; ?>
