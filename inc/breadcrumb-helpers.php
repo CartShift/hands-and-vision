@@ -24,12 +24,13 @@ function handandvision_breadcrumbs( $args = array() ) {
         return;
     }
 
-    $chevron = handandvision_is_hebrew()
+    $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
+    $chevron = $is_hebrew
         ? '<svg class="hv-breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>'
         : '<svg class="hv-breadcrumb-separator" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>';
     $defaults = array(
         'separator' => $chevron,
-        'home_label' => handandvision_is_hebrew() ? 'בית' : 'Home',
+        'home_label' => $is_hebrew ? 'בית' : 'Home',
         'show_current' => true,
         'echo' => true,
     );
@@ -55,6 +56,7 @@ function handandvision_build_breadcrumb_trail( $args ) {
     $items = array();
     $separator = $args['separator'];
     $schema_items = array();
+    $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
 
     // Home link (always first)
     $home_url = home_url( '/' );
@@ -129,7 +131,7 @@ function handandvision_build_breadcrumb_trail( $args ) {
         $search_term = get_search_query();
         $search_label = sprintf(
             '%s: %s',
-            handandvision_is_hebrew() ? 'חיפוש' : 'Search',
+            $is_hebrew ? 'חיפוש' : 'Search',
             $search_term
         );
         $items[] = sprintf(
@@ -142,7 +144,7 @@ function handandvision_build_breadcrumb_trail( $args ) {
             'name' => $search_label,
         );
     } elseif ( is_404() ) {
-        $label_404 = handandvision_is_hebrew() ? 'דף לא נמצא' : '404 - Page Not Found';
+        $label_404 = $is_hebrew ? 'דף לא נמצא' : '404 - Page Not Found';
         $items[] = sprintf(
             '<span class="hv-breadcrumb-item hv-breadcrumb-current">%s</span>',
             esc_html( $label_404 )
@@ -181,7 +183,7 @@ function handandvision_build_breadcrumb_trail( $args ) {
     );
 
     // Build final HTML
-    $output = '<nav class="hv-breadcrumbs" aria-label="' . esc_attr( handandvision_is_hebrew() ? 'ניווט מסלול' : 'Breadcrumb navigation' ) . '">';
+    $output = '<nav class="hv-breadcrumbs" aria-label="' . esc_attr( $is_hebrew ? 'ניווט מסלול' : 'Breadcrumb navigation' ) . '">';
     $output .= '<div class="hv-breadcrumb-trail">';
 
     $total_items = count( $items );
@@ -212,7 +214,11 @@ function handandvision_build_breadcrumb_trail( $args ) {
 function handandvision_get_singular_breadcrumb_items() {
     $items = array();
     $post_type = get_post_type();
+    if ( ! $post_type ) {
+        return $items;
+    }
     $post_type_object = get_post_type_object( $post_type );
+    $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
 
     // Add post type archive link (if not a page)
     if ( $post_type !== 'page' && $post_type !== 'post' ) {
@@ -223,19 +229,19 @@ function handandvision_get_singular_breadcrumb_items() {
 
             switch ( $post_type ) {
                 case 'service':
-                    $archive_label = handandvision_is_hebrew() ? 'שירותים' : 'Services';
+                    $archive_label = $is_hebrew ? 'שירותים' : 'Services';
                     break;
                 case 'artist':
-                    $archive_label = handandvision_is_hebrew() ? 'אמנים' : 'Artists';
+                    $archive_label = $is_hebrew ? 'אמנים' : 'Artists';
                     break;
                 case 'product':
-                    $archive_label = handandvision_is_hebrew() ? 'חנות' : 'Shop';
+                    $archive_label = $is_hebrew ? 'חנות' : 'Shop';
                     break;
                 case 'gallery_item':
-                    $archive_label = handandvision_is_hebrew() ? 'גלריה' : 'Gallery';
+                    $archive_label = $is_hebrew ? 'גלריה' : 'Gallery';
                     break;
                 default:
-                    $archive_label = $post_type_object->labels->name;
+                    $archive_label = ( $post_type_object && isset( $post_type_object->labels->name ) ) ? $post_type_object->labels->name : $post_type;
             }
 
             $items[] = array(
@@ -269,20 +275,22 @@ function handandvision_get_singular_breadcrumb_items() {
     }
 
     // For products, add categories
-    if ( $post_type === 'product' && function_exists( 'wc_get_product_category_list' ) ) {
+    if ( $post_type === 'product' && function_exists( 'wc_get_product_category_list' ) && get_the_ID() ) {
         $categories = get_the_terms( get_the_ID(), 'product_cat' );
         if ( $categories && ! is_wp_error( $categories ) ) {
             $main_cat = array_shift( $categories );
             $cat_url = get_term_link( $main_cat );
-            $items[] = array(
-                'name' => $main_cat->name,
-                'url' => $cat_url,
-                'html' => sprintf(
-                    '<a href="%s" class="hv-breadcrumb-item hv-breadcrumb-category">%s</a>',
-                    esc_url( $cat_url ),
-                    esc_html( $main_cat->name )
-                ),
-            );
+            if ( ! is_wp_error( $cat_url ) ) {
+                $items[] = array(
+                    'name' => $main_cat->name,
+                    'url' => $cat_url,
+                    'html' => sprintf(
+                        '<a href="%s" class="hv-breadcrumb-item hv-breadcrumb-category">%s</a>',
+                        esc_url( $cat_url ),
+                        esc_html( $main_cat->name )
+                    ),
+                );
+            }
         }
     }
 
@@ -314,22 +322,23 @@ function handandvision_get_archive_breadcrumb_items() {
     $items = array();
     $post_type = get_post_type();
     $post_type_object = get_post_type_object( $post_type );
+    $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
 
     if ( $post_type_object ) {
         $archive_label = '';
 
         switch ( $post_type ) {
             case 'service':
-                $archive_label = handandvision_is_hebrew() ? 'שירותים' : 'Services';
+                $archive_label = $is_hebrew ? 'שירותים' : 'Services';
                 break;
             case 'artist':
-                $archive_label = handandvision_is_hebrew() ? 'אמנים' : 'Artists';
+                $archive_label = $is_hebrew ? 'אמנים' : 'Artists';
                 break;
             case 'product':
-                $archive_label = handandvision_is_hebrew() ? 'חנות' : 'Shop';
+                $archive_label = $is_hebrew ? 'חנות' : 'Shop';
                 break;
             case 'gallery_item':
-                $archive_label = handandvision_is_hebrew() ? 'גלריה' : 'Gallery';
+                $archive_label = $is_hebrew ? 'גלריה' : 'Gallery';
                 break;
             default:
                 $archive_label = $post_type_object->labels->name;
@@ -360,12 +369,12 @@ function handandvision_get_taxonomy_breadcrumb_items() {
         return $items;
     }
 
-    // Add post type archive link
+    $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
     $post_type = '';
 
     if ( $term->taxonomy === 'product_cat' || $term->taxonomy === 'product_tag' ) {
         $post_type = 'product';
-        $archive_label = handandvision_is_hebrew() ? 'חנות' : 'Shop';
+        $archive_label = $is_hebrew ? 'חנות' : 'Shop';
         $archive_url = get_post_type_archive_link( $post_type );
         if ( $archive_url ) {
             $items[] = array(

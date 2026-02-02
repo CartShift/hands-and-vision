@@ -198,7 +198,8 @@ if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew()
 
     <!-- CTA Section -->
     <section class="hv-service-cta-section">
-        <div clas?php $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false; ?>
+        <div class="hv-container hv-container--narrow">
+            <div class="hv-service-cta-content">
                 <span class="hv-service-cta-label">
                     <?php echo esc_html( $is_hebrew ? 'מתחילים' : 'Let's Begin' ); ?>
                 </span>
@@ -211,9 +212,7 @@ if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew()
                     <?php echo esc_html( $is_hebrew ? 'נשמח לשמוע על הצרכים שלכם ולבנות יחד את הפתרון המושלם' : 'We'd love to hear about your needs and build the perfect solution together' ); ?>
                 </p>
                 <a href="<?php echo esc_url( function_exists( 'handandvision_get_contact_url' ) ? handandvision_get_contact_url() : home_url( '/contact' ) ); ?>" class="hv-service-cta-btn">
-                    <?php echo esc_html( $is_hebrew
-                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-service-cta-btn">
-                    <?php echo esc_html( handandvision_is_hebrew() ? 'צרו קשר' : 'Get in Touch' ); ?>
+                    <?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Get in Touch' ); ?>
                 </a>
             </div>
         </div>
