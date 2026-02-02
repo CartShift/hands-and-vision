@@ -107,7 +107,10 @@ if ( ! $services ) {
                                 <h2 class="hv-service-card-archive__title"><?php echo esc_html( $service_title ); ?></h2>
                                 <p class="hv-service-card-archive__desc"><?php echo esc_html( $short_desc ); ?></p>
                                 <span class="hv-service-card-archive__arrow">
-                                    <?php if ( handandvision_is_hebrew() ) : ?>
+                                    <?php 
+                                    $arrow_is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
+                                    if ( $arrow_is_hebrew ) : 
+                                    ?>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                                             <line x1="19" y1="12" x2="5" y2="12"></line>
                                             <polyline points="12 19 5 12 12 5"></polyline>
@@ -128,7 +131,10 @@ if ( ! $services ) {
     </section>
 
     <!-- Premium CTA -->
-    <section clas?php $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false; ?>
+    <section class="hv-services-cta">
+        <div class="hv-container hv-container--narrow">
+            <div class="hv-services-cta__content">
+                <?php $is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false; ?>
                 <span class="hv-services-cta__label">
                     <?php echo esc_html( $is_hebrew ? 'בואו נדבר' : 'Let's Talk' ); ?>
                 </span>
@@ -139,10 +145,7 @@ if ( ! $services ) {
                     <?php echo esc_html( $is_hebrew ? 'נשמח לשמוע על הפרויקט שלכם ולבנות יחד את הדרך קדימה' : 'We'd love to hear about your project and build the path forward together' ); ?>
                 </p>
                 <a href="<?php echo esc_url( function_exists( 'handandvision_get_contact_url' ) ? handandvision_get_contact_url() : home_url( '/contact' ) ); ?>" class="hv-services-cta__btn">
-                    <?php echo esc_html( $is_hebrew ? 'נשמח לשמוע על הפרויקט שלכם ולבנות יחד את הדרך קדימה' : 'We'd love to hear about your project and build the path forward together' ); ?>
-                </p>
-                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-services-cta__btn">
-                    <?php echo esc_html( handandvision_is_hebrew() ? 'צרו קשר' : 'Get in Touch' ); ?>
+                    <?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Get in Touch' ); ?>
                 </a>
             </div>
         </div>
