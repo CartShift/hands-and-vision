@@ -45,7 +45,7 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
                 ?>
                     <article class="hv-artist-card">
                         <a href="<?php echo esc_url( get_permalink( $artist->ID ) ); ?>" class="hv-artist-card__link">
-                            <div class="hv-artist-card__portrait">
+                            <div class="hv-artist-card__portrait" style="view-transition-name: artist-portrait-<?php echo esc_attr( $artist->ID ); ?>">
                                 <?php if ( $image_url ) : ?>
                                     <img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $artist->post_title ); ?>" class="hv-artist-card__img" loading="lazy">
                                 <?php else :

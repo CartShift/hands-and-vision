@@ -75,7 +75,7 @@ while ( have_posts() ) :
             <div class="hv-product-layout">
 
                 <!-- Product Gallery -->
-                <div class="hv-product-gallery hv-reveal">
+                <div class="hv-product-gallery hv-reveal" style="view-transition-name: product-image-<?php echo esc_attr( $product->get_id() ); ?>">
                     <?php
                     /**
                      * Hook: woocommerce_before_single_product_summary.
@@ -247,7 +247,7 @@ while ( have_posts() ) :
                 ?>
                     <article class="hv-product-card">
                         <a href="<?php echo esc_url( get_permalink( $related_product_post->ID ) ); ?>" class="hv-product-card__link">
-                            <div class="hv-product-card__image">
+                            <div class="hv-product-card__image" style="view-transition-name: product-image-<?php echo esc_attr( $related_product_post->ID ); ?>">
                                 <?php echo get_the_post_thumbnail( $related_product_post->ID, 'woocommerce_thumbnail' ); ?>
                             </div>
                             <div class="hv-product-card__content">
@@ -288,7 +288,7 @@ while ( have_posts() ) :
                 ?>
                     <article class="hv-product-card">
                         <a href="<?php echo esc_url( get_permalink( $related_id ) ); ?>" class="hv-product-card__link">
-                            <div class="hv-product-card__image">
+                            <div class="hv-product-card__image" style="view-transition-name: product-image-<?php echo esc_attr( $related_id ); ?>">
                                 <?php echo get_the_post_thumbnail( $related_id, 'woocommerce_thumbnail' ); ?>
                             </div>
                             <div class="hv-product-card__content">

@@ -177,6 +177,24 @@ body {
 html {
 	scroll-behavior: smooth;
 }
+/* ==========================================
+   VIEW TRANSITIONS API
+   ========================================== */
+@view-transition {
+	navigation: auto;
+}
+
+/* Stable Header Transition */
+.hv-header {
+	view-transition-name: main-header;
+}
+
+/* Ensure smooth cross-fade */
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: 0.4s;
+}
+
 #content.site-content {
 	padding-top: var(--hv-header-height) !important;
 }
@@ -530,24 +548,42 @@ ul.hv-nav-menu {
 		width: 100%;
 		height: 2px;
 		background: var(--hv-charcoal);
+		transition: transform 0.25s ease, opacity 0.2s ease;
+	}
+
+	.hv-header.menu-open .hv-hamburger span:nth-child(1) {
+		transform: translateY(8px) rotate(45deg);
+	}
+
+	.hv-header.menu-open .hv-hamburger span:nth-child(2) {
+		opacity: 0;
+	}
+
+	.hv-header.menu-open .hv-hamburger span:nth-child(3) {
+		transform: translateY(-8px) rotate(-45deg);
 	}
 
 	.hv-header__nav {
 		position: fixed;
 		inset: 0;
 		background: rgba(255, 255, 255, 0.98);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		opacity: 0;
 		visibility: hidden;
-		transition: all 0.4s ease;
+		transform: translateY(-12px);
+		transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.35s step-end, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 		z-index: 10000;
 	}
 
 	.hv-header.menu-open .hv-header__nav {
 		opacity: 1;
 		visibility: visible;
+		transform: translateY(0);
+		transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
 	.hv-nav-menu,
@@ -840,14 +876,18 @@ html[dir="rtl"] .hv-lightbox-next {
 	.hv-lightbox-close {
 		top: 15px;
 		right: 15px;
-		width: 40px;
-		height: 40px;
+		width: 48px;
+		height: 48px;
 		font-size: 1.5rem;
+		min-width: 48px;
+		min-height: 48px;
 	}
 
 	.hv-lightbox-nav {
-		width: 50px;
-		height: 50px;
+		width: 56px;
+		height: 56px;
+		min-width: 56px;
+		min-height: 56px;
 		font-size: 2rem;
 	}
 
@@ -1524,7 +1564,7 @@ html[dir="rtl"] .hv-lightbox-next {
 .hv-services-carousel .hv-service-card .hv-service-card__link {
 	display: block;
 	text-align: center;
-	padding: 0;
+	padding: 0 16px;
 }
 
 .hv-service-card__thumb {
@@ -1589,6 +1629,13 @@ html[dir="rtl"] .hv-lightbox-next {
 	.hv-services-carousel .hv-service-card {
 		width: calc(100% / 3 - 16px);
 		min-width: 200px;
+	}
+}
+
+@media (max-width: 640px) {
+	.hv-services-carousel .hv-service-card {
+		width: calc(50% - 12px);
+		min-width: 160px;
 	}
 }
 
@@ -3129,7 +3176,7 @@ body.hv-hero-layout-page #content,
 body.hv-hero-layout-page #content.site-content {
 	width: 100% !important;
 	max-width: 100% !important;
-	padding: 0 !important;
+	padding: var(--hv-header-height) 0 0 0 !important;
 	margin: 0 !important;
 	display: block !important;
 }
@@ -3241,6 +3288,28 @@ html[dir="rtl"] {
 
 	.hv-artist-card__discipline {
 		display: none !important;
+	}
+}
+
+@media (max-width: 640px) {
+	.hv-artists-showcase {
+		gap: 16px !important;
+		padding-inline: 16px !important;
+		scroll-padding-inline: 16px;
+	}
+
+	.hv-artist-card {
+		flex: 0 0 calc((100vw - 32px) / 3 - 8px) !important;
+		width: calc((100vw - 32px) / 3 - 8px) !important;
+		min-width: 0 !important;
+	}
+
+	.hv-artist-card__name {
+		font-size: 0.85rem !important;
+		line-height: 1.2 !important;
+		height: 2.4em !important;
+		-webkit-line-clamp: 2 !important;
+		line-clamp: 2 !important;
 	}
 }
 
@@ -3372,6 +3441,13 @@ html[dir="rtl"] {
 	.hv-hero-video__actions {
 		flex-direction: column;
 		gap: 12px;
+		width: 100%;
+	}
+
+	.hv-hero-video__actions .hv-btn {
+		width: 100%;
+		max-width: 280px;
+		margin-inline: auto;
 	}
 
 	.hv-headline-1 {
@@ -3380,6 +3456,16 @@ html[dir="rtl"] {
 
 	.hv-headline-2 {
 		font-size: 1.75rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.hv-hero-video .hv-display {
+		letter-spacing: 0.08em;
+	}
+
+	.hv-hero-subtitle-v2 {
+		letter-spacing: 0.5em;
 	}
 }
 
@@ -3545,6 +3631,15 @@ html[dir="rtl"] {
 	.hv-cta-text {
 		font-size: 1rem;
 		margin-bottom: 32px;
+	}
+
+	.hv-cta-section .hv-container .hv-btn,
+	.hv-cta-premium .hv-btn,
+	.hv-cta-section .hv-btn--primary-gold {
+		width: 100%;
+		max-width: 320px;
+		margin-inline: auto;
+		display: block;
 	}
 }
 
@@ -4778,24 +4873,42 @@ ul.hv-nav-menu a,
 		width: 100%;
 		height: 2px;
 		background: var(--hv-charcoal);
+		transition: transform 0.25s ease, opacity 0.2s ease;
+	}
+
+	.hv-header.menu-open .hv-hamburger span:nth-child(1) {
+		transform: translateY(8px) rotate(45deg);
+	}
+
+	.hv-header.menu-open .hv-hamburger span:nth-child(2) {
+		opacity: 0;
+	}
+
+	.hv-header.menu-open .hv-hamburger span:nth-child(3) {
+		transform: translateY(-8px) rotate(-45deg);
 	}
 
 	.hv-header__nav {
 		position: fixed;
 		inset: 0;
 		background: rgba(255, 255, 255, 0.98);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		opacity: 0;
 		visibility: hidden;
-		transition: all 0.4s ease;
+		transform: translateY(-12px);
+		transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.35s step-end, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 		z-index: 10000;
 	}
 
 	.hv-header.menu-open .hv-header__nav {
 		opacity: 1;
 		visibility: visible;
+		transform: translateY(0);
+		transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
 	.hv-nav-menu,
@@ -12766,6 +12879,14 @@ html[dir="rtl"] .hv-footer__links a:hover {
 	margin: 0 auto;
 }
 
+.single-product .hv-service-single-hero {
+	min-height: 32vh;
+}
+
+.single-product .hv-service-single-hero__content {
+	padding: 24px 0 36px;
+}
+
 /* Service Content Section */
 .hv-service-content-section {
 	padding: 100px 0;
@@ -13138,6 +13259,14 @@ html[dir="rtl"] .hv-footer__links a:hover {
 
 	.hv-service-single-hero__content {
 		padding: 140px 0 80px;
+	}
+
+	.single-product .hv-service-single-hero {
+		min-height: 28vh;
+	}
+
+	.single-product .hv-service-single-hero__content {
+		padding: 20px 0 28px;
 	}
 
 	.hv-service-content-section,

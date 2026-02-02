@@ -39,7 +39,7 @@ $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, arra
         <div class="hv-container">
             <?php handandvision_breadcrumbs(); ?>
             <div class="hv-artist-hero__grid">
-                <div class="hv-artist-hero__portrait hv-reveal">
+                <div class="hv-artist-hero__portrait hv-reveal" style="view-transition-name: artist-portrait-<?php echo esc_attr( get_the_ID() ); ?>">
                     <?php if ( $portrait_url ) : ?>
                         <img src="<?php echo esc_url( $portrait_url ); ?>" alt="<?php the_title_attribute(); ?>">
                     <?php else :
@@ -202,7 +202,7 @@ $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, arra
                 ?>
                     <article class="hv-product-card">
                         <a href="<?php echo esc_url( get_permalink( $product_post->ID ) ); ?>" class="hv-product-card__link">
-                            <div class="hv-product-card__image">
+                            <div class="hv-product-card__image" style="view-transition-name: product-image-<?php echo esc_attr( $product_post->ID ); ?>">
                                 <?php
                                 if ( has_post_thumbnail( $product_post->ID ) ) {
                                     echo get_the_post_thumbnail( $product_post->ID, 'woocommerce_thumbnail' );

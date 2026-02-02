@@ -109,7 +109,7 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
                 ?>
                     <article <?php wc_product_class( 'hv-product-card', $product ); ?>>
                         <a href="<?php echo esc_url( get_permalink() ); ?>" class="hv-product-card__link">
-                            <div class="hv-product-card__image">
+                            <div class="hv-product-card__image" style="view-transition-name: product-image-<?php echo esc_attr( $product->get_id() ); ?>">
                                 <?php
                                 if ( has_post_thumbnail() ) {
                                     the_post_thumbnail( 'woocommerce_thumbnail', array( 'loading' => 'lazy' ) );

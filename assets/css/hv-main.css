@@ -1264,7 +1264,7 @@ html[dir="rtl"] .hv-lightbox-next {
 .hv-services-carousel .hv-service-card .hv-service-card__link {
 	display: block;
 	text-align: center;
-	padding: 0;
+	padding: 0 16px;
 }
 
 .hv-service-card__thumb {
@@ -2841,7 +2841,7 @@ body.hv-hero-layout-page #content,
 body.hv-hero-layout-page #content.site-content {
 	width: 100% !important;
 	max-width: 100% !important;
-	padding: 0 !important;
+	padding: var(--hv-header-height) 0 0 0 !important;
 	margin: 0 !important;
 	display: block !important;
 }
@@ -12669,6 +12669,14 @@ html[dir="rtl"] .hv-footer__links a:hover {
 	margin: 0 auto;
 }
 
+.single-product .hv-service-single-hero {
+	min-height: 32vh;
+}
+
+.single-product .hv-service-single-hero__content {
+	padding: 24px 0 36px;
+}
+
 /* Service Content Section */
 .hv-service-content-section {
 	padding: 100px 0;
@@ -13041,6 +13049,14 @@ html[dir="rtl"] .hv-footer__links a:hover {
 
 	.hv-service-single-hero__content {
 		padding: 140px 0 80px;
+	}
+
+	.single-product .hv-service-single-hero {
+		min-height: 28vh;
+	}
+
+	.single-product .hv-service-single-hero__content {
+		padding: 20px 0 28px;
 	}
 
 	.hv-service-content-section,
