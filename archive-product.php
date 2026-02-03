@@ -110,6 +110,12 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
                     <article <?php wc_product_class( 'hv-product-card', $product ); ?>>
                         <a href="<?php echo esc_url( get_permalink() ); ?>" class="hv-product-card__link">
                             <div class="hv-product-card__image" style="view-transition-name: product-image-<?php echo esc_attr( $product->get_id() ); ?>">
+                                <button type="button" class="hv-quick-view-btn" data-product-id="<?php echo esc_attr( $product->get_id() ); ?>" aria-label="<?php echo esc_attr( $is_hebrew ? 'תצוגה מהירה' : 'Quick View' ); ?>">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
                                 <?php
                                 if ( has_post_thumbnail() ) {
                                     the_post_thumbnail( 'woocommerce_thumbnail', array( 'loading' => 'lazy' ) );
