@@ -1215,7 +1215,7 @@
 		MobileMenu.init();
 		StickyHeader.init();
 		ContactForm.init();
-		DragScroll.init();
+		// DragScroll.init(); // Replaced by Swiper
 		HeroScroll.init();
 		HeaderCart.init();
 		AjaxFilters.init();

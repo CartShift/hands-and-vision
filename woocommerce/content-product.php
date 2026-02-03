@@ -26,7 +26,7 @@ $artist_name = $artist_id ? get_the_title( $artist_id ) : '';
 
 <li <?php wc_product_class( 'hv-product-card', $product ); ?>>
 	<div class="hv-product-card__inner">
-		<a href="<?php echo esc_url( get_permalink() ); ?>" class="hv-product-card__link">
+		<a href="<?php echo esc_url( get_permalink() ); ?>" class="hv-product-card__link" data-product-id="<?php echo esc_attr( $product->get_id() ); ?>">
 			<div class="hv-product-card__image">
 				<?php
 				if ( has_post_thumbnail() ) {

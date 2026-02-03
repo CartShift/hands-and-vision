@@ -51,10 +51,11 @@ $is_hebrew = handandvision_is_hebrew();
                     // Stagger animation delay
                     $delay = ($index % 3) * 0.1;
                 ?>
+
                     <article class="hv-artist-card-premium hv-reveal" style="transition-delay: <?php echo esc_attr($delay); ?>s;">
-                        <a href="<?php echo esc_url( get_permalink( $artist->ID ) ); ?>" class="hv-artist-card-premium__link">
+                        <a href="<?php echo esc_url( get_permalink( $artist->ID ) ); ?>" class="hv-artist-card-premium__link" data-artist-id="<?php echo esc_attr( $artist->ID ); ?>">
                             <div class="hv-artist-card-premium__media-wrapper">
-                                <div class="hv-artist-card-premium__media" style="view-transition-name: artist-portrait-<?php echo esc_attr( $artist->ID ); ?>">
+                                <div class="hv-artist-card-premium__media">
                                     <?php if ( $image_url ) : ?>
                                         <img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $artist->post_title ); ?>" class="hv-artist-card-premium__img" loading="lazy">
                                     <?php else : ?>

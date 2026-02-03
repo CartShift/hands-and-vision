@@ -15382,3 +15382,175 @@ html[dir="rtl"] .hv-footer__links a:hover {
     height: 20px;
     stroke-width: 1.5;
 }
+
+/* ==========================================
+   SWIPER INTEGRATION (Feb 2026)
+   ========================================== */
+
+/* 1. Gallery Carousel - Coverflow Adjustments */
+.hv-gallery-carousel {
+    padding-bottom: 60px; /* Space for pagination/info */
+    overflow: hidden;
+}
+
+.hv-gallery-carousel .swiper-wrapper {
+    align-items: center;
+}
+
+.hv-gallery-carousel .swiper-slide {
+    width: 300px; /* Default width for 'auto' mode */
+    height: 400px;
+    transition: all 0.4s ease;
+    filter: brightness(0.7); /* Dim non-active slides */
+}
+
+.hv-gallery-carousel .swiper-slide-active {
+    filter: brightness(1);
+    z-index: 10;
+}
+
+/* Responsive Slide Sizes */
+@media (min-width: 768px) {
+    .hv-gallery-carousel .swiper-slide {
+        width: 400px;
+        height: 550px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .hv-gallery-carousel .swiper-slide {
+        width: 500px;
+        height: 650px;
+    }
+}
+
+/* 2. Navigation Buttons - Side Positioning */
+@media (min-width: 1024px) {
+    .hv-gallery-carousel__controls {
+        width: 100%;
+        max-width: 1400px; /* Match container */
+        left: 50%;
+        top: 50%;
+        bottom: auto;
+        transform: translate(-50%, -50%);
+        justify-content: space-between;
+        padding: 0 40px;
+        pointer-events: none;
+    }
+
+    .hv-gallery-carousel__btn {
+        pointer-events: auto;
+        width: 64px;
+        height: 64px;
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .hv-gallery-carousel__btn:hover {
+        background: var(--hv-lilac);
+        border-color: var(--hv-lilac);
+        color: var(--hv-white);
+    }
+}
+
+/* 3. Pagination Dots - Custom Style */
+.hv-gallery-carousel .swiper-pagination {
+    bottom: 0;
+}
+
+.swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+    background: var(--hv-lilac);
+    transform: scale(1.5);
+}
+
+/* 4. Info box Adjustment for Swiper */
+.hv-gallery-carousel__info {
+    bottom: 20px; /* Position inside the slide */
+    left: 20px;
+    right: 20px;
+    width: auto;
+    text-align: left;
+    transform: translateY(20px);
+}
+
+[dir="rtl"] .hv-gallery-carousel__info {
+    text-align: right;
+}
+
+.swiper-slide-active .hv-gallery-carousel__info {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 5. Services & Artists Swiper Fixes */
+.hv-services-carousel,
+.hv-artists-showcase {
+    overflow: hidden;
+    padding: 20px 0 60px; /* Space for shadow/hover effects */
+}
+
+.hv-services-carousel .swiper-slide,
+.hv-artists-showcase .swiper-slide {
+    height: auto; /* Allow content to dictate height */
+}
+
+/* ==========================================
+   PARALLAX POLISH (Feb 2026)
+   ========================================== */
+.hv-parallax-img {
+    height: 120% !important;
+    width: 100%;
+    top: -10%;
+    position: relative;
+    object-fit: cover;
+    will-change: transform;
+    /* Optional: Scale slightly to prevent edge bleeding during fast scrolls */
+    transform: scale(1.1);
+}
+
+/* Ensure container clips the overflowing image */
+.hv-sticky-portrait {
+    overflow: hidden;
+    position: sticky;
+    /* Basic cleanup to ensure frame is stable */
+    backface-visibility: hidden;
+}
+
+/* ==========================================
+   MOBILE MENU STAGGER (Feb 2026)
+   ========================================== */
+@media (max-width: 900px) {
+    /* Initial State (Hidden) */
+    .hv-nav-menu li {
+        opacity: 0;
+        transform: translateY(15px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Reveal State */
+    .hv-header.menu-open .hv-nav-menu li {
+        animation: hvSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .hv-header.menu-open .hv-nav-menu li:nth-child(1) { animation-delay: 0.1s; }
+    .hv-header.menu-open .hv-nav-menu li:nth-child(2) { animation-delay: 0.15s; }
+    .hv-header.menu-open .hv-nav-menu li:nth-child(3) { animation-delay: 0.2s; }
+    .hv-header.menu-open .hv-nav-menu li:nth-child(4) { animation-delay: 0.25s; }
+    .hv-header.menu-open .hv-nav-menu li:nth-child(5) { animation-delay: 0.3s; }
+    .hv-header.menu-open .hv-nav-menu li:nth-child(6) { animation-delay: 0.35s; }
+
+    @keyframes hvSlideUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}

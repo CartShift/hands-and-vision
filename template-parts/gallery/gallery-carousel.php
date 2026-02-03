@@ -24,7 +24,7 @@ if ( empty( $items ) ) {
 		</header>
 	</div>
 
-	<div class="hv-gallery-carousel hv-animate">
+	<div class="hv-gallery-carousel hv-animate swiper">
 		<div class="hv-gallery-carousel__controls">
             <button type="button" class="hv-gallery-carousel__btn hv-gallery-carousel__btn--prev" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'הבא' : 'Previous' ); ?>">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
@@ -34,33 +34,32 @@ if ( empty( $items ) ) {
             </button>
         </div>
 
-		<div class="hv-gallery-carousel__track-wrapper">
-			<div class="hv-gallery-carousel__track" role="list">
-				<?php foreach ( $items as $i => $img ) :
-					$title = $img['title'] ?? '';
-					$caption = $img['caption'] ?? '';
-					$data_caption = trim( $title . ' ' . $caption );
-				?>
-					<div class="hv-gallery-carousel__item" role="listitem">
-						<a href="<?php echo esc_url( $img['url'] ); ?>" class="hv-lightbox hv-gallery-carousel__link" data-caption="<?php echo esc_attr( $data_caption ); ?>">
-							<div class="hv-gallery-carousel__img-wrap">
-								<?php
-								if ( ! empty( $img['id'] ) ) {
-									echo wp_get_attachment_image( $img['id'], 'large', false, array( 'class' => 'hv-gallery-carousel__img', 'loading' => 'lazy' ) );
-								} else {
-									echo '<img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $title ) . '" class="hv-gallery-carousel__img" loading="lazy">';
-								}
-								?>
-							</div>
-							<div class="hv-gallery-carousel__info">
-								<?php if ( $title ) : ?><h3 class="hv-gallery-carousel__title"><?php echo esc_html( $title ); ?></h3><?php endif; ?>
-								<?php if ( $caption ) : ?><span class="hv-gallery-carousel__artist"><?php echo esc_html( $caption ); ?></span><?php endif; ?>
-							</div>
-						</a>
-					</div>
-				<?php endforeach; ?>
-			</div>
+		<div class="hv-gallery-carousel__track swiper-wrapper" role="list">
+			<?php foreach ( $items as $i => $img ) :
+				$title = $img['title'] ?? '';
+				$caption = $img['caption'] ?? '';
+				$data_caption = trim( $title . ' ' . $caption );
+			?>
+				<div class="hv-gallery-carousel__item swiper-slide" role="listitem">
+					<a href="<?php echo esc_url( $img['url'] ); ?>" class="hv-lightbox hv-gallery-carousel__link" data-caption="<?php echo esc_attr( $data_caption ); ?>">
+						<div class="hv-gallery-carousel__img-wrap" data-swiper-parallax="20%">
+							<?php
+							if ( ! empty( $img['id'] ) ) {
+								echo wp_get_attachment_image( $img['id'], 'large', false, array( 'class' => 'hv-gallery-carousel__img', 'loading' => 'lazy' ) );
+							} else {
+								echo '<img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $title ) . '" class="hv-gallery-carousel__img" loading="lazy">';
+							}
+							?>
+						</div>
+						<div class="hv-gallery-carousel__info" data-swiper-parallax="-100">
+							<?php if ( $title ) : ?><h3 class="hv-gallery-carousel__title" data-swiper-parallax="-200"><?php echo esc_html( $title ); ?></h3><?php endif; ?>
+							<?php if ( $caption ) : ?><span class="hv-gallery-carousel__artist" data-swiper-parallax="-100"><?php echo esc_html( $caption ); ?></span><?php endif; ?>
+						</div>
+					</a>
+				</div>
+			<?php endforeach; ?>
 		</div>
+        <div class="swiper-pagination"></div>
 	</div>
 
 	<div class="hv-container hv-text-center hv-mt-8">

@@ -383,6 +383,14 @@ function handandvision_enqueue_custom_assets() {
         true
     );
 
+    // Swiper Carousel
+    wp_enqueue_style( 'swiper', $theme_uri . '/assets/css/swiper-bundle.min.css', array(), '11.0.0' );
+    wp_enqueue_script( 'swiper', $theme_uri . '/assets/js/swiper-bundle.min.js', array(), '11.0.0', true );
+    wp_enqueue_script( 'hv-swiper-init', $theme_uri . '/assets/js/hv-swiper-init.js', array( 'swiper' ), HV_THEME_VERSION, true );
+    wp_enqueue_script( 'hv-parallax', $theme_uri . '/assets/js/hv-parallax.js', array(), HV_THEME_VERSION, true );
+    wp_enqueue_script( 'hv-view-transitions', $theme_uri . '/assets/js/hv-view-transitions.js', array(), HV_THEME_VERSION, true );
+    wp_enqueue_script( 'hv-cart-animation', $theme_uri . '/assets/js/hv-cart-animation.js', array(), HV_THEME_VERSION, true );
+
     // Pass AJAX URL and localized strings to JS
     wp_localize_script( 'handandvision-main', 'hv_ajax', array(
         'ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -662,3 +670,22 @@ require_once get_template_directory() . '/inc/ajax-handlers/quick-view.php';
 function handandvision_get_placeholder_image() {
     return get_stylesheet_directory_uri() . '/assets/images/placeholder.jpg';
 }
+
+/**
+ * Inject View Transition Name for Single Product Pages
+ * Targets the main gallery image.
+ */
+function handandvision_product_view_transition_css() {
+    if ( is_product() ) {
+        $product_id = get_the_ID();
+        // Target: first image in the WC gallery
+        echo "<style>
+            .woocommerce-product-gallery__image:first-child img,
+            .woocommerce-product-gallery__wrapper .woocommerce-product-gallery__image:first-child,
+            .hv-service-single-hero__bg img {
+                view-transition-name: product-img-{$product_id};
+            }
+        </style>";
+    }
+}
+add_action( 'wp_head', 'handandvision_product_view_transition_css' );

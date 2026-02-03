@@ -99,7 +99,8 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
 
             <?php if ( ! empty( $display_services ) ) : ?>
             <div class="hv-services-carousel-bleed">
-            <div class="hv-services-carousel" role="group" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'שירותים' : 'Services' ); ?>">
+            <div class="hv-services-carousel swiper" role="group" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'שירותים' : 'Services' ); ?>">
+                <div class="swiper-wrapper">
                 <?php
                 foreach ( $display_services as $i => $service_item ) :
                     if ( ! is_object( $service_item ) ) continue;
@@ -119,7 +120,7 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
                     if ( is_array( $s_hero ) && ! empty( $s_hero['ID'] ) ) $s_img_id = (int) $s_hero['ID'];
                     if ( ! $s_img_id ) $s_img_id = get_post_thumbnail_id( $service_item->ID );
                 ?>
-                    <article class="hv-service-card">
+                    <article class="hv-service-card swiper-slide">
                         <a href="<?php echo esc_url( $s_link ); ?>" class="hv-service-card__link">
                             <div class="hv-service-card__thumb">
                                 <?php if ( $s_img_id ) : ?>
@@ -134,6 +135,7 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
                         </a>
                     </article>
                 <?php endforeach; ?>
+            </div>
             </div>
             </div>
             <div class="hv-text-center hv-mt-8">
@@ -169,7 +171,8 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
             ?>
             <?php if ( ! empty( $display_artists ) ) : ?>
             <div class="hv-artists-showcase-bleed">
-            <div class="hv-artists-showcase">
+            <div class="hv-artists-showcase swiper">
+                <div class="swiper-wrapper">
                 <?php foreach ( $display_artists as $i => $artist_item ) :
                     if ( ! is_object( $artist_item ) ) continue;
                     $a_image_html = '';
@@ -208,8 +211,8 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
 
                     }
                 ?>
-                    <article class="hv-artist-card">
-                        <a href="<?php echo esc_url( $a_link ); ?>" class="hv-artist-card__link">
+                    <article class="hv-artist-card swiper-slide">
+                        <a href="<?php echo esc_url( $a_link ); ?>" class="hv-artist-card__link" data-artist-id="<?php echo esc_attr( $artist_item->ID ); ?>">
                             <div class="hv-artist-card__portrait">
                                 <?php if ( $a_image_html ) : ?>
                                     <?php echo wp_kses_post( $a_image_html ); ?>
@@ -229,6 +232,7 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
                         </a>
                     </article>
                 <?php endforeach; ?>
+            </div>
             </div>
             </div>
             <div class="hv-text-center hv-mt-8">
