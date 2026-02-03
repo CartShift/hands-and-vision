@@ -632,3 +632,4 @@ function handandvision_custom_footer() {
 	}
 	get_template_part( 'footer' );
 }
+require_once get_template_directory() . '/inc/ajax-handlers/quick-view.php';

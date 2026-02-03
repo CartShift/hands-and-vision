@@ -137,11 +137,18 @@ if ( ! class_exists( 'Astra_Theme_Background_Updater' ) ) {
 			}
 
 			// Core Helpers - Batch Processing.
-			require_once ASTRA_THEME_DIR . 'inc/lib/batch-processing/class-astra-wp-async-request.php';// phpcs:ignore: WPThemeReview.CoreFunctionality.FileInclude.FileIncludeFound
-			require_once ASTRA_THEME_DIR . 'inc/lib/batch-processing/class-astra-wp-background-process.php';// phpcs:ignore: WPThemeReview.CoreFunctionality.FileInclude.FileIncludeFound
-			require_once ASTRA_THEME_DIR . 'inc/theme-update/class-astra-theme-wp-background-process.php';// phpcs:ignore: WPThemeReview.CoreFunctionality.FileInclude.FileIncludeFound
+			// Core Helpers - Batch Processing.
+			$async_request_path    = ASTRA_THEME_DIR . 'inc/lib/batch-processing/class-astra-wp-async-request.php';
+			$bg_process_path       = ASTRA_THEME_DIR . 'inc/lib/batch-processing/class-astra-wp-background-process.php';
+			$theme_bg_process_path = ASTRA_THEME_DIR . 'inc/theme-update/class-astra-theme-wp-background-process.php';
 
-			self::$background_updater = new Astra_Theme_WP_Background_Process();
+			if ( file_exists( $async_request_path ) && file_exists( $bg_process_path ) && file_exists( $theme_bg_process_path ) ) {
+				require_once $async_request_path; // phpcs:ignore WPThemeReview.CoreFunctionality.FileInclude.FileIncludeFound
+				require_once $bg_process_path; // phpcs:ignore WPThemeReview.CoreFunctionality.FileInclude.FileIncludeFound
+				require_once $theme_bg_process_path; // phpcs:ignore WPThemeReview.CoreFunctionality.FileInclude.FileIncludeFound
+
+				self::$background_updater = new Astra_Theme_WP_Background_Process();
+			}
 		}
 
 		/**
@@ -203,7 +210,9 @@ if ( ! class_exists( 'Astra_Theme_Background_Updater' ) ) {
 		 */
 		public function install_actions() {
 
-			do_action( 'astra_update_initiated', self::$background_updater );
+			if ( is_object( self::$background_updater ) ) {
+				do_action( 'astra_update_initiated', self::$background_updater );
+			}
 
 			if ( true === $this->is_new_install() ) {
 				self::update_db_version();
@@ -333,6 +342,10 @@ if ( ! class_exists( 'Astra_Theme_Background_Updater' ) ) {
 		 */
 		private function update( $fallback ) {
 			$current_db_version = astra_get_option( 'theme-auto-version' );
+
+			if ( ! is_object( self::$background_updater ) ) {
+				return;
+			}
 
 			if ( count( $this->get_db_update_callbacks() ) > 0 ) {
 				foreach ( $this->get_db_update_callbacks() as $version => $update_callbacks ) {

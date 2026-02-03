@@ -81,7 +81,7 @@ $current_year = date( 'Y' );
         </div>
 
         <div class="hv-footer__bottom">
-            <p>© <?php echo esc_html( $current_year ); ?> Hand & Vision. <?php echo esc_html( handandvision_is_hebrew() ? 'כל הזכויות שמורות.' : 'All rights reserved.' ); ?></p>
+            <p>© <?php echo esc_html( $current_year ); ?> CartShift Studio. <?php echo esc_html( handandvision_is_hebrew() ? 'כל הזכויות שמורות.' : 'All rights reserved.' ); ?></p>
             <nav class="hv-footer__legal">
                 <?php
                 $privacy_url = get_privacy_policy_url();

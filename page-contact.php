@@ -42,7 +42,7 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
                     <?php
                     $form_title = get_field( 'form_title', $page_id ) ?: ( handandvision_is_hebrew() ? 'שלחו לנו הודעה' : 'Send us a message' );
                     if ( $form_title ) : ?>
-                        <h2 class="hv-headline-3 hv-mb-6 hv-text-center"><?php echo esc_html( $form_title ); ?></h2>
+                        <h2 class="hv-headline-3 hv-mb-10 hv-text-center"><?php echo esc_html( $form_title ); ?></h2>
                     <?php endif; ?>
 
                     <?php

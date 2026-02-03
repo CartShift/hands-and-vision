@@ -69,6 +69,24 @@ $is_hebrew = handandvision_is_hebrew();
                             <div class="hv-artist-card-premium__info">
                                 <h3 class="hv-artist-card-premium__name"><?php echo esc_html( $artist->post_title ); ?></h3>
                                 <span class="hv-artist-card-premium__discipline"><?php echo esc_html( $discipline ); ?></span>
+
+                                <div class="hv-artist-card-premium__excerpt-wrap">
+                                    <div class="hv-artist-card-premium__excerpt">
+                                        <?php
+                                        $bio = get_field( 'artist_biography', $artist->ID ) ?: get_field( 'artist_bio', $artist->ID );
+                                        if ( $bio ) {
+                                            echo wp_trim_words( strip_tags( $bio ), 20 );
+                                        }
+                                        ?>
+                                    </div>
+                                    <button type="button" class="hv-artist-card-premium__expander" aria-expanded="false">
+                                        <span class="hv-expander-text"><?php echo $is_hebrew ? 'קרא עוד' : 'Read More'; ?></span>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+                                    </button>
+                                    <div class="hv-artist-card-premium__full-bio" hidden>
+                                        <?php echo wp_kses_post( $bio ); ?>
+                                    </div>
+                                </div>
                             </div>
                         </a>
                     </article>

@@ -61,7 +61,10 @@
 	--hv-yellow: #fae4af; /* Light Yellow - Section backgrounds */
 	--hv-yellow-soft: rgba(250, 228, 175, 0.3);
 
-	/* Pink Spectrum - Soft feminine touches */
+	/* Artist Card Updates */
+	--hv-artist-img-radius: 50%; /* Circular images */
+	--hv-artist-card-bg: var(--hv-white);
+
 	--hv-pink: #f8cec8; /* Light Pink - Accents */
 	--hv-pink-soft: #f5e0e9; /* Soft Pink - Section backgrounds */
 	--hv-pink-subtle: rgba(245, 224, 233, 0.4);
@@ -556,8 +559,9 @@ ul.hv-nav-menu {
 	}
 
 	.hv-header__center {
-		justify-content: space-between;
-		width: 100%;
+		justify-content: center;
+		flex: 1; /* Allow flex to manage space */
+		width: auto;
 		gap: 0;
 	}
 
@@ -567,7 +571,9 @@ ul.hv-nav-menu {
 
 	.hv-header__lang {
 		position: static;
-		order: -1;
+		order: 2; /* Move to right */
+		margin-inline-start: auto; /* Push to right */
+		margin-inline-end: 10px;
 	}
 
 	.hv-nav-menu li a {
@@ -792,12 +798,153 @@ body.ast-mobile-cart-active {
 	}
 }
 
-/* Desktop adjustment */
-@media (min-width: 901px) {
-	.hv-header__cart {
-		inset-inline-end: 40px;
+/* ==========================================
+   2026 UPDATE: PREMIUM & MOBILE ENHANCEMENTS
+   ========================================== */
+
+/* 1. ARTIST ARCHIVE - CIRCULAR & EXPANDABLE */
+.hv-artist-card-premium__media {
+	border-radius: 50% !important;
+	aspect-ratio: 1 / 1;
+	overflow: hidden;
+	box-shadow: var(--hv-shadow-md);
+	transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.hv-artist-card-premium:hover .hv-artist-card-premium__media {
+	transform: scale(1.05);
+	box-shadow: var(--hv-shadow-lg);
+}
+.hv-artist-card-premium__excerpt-wrap {
+	margin-top: 0.5rem;
+}
+.hv-artist-card-premium__excerpt {
+	font-size: 0.9rem;
+	color: var(--hv-text-secondary);
+	margin-bottom: 0.5rem;
+	line-height: 1.5;
+}
+.hv-artist-card-premium__expander {
+	background: none;
+	border: none;
+	padding: 0;
+	color: var(--hv-lilac);
+	font-size: 0.85rem;
+	font-weight: 500;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	transition: color 0.2s ease;
+}
+.hv-artist-card-premium__expander:hover {
+	color: var(--hv-purple);
+}
+.hv-artist-card-premium__full-bio {
+	margin-top: 0.5rem;
+	font-size: 0.9rem;
+	color: var(--hv-text-secondary);
+	border-top: 1px solid var(--hv-border-light);
+	padding-top: 0.5rem;
+}
+
+/* 2. HOMEPAGE GALLERY - VISUALS */
+.hv-gallery-mosaic__item {
+	transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.hv-gallery-mosaic__item:hover {
+	transform: translateY(-5px) scale(1.01);
+	box-shadow: 0 20px 40px rgba(0,0,0,0.2) !important;
+	z-index: 2;
+}
+.hv-gallery-mosaic__overlay {
+	background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+.hv-gallery-mosaic__item:hover .hv-gallery-mosaic__overlay {
+	opacity: 1;
+}
+
+/* 3. MOBILE SHOP - CAROUSEL & COMPACT */
+@media (max-width: 768px) {
+	.hv-shop-page .hv-shop-grid {
+		display: flex;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		gap: 12px;
+		padding-bottom: 20px;
+		margin-inline: -20px; /* Bleed to edge */
+		padding-inline: 20px;
+		-webkit-overflow-scrolling: touch;
+	}
+	.hv-shop-page .hv-shop-grid::-webkit-scrollbar {
+		display: none;
+	}
+	/* Category Tabs Scroll */
+	.hv-shop-filters__categories {
+		display: flex;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		white-space: nowrap;
+		gap: 8px;
+		padding-bottom: 10px;
+		margin-inline: -20px;
+		padding-inline: 20px;
+		-webkit-overflow-scrolling: touch;
+	}
+	/* Product Card Compact */
+	.hv-product-card {
+		min-width: 150px;
+		max-width: 150px;
+		flex: 0 0 auto;
+		scroll-snap-align: start;
+	}
+	.hv-product-card__title {
+		font-size: 0.9rem;
+	}
+	.hv-product-card__price {
+		font-size: 0.85rem;
+	}
+	.hv-product-card__actions .hv-btn {
+		padding: 6px 12px;
+		font-size: 0.75rem;
 	}
 }
+
+/* 4. SERVICES MOBILE - STACK */
+@media (max-width: 768px) {
+	.hv-services-showcase .hv-container--wide {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+	.hv-service-showcase-card {
+		width: 100%;
+	}
+}
+
+/* 5. FOOTER HEIGHT */
+.hv-footer {
+	padding-top: 3rem;
+	padding-bottom: 2rem;
+}
+.hv-footer__grid {
+	gap: 2rem;
+}
+@media (max-width: 768px) {
+	.hv-footer {
+		padding-top: 2rem;
+		padding-bottom: 1.5rem;
+	}
+}
+
+/* 6. CONTACT PAGE SPACING */
+.page-template-page-contact .hv-contact-form-section,
+.hv-contact-page .hv-contact-form-section {
+	padding-top: 4rem; /* Increase spacing */
+}
+
 
 /* Tablet/Mobile adjustments */
 @media (max-width: 900px) {
@@ -14536,3 +14683,204 @@ html[dir="rtl"] .hv-footer__links a:hover {
 	filter: grayscale(0%);
 	transform: scale(1.08);
 }
+
+/* Desktop adjustment */
+@media (min-width: 901px) {
+.hv-header__cart {
+inset-inline-end: 40px;
+}
+}
+
+
+/* Masonry Gallery Grid */
+.hv-masonry-grid {
+column-count: 3;
+column-gap: 24px;
+width: 100%;
+}
+.hv-masonry-grid-item {
+break-inside: avoid;
+margin-bottom: 24px;
+border-radius: 4px; /* Optional rounded corners */
+overflow: hidden;
+backface-visibility: hidden; /* Fix for chrome rendering glitch */
+}
+.hv-masonry-grid-item img {
+width: 100%;
+height: auto;
+display: block;
+transition: transform 0.5s ease;
+}
+.hv-masonry-grid-item:hover img {
+transform: scale(1.03);
+}
+
+@media (max-width: 900px) {
+.hv-masonry-grid {
+column-count: 2;
+}
+}
+@media (max-width: 600px) {
+.hv-masonry-grid {
+column-count: 1;
+}
+}
+
+
+/* ==========================================
+   QUICK VIEW MODAL
+   ========================================== */
+.hv-quick-view-modal {
+position: fixed;
+inset: 0;
+z-index: 999999;
+display: flex;
+align-items: center;
+justify-content: center;
+opacity: 0;
+visibility: hidden;
+transition: all 0.3s ease;
+}
+.hv-quick-view-modal.active {
+opacity: 1;
+visibility: visible;
+}
+.hv-quick-view-modal__overlay {
+position: absolute;
+inset: 0;
+background: rgba(0, 0, 0, 0.7);
+backdrop-filter: blur(4px);
+}
+.hv-quick-view-modal__container {
+position: relative;
+width: 90%;
+max-width: 900px;
+max-height: 90vh;
+background: var(--hv-white);
+border-radius: 8px;
+overflow-y: auto;
+box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+transform: scale(0.95);
+transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.hv-quick-view-modal.active .hv-quick-view-modal__container {
+transform: scale(1);
+}
+.hv-quick-view-close {
+position: absolute;
+top: 15px;
+right: 15px;
+z-index: 10;
+font-size: 24px;
+background: none;
+border: none;
+cursor: pointer;
+color: var(--hv-petrol);
+padding: 5px;
+line-height: 1;
+}
+[dir='rtl'] .hv-quick-view-close {
+right: auto;
+left: 15px;
+}
+.hv-quick-view-loader {
+padding: 40px;
+text-align: center;
+}
+.hv-quick-view-loader::after {
+content: '';
+display: inline-block;
+width: 30px;
+height: 30px;
+border: 2px solid var(--hv-gray-300);
+border-radius: 50%;
+border-top-color: var(--hv-primary);
+animation: spin 0.8s linear infinite;
+}
+.hv-quick-view-content-wrap {
+display: flex;
+flex-wrap: wrap;
+}
+.hv-quick-view-modal__content {
+display: flex;
+width: 100%;
+}
+.hv-quick-view-modal__image {
+flex: 1;
+min-width: 300px;
+background: #f9f9f9;
+display: flex;
+align-items: center;
+}
+.hv-quick-view-modal__image img {
+width: 100%;
+height: 100%;
+object-fit: contain;
+max-height: 600px;
+}
+.hv-quick-view-modal__details {
+flex: 1;
+padding: 40px;
+min-width: 300px;
+}
+.hv-quick-view-modal__artist {
+display: block;
+font-family: 'Heebo', sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+color: var(--hv-lilac);
+margin-bottom: 8px;
+font-size: 0.85rem;
+}
+.hv-quick-view-modal__price {
+font-size: 1.5rem;
+color: var(--hv-petrol);
+font-weight: 500;
+}
+@media (max-width: 768px) {
+.hv-quick-view-modal__content {
+flex-direction: column;
+}
+.hv-quick-view-modal__image {
+min-height: 300px;
+}
+.hv-quick-view-modal__details {
+padding: 20px;
+}
+}
+
+/* Quick View Button on Card */
+.hv-quick-view-btn {
+position: absolute;
+top: 10px;
+right: 10px;
+width: 36px;
+height: 36px;
+background: rgba(255,255,255,0.9);
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+color: var(--hv-petrol);
+box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+opacity: 0;
+transform: translateY(10px);
+transition: all 0.3s ease;
+z-index: 5;
+padding: 0;
+border: none;
+cursor: pointer;
+}
+[dir='rtl'] .hv-quick-view-btn {
+right: auto;
+left: 10px;
+}
+.hv-product-card:hover .hv-quick-view-btn {
+opacity: 1;
+transform: translateY(0);
+}
+.hv-quick-view-btn:hover {
+background: var(--hv-petrol);
+color: white;
+}
+

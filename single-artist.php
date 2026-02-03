@@ -50,7 +50,13 @@ if ( empty( $social ) || ! is_array( $social ) ) {
                 <!-- Sticky Portrait Side -->
                 <div class="hv-artist-hero-premium__visual">
                     <div class="hv-sticky-portrait" style="view-transition-name: artist-portrait-<?php echo esc_attr( $artist_id ); ?>; top: calc(var(--hv-header-height, 80px) + 40px);">
-                         <?php if ( $portrait_url ) : ?>
+                         <?php
+                         $video_url = get_field('artist_video', $artist_id);
+                         if ( $video_url ) : ?>
+                            <video class="hv-img-cover" autoplay muted loop playsinline poster="<?php echo esc_url($portrait_url); ?>">
+                                <source src="<?php echo esc_url($video_url); ?>" type="video/mp4">
+                            </video>
+                         <?php elseif ( $portrait_url ) : ?>
                             <img src="<?php echo esc_url( $portrait_url ); ?>" alt="<?php the_title_attribute(); ?>" class="hv-img-cover">
                         <?php else : ?>
                             <div class="hv-img-placeholder"></div>

@@ -1,7 +1,7 @@
 <?php
 /**
  * ACF Field Group Configuration for Artists
- * 
+ *
  * This file registers ACF fields for the Artist post type.
  * Labels and instructions in Hebrew.
  *
@@ -41,6 +41,13 @@ function handandvision_register_acf_artist_fields() {
                 'instructions' => 'תמונת דיוקן מרובעת. מומלץ: 600x600 פיקסלים או יותר.',
             ),
             array(
+                'key' => 'field_artist_video',
+                'label' => 'וידאו דיוקן (אופציונלי)',
+                'name' => 'artist_video',
+                'type' => 'url',
+                'instructions' => 'קישור לוידאו (MP4) שיוצג במקום תמונת הדיוקן בעמוד האמן. השאירו ריק אם אין.',
+            ),
+            array(
                 'key' => 'field_artist_biography',
                 'label' => 'ביוגרפיה',
                 'name' => 'artist_biography',
@@ -49,7 +56,7 @@ function handandvision_register_acf_artist_fields() {
                 'media_upload' => 0,
                 'instructions' => 'ביוגרפיה ורקע על האמן.',
             ),
-            
+
             // Social Links Tab - לשונית קישורים חברתיים
             array(
                 'key' => 'field_artist_social_tab',
@@ -78,7 +85,7 @@ function handandvision_register_acf_artist_fields() {
                 'type' => 'url',
                 'placeholder' => 'https://example.com',
             ),
-            
+
             // Gallery Tab - לשונית גלריה
             array(
                 'key' => 'field_artist_gallery_tab',
