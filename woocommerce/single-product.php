@@ -336,7 +336,7 @@ while ( have_posts() ) :
                         : 'Have questions about this piece? Want to know more about the artist? Get in touch.'
                     ); ?>
                 </p>
-                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-shop-cta-premium__btn">
+                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-btn hv-btn--primary-gold hv-shop-cta-premium__btn">
                     <span><?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Contact Us' ); ?></span>
                 </a>
             </div>

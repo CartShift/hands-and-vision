@@ -164,7 +164,7 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
                         ? 'נשמח לשמוע על החזון האמנותי שלכם ולעזור להפוך אותו למציאות.'
                         : "We'd love to hear about your artistic vision and help bring it to life." ); ?>
                 </p>
-                <a href="<?php echo esc_url( function_exists( 'handandvision_get_contact_url' ) ? handandvision_get_contact_url() : home_url( '/contact' ) ); ?>" class="hv-services-cta-premium__btn">
+                <a href="<?php echo esc_url( function_exists( 'handandvision_get_contact_url' ) ? handandvision_get_contact_url() : home_url( '/contact' ) ); ?>" class="hv-btn hv-btn--primary-gold hv-services-cta-premium__btn">
                     <span><?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Get in Touch' ); ?></span>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <?php if ( $is_hebrew ) : ?>

@@ -122,7 +122,7 @@ if ( ! $term || ! isset( $term->name ) ) {
                     : 'Discover more pieces from different categories in our shop'
                 ); ?>
             </p>
-            <a href="<?php echo esc_url( get_permalink( wc_get_page_id( 'shop' ) ) ); ?>" class="hv-btn hv-btn--primary hv-reveal">
+            <a href="<?php echo esc_url( get_permalink( wc_get_page_id( 'shop' ) ) ); ?>" class="hv-btn hv-btn--primary-gold hv-reveal">
                 <?php echo esc_html( $is_hebrew ? 'לכל החנות' : 'View All Shop' ); ?>
             </a>
         </div>

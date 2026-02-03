@@ -277,7 +277,7 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
                     $contact_url = handandvision_get_contact_url();
                 }
                 ?>
-                <a href="<?php echo esc_url( $contact_url ); ?>" class="hv-service-cta-btn">
+                <a href="<?php echo esc_url( $contact_url ); ?>" class="hv-btn hv-btn--primary-gold">
                     <?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Get in Touch' ); ?>
                 </a>
             </div>

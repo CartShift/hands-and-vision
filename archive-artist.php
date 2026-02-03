@@ -105,7 +105,7 @@ $is_hebrew = handandvision_is_hebrew();
                         ? 'אנחנו תמיד שמחים לצרף כישרונות חדשים לקולקטיב שלנו.'
                         : 'We are always looking for new talent to join our collective.'; ?>
                 </p>
-                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-link-decor"><?php echo $is_hebrew ? 'דברו איתנו' : 'Get in touch'; ?></a>
+                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-btn hv-btn--primary-gold"><?php echo $is_hebrew ? 'דברו איתנו' : 'Get in touch'; ?></a>
             </div>
         </div>
     </section>
