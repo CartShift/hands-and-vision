@@ -331,21 +331,144 @@
 
 		if (!track || !prevBtn || !nextBtn) return;
 
-		const scrollAmount = () => track.offsetWidth * 0.8;
+		// --------------------------------------------------------
+		// 1. DRAG TO SCROLL (Mouse & Touch)
+		// --------------------------------------------------------
+		let isDown = false;
+		let startX;
+		let scrollLeft;
+		let isDragging = false; // To distinguish click vs drag
 
-		prevBtn.addEventListener("click", () => {
-			track.scrollBy({
-				left: -scrollAmount(),
-				behavior: "smooth"
+		const startDrag = (e) => {
+			isDown = true;
+			isDragging = false;
+			track.classList.add('active'); // Change cursor
+			startX = (e.pageX || e.touches[0].pageX) - track.offsetLeft;
+			scrollLeft = track.scrollLeft;
+		};
+
+		const endDrag = () => {
+			isDown = false;
+			track.classList.remove('active');
+			requestAnimationFrame(() => {
+				setTimeout(() => { isDragging = false; }, 50); // Small buffer
+			});
+		};
+
+		const moveDrag = (e) => {
+			if (!isDown) return;
+			e.preventDefault();
+			isDragging = true;
+			const x = (e.pageX || e.touches[0].pageX) - track.offsetLeft;
+			const walk = (x - startX) * 2; // Scroll speed
+			track.scrollLeft = scrollLeft - walk;
+		};
+
+		// Mouse Events
+		track.addEventListener('mousedown', startDrag);
+		track.addEventListener('mouseleave', endDrag);
+		track.addEventListener('mouseup', endDrag);
+		track.addEventListener('mousemove', moveDrag);
+
+		// Touch Events (optional, native scroll is usually better, but this unifies feeling)
+		// We'll stick to native touch scroll for mobile as it's smoother with scroll-snap
+
+		// Prevent clicking links whilst dragging
+		const links = track.querySelectorAll('a');
+		links.forEach(link => {
+			link.addEventListener('click', (e) => {
+				if (isDragging) e.preventDefault();
 			});
 		});
 
-		nextBtn.addEventListener("click", () => {
-			track.scrollBy({
-				left: scrollAmount(),
-				behavior: "smooth"
-			});
+		// --------------------------------------------------------
+		// 2. INFINITE LOOP LOGIC
+		// --------------------------------------------------------
+		// Clone items to create an invalid start/end buffer
+		const originalItems = Array.from(track.children);
+		if (originalItems.length === 0) return;
+
+		// Clone enough items to fill the viewport width at least once
+		// For safety, let's clone the entire set once at start and once at end
+		// if the set is small.
+
+		const originalWidth = track.scrollWidth;
+		const itemWidth = originalItems[0].offsetWidth + 24; // Width + Gap (approx)
+
+		// Clone set at end
+		originalItems.forEach(item => {
+			const clone = item.cloneNode(true);
+			clone.setAttribute('aria-hidden', 'true');
+			clone.classList.add('hv-clone');
+			track.appendChild(clone);
 		});
+
+		// Clone set at start
+		originalItems.reverse().forEach(item => {
+			const clone = item.cloneNode(true);
+			clone.setAttribute('aria-hidden', 'true');
+			clone.classList.add('hv-clone');
+			track.insertBefore(clone, track.firstChild);
+		});
+
+		// Original set is now in the middle.
+		// Calculate the scroll position of the "real" start
+		// It is exactly the width of the Prepended Clones (which is the length of original items)
+		// We need to wait for layout to act correct.
+
+		const updateScrollPos = () => {
+			// Get width of one full set
+			// We can estimate it or measure the first N items
+			// Simpler: The "real" set starts at index = originalItems.length
+			const realSetStartItem = track.children[originalItems.length];
+			if (realSetStartItem) {
+				const startPos = realSetStartItem.offsetLeft;
+				track.scrollLeft = startPos - parseFloat(getComputedStyle(track).paddingLeft || 0);
+			}
+		};
+
+		// Initial position
+		// Use setTimeout to ensure rendering is done
+		setTimeout(updateScrollPos, 100);
+
+		// Scroll Loop Check
+		const handleScroll = () => {
+			const maxScroll = track.scrollWidth - track.clientWidth;
+
+			// We define "bounds" for the loop.
+			// The "Real" set is in the middle.
+			// Prepended Clones (Set A) | Real Set (Set B) | Appended Clones (Set C)
+			// Total items = 3 * N
+
+			const oneSetWidth = (track.scrollWidth / 3);
+
+			// Thresholds
+			const jumpThresholdLeft = oneSetWidth * 0.5;
+			const jumpThresholdRight = oneSetWidth * 2.5;
+
+			if (track.scrollLeft < 50) {
+				// Too far left (into Set A), jump to end of Set B
+				track.scrollLeft += oneSetWidth;
+			} else if (track.scrollLeft > (maxScroll - 50)) {
+				// Too far right (into Set C), jump to start of Set B
+				track.scrollLeft -= oneSetWidth;
+			}
+		};
+
+		track.addEventListener('scroll', handleScroll, { passive: true });
+
+
+		// --------------------------------------------------------
+		// 3. BUTTON CONTROLS
+		// --------------------------------------------------------
+		const scrollAmount = () => track.offsetWidth * 0.6; // Scroll 60% of viewport
+
+		const scrollSmooth = (amount) => {
+			track.scrollBy({ left: amount, behavior: 'smooth' });
+		};
+
+		prevBtn.addEventListener("click", () => scrollSmooth(-scrollAmount()));
+		nextBtn.addEventListener("click", () => scrollSmooth(scrollAmount()));
 	};
 
 	/**

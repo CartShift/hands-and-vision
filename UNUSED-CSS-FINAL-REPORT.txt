@@ -1,0 +1,760 @@
+CSS USAGE ANALYSIS - ACCURATE REPORT
+=====================================
+
+Generated: 2026-02-03T17:54:55.942Z
+
+EXECUTIVE SUMMARY:
+  Total CSS Selectors: 1402
+  Used Selectors: 743 (53.0%)
+  Unused Selectors: 553 (39.4%)
+  Preserved (WordPress/Libraries): 106 (7.6%)
+
+======================================================================
+DETAILED ANALYSIS BY FILE
+======================================================================
+
+
+──────────────────────────────────────────────────────────────────────
+assets/css/hv-unified.css
+──────────────────────────────────────────────────────────────────────
+Total selectors: 716
+Used: 392 (54.7%)
+Unused: 272 (38.0%)
+Preserved: 52 (7.3%)
+
+UNUSED SELECTORS:
+─────────────────
+  #place_order
+  .added
+  .added_to_cart
+  .amount
+  .cart_totals
+  .cross-sells
+  .current
+  .dragging
+  .error
+  .flex-active
+  .flex-control-thumbs
+  .home
+  .hv-animate--visible
+  .hv-animate-delay-1
+  .hv-animate-delay-2
+  .hv-animate-delay-3
+  .hv-archive-header
+  .hv-archive-header__container
+  .hv-archive-header__subtitle
+  .hv-archive-header__title
+  .hv-artist-card--skeleton
+  .hv-artist-gallery-works
+  .hv-artist-gallery__grid
+  .hv-artist-gallery__img
+  .hv-artist-gallery__item
+  .hv-artist-gallery__item--featured
+  .hv-artist-gallery__item--wide
+  .hv-artist-gallery__link
+  .hv-artist-gallery__media
+  .hv-artist-gallery__meta
+  .hv-artist-gallery__overlay
+  .hv-artist-gallery__title
+  .hv-artist-gallery__zoom
+  .hv-artist-hero
+  .hv-artist-hero__bio
+  .hv-artist-hero__container
+  .hv-artist-hero__content
+  .hv-artist-hero__grid
+  .hv-artist-hero__name
+  .hv-artist-hero__placeholder
+  .hv-artist-hero__portrait
+  .hv-artist-hero__social
+  .hv-artist-products
+  .hv-artists-archive
+  .hv-artists-archive__grid
+  .hv-artists-grid
+  .hv-artists-grid--narrow
+  .hv-artists__grid
+  .hv-body
+  .hv-btn--ghost
+  .hv-btn--ghost-light
+  .hv-btn--large
+  .hv-card
+  .hv-card--artist
+  .hv-card__content
+  .hv-card__media
+  .hv-card__placeholder
+  .hv-card__placeholder--1
+  .hv-card__placeholder--2
+  .hv-card__placeholder--3
+  .hv-card__placeholder--4
+  .hv-card__placeholder--artist
+  .hv-card__subtitle
+  .hv-card__title
+  .hv-collection__grid
+  .hv-contact-content
+  .hv-contact-content__container
+  .hv-contact-form-section
+  .hv-contact-header
+  .hv-contact-header__container
+  .hv-contact-header__intro
+  .hv-contact-header__title
+  .hv-cta-premium
+  .hv-cta-subtitle
+  .hv-divider
+  .hv-empty-state
+  .hv-empty-state__icon
+  .hv-empty-state__message
+  .hv-empty-state__title
+  .hv-fade-in
+  .hv-feature-item
+  .hv-feature-item__number
+  .hv-feature-item__text
+  .hv-features-grid
+  .hv-features-showcase
+  .hv-features-showcase__grid
+  .hv-filter-btn--active
+  .hv-form-feedback--error
+  .hv-form-feedback--success
+  .hv-form-submit
+  .hv-full-width-wrapper
+  .hv-gallery-archive__grid
+  .hv-gallery-bento__item--hidden
+  .hv-gallery-empty
+  .hv-gallery-grid
+  .hv-gallery-hero
+  .hv-gallery-hero__line
+  .hv-gallery-hero__sub
+  .hv-gallery-hero__title
+  .hv-gallery-item
+  .hv-gallery-item__artist
+  .hv-gallery-item__image
+  .hv-gallery-item__overlay
+  .hv-gallery-item__title
+  .hv-gallery__grid
+  .hv-grid
+  .hv-grid--4
+  .hv-header__logo-text
+  .hv-hero-layout-page
+  .hv-hero-premium
+  .hv-hero-premium__actions
+  .hv-hero-premium__bg
+  .hv-hero-premium__content
+  .hv-hero-premium__gradient
+  .hv-hero-premium__overlay
+  .hv-hero-premium__scroll
+  .hv-hero__scroll
+  .hv-hero__stat
+  .hv-hero__stat-divider
+  .hv-hero__stat-label
+  .hv-hero__stat-number
+  .hv-hero__stats
+  .hv-hero__title-line--accent
+  .hv-img-loading
+  .hv-intro
+  .hv-intro-text
+  .hv-intro__content
+  .hv-intro__text
+  .hv-js-ready
+  .hv-lang-switcher
+  .hv-lightbox-backdrop
+  .hv-lightbox-container
+  .hv-lightbox-counter
+  .hv-lightbox-loader
+  .hv-lightbox-open
+  .hv-lightbox-overlay
+  .hv-lightbox-spinner
+  .hv-link-decor
+  .hv-map-placeholder
+  .hv-page-hero
+  .hv-product-card__badge--new
+  .hv-product-title
+  .hv-section--lg
+  .hv-section--warm
+  .hv-service-archive
+  .hv-service-archive-hero
+  .hv-service-archive-hero__bg
+  .hv-service-archive-hero__content
+  .hv-service-archive-hero__overline
+  .hv-service-archive-hero__subtitle
+  .hv-service-archive-hero__title
+  .hv-service-block
+  .hv-service-block--right
+  .hv-service-block__content
+  .hv-service-block__media
+  .hv-service-block__placeholder
+  .hv-service-card--skeleton
+  .hv-service-card-archive
+  .hv-service-card-archive__arrow
+  .hv-service-card-archive__content
+  .hv-service-card-archive__desc
+  .hv-service-card-archive__link
+  .hv-service-card-archive__media
+  .hv-service-card-archive__number
+  .hv-service-card-archive__overlay
+  .hv-service-card-archive__placeholder
+  .hv-service-card-archive__title
+  .hv-service-card__btn
+  .hv-service-card__content
+  .hv-service-card__icon
+  .hv-service-card__img
+  .hv-service-card__number
+  .hv-service-card__overlay
+  .hv-service-card__placeholder--1
+  .hv-service-card__placeholder--2
+  .hv-service-card__placeholder--3
+  .hv-service-card__placeholder--4
+  .hv-service-content
+  .hv-service-gallery__grid
+  .hv-service-hero
+  .hv-service-hero--full
+  .hv-service-hero-archive
+  .hv-service-hero-archive__content
+  .hv-service-hero-archive__desc
+  .hv-service-hero-archive__divider
+  .hv-service-hero-archive__inner
+  .hv-service-hero-archive__label
+  .hv-service-hero-archive__title
+  .hv-service-hero__bg
+  .hv-service-hero__content
+  .hv-service-hero__gradient
+  .hv-service-hero__media
+  .hv-service-hero__overlay
+  .hv-service-hero__overline
+  .hv-service-hero__subtitle
+  .hv-service-hero__title
+  .hv-service-intro-text
+  .hv-service-showcase-card
+  .hv-service-showcase-card--featured
+  .hv-services-archive-grid
+  .hv-services-archive-grid__inner
+  .hv-services-archive__grid
+  .hv-services-cards
+  .hv-services-cta
+  .hv-services-cta__btn
+  .hv-services-cta__content
+  .hv-services-cta__desc
+  .hv-services-cta__label
+  .hv-services-cta__title
+  .hv-services-grid
+  .hv-services-hero
+  .hv-services-hero__bg
+  .hv-services-hero__content
+  .hv-services-hero__gradient
+  .hv-services-hero__inner
+  .hv-services-hero__line
+  .hv-services-hero__lines
+  .hv-services-hero__orb
+  .hv-services-hero__overline
+  .hv-services-hero__scroll
+  .hv-services-hero__stat
+  .hv-services-hero__stat-divider
+  .hv-services-hero__stat-label
+  .hv-services-hero__stat-number
+  .hv-services-hero__stats
+  .hv-services-hero__subtitle
+  .hv-services-hero__text
+  .hv-services-hero__title
+  .hv-services-hero__title-line
+  .hv-services-hero__title-line--accent
+  .hv-services__grid
+  .hv-shop-hero
+  .hv-shop-hero__content
+  .hv-shop-link-wrapper
+  .hv-shop-subtitle
+  .hv-skeleton
+  .hv-text-left
+  .hv-text-right
+  .in-stock
+  .loaded
+  .loading
+  .menu
+  .menu-open
+  .mini_cart_item
+  .next
+  .onsale
+  .order-total
+  .out-of-stock
+  .page-numbers
+  .page-template-page-contact
+  .post-navigation
+  .prev
+  .product_meta
+  .reset_variations
+  .return-to-shop
+  .revealed
+  .scrolled
+  .single-product
+  .site-footer
+  .site-header-primary-section-left
+  .site-header-primary-section-right
+  .sku
+  .sku_wrapper
+  .tagged_as
+  .variation
+  .variations
+  body
+  button
+  html
+  img
+  input
+  p
+
+PRESERVED SELECTORS (WordPress/Libraries - Manually Verify):
+───────────────────────────────────────────────────────────────
+  #ast-desktop-header
+  #ast-mobile-header
+  #ast-scroll-top
+  .active
+  .ast-builder-header-row
+  .ast-builder-menu
+  .ast-container
+  .ast-desktop-header-wrap
+  .ast-footer-container
+  .ast-header-menu
+  .ast-header-menu-btn
+  .ast-masthead
+  .ast-mobile-cart-active
+  .ast-mobile-header-wrap
+  .ast-mobile-menu-buttons
+  .ast-nav-menu
+  .ast-primary
+  .ast-primary-header-bar
+  .ast-row
+  .ast-single-post-order
+  .ast-site-identity
+  .astra-cart-drawer
+  .astra-mobile-cart-overlay
+  .cart
+  .has-items
+  .is-active
+  .is-loading
+  .is-visible
+  .product
+  .products
+  .rtl
+  .wc-proceed-to-checkout
+  .woocommerce
+  .woocommerce-Price-currencySymbol
+  .woocommerce-breadcrumb
+  .woocommerce-cart
+  .woocommerce-cart-form
+  .woocommerce-cart-form__contents
+  .woocommerce-checkout
+  .woocommerce-error
+  .woocommerce-form-row
+  .woocommerce-info
+  .woocommerce-loop-product
+  .woocommerce-loop-product__title
+  .woocommerce-message
+  .woocommerce-mini-cart__buttons
+  .woocommerce-mini-cart__total
+  .woocommerce-page
+  .woocommerce-pagination
+  .woocommerce-product-gallery
+  .woocommerce-product-gallery__image
+  .woocommerce-product-gallery__wrapper
+
+
+──────────────────────────────────────────────────────────────────────
+assets/css/hv-main.css
+──────────────────────────────────────────────────────────────────────
+Total selectors: 608
+Used: 301 (49.5%)
+Unused: 255 (41.9%)
+Preserved: 52 (8.6%)
+
+UNUSED SELECTORS:
+─────────────────
+  #place_order
+  .added
+  .added_to_cart
+  .amount
+  .cart_totals
+  .cross-sells
+  .current
+  .dragging
+  .error
+  .flex-active
+  .flex-control-thumbs
+  .home
+  .hv-animate--visible
+  .hv-animate-delay-1
+  .hv-animate-delay-2
+  .hv-animate-delay-3
+  .hv-archive-header
+  .hv-archive-header__container
+  .hv-archive-header__subtitle
+  .hv-archive-header__title
+  .hv-artist-card--skeleton
+  .hv-artist-gallery__grid
+  .hv-artist-hero
+  .hv-artist-hero__bio
+  .hv-artist-hero__container
+  .hv-artist-hero__content
+  .hv-artist-hero__grid
+  .hv-artist-hero__name
+  .hv-artist-hero__placeholder
+  .hv-artist-hero__portrait
+  .hv-artist-hero__social
+  .hv-artist-products
+  .hv-artists-archive
+  .hv-artists-archive__grid
+  .hv-artists-grid
+  .hv-artists-grid--narrow
+  .hv-artists__grid
+  .hv-body
+  .hv-btn--ghost
+  .hv-btn--ghost-light
+  .hv-btn--large
+  .hv-card
+  .hv-card--artist
+  .hv-card__content
+  .hv-card__media
+  .hv-card__placeholder
+  .hv-card__placeholder--1
+  .hv-card__placeholder--2
+  .hv-card__placeholder--3
+  .hv-card__placeholder--4
+  .hv-card__placeholder--artist
+  .hv-card__subtitle
+  .hv-card__title
+  .hv-collection__grid
+  .hv-contact-content
+  .hv-contact-content__container
+  .hv-contact-header
+  .hv-contact-header__container
+  .hv-contact-header__intro
+  .hv-contact-header__title
+  .hv-cta-premium
+  .hv-cta-subtitle
+  .hv-divider
+  .hv-empty-state
+  .hv-empty-state__icon
+  .hv-empty-state__message
+  .hv-empty-state__title
+  .hv-fade-in
+  .hv-feature-item
+  .hv-feature-item__number
+  .hv-feature-item__text
+  .hv-features-grid
+  .hv-features-showcase
+  .hv-features-showcase__grid
+  .hv-filter-btn--active
+  .hv-form-feedback--error
+  .hv-form-feedback--success
+  .hv-form-submit
+  .hv-full-width-wrapper
+  .hv-gallery-archive__grid
+  .hv-gallery-bento__item--hidden
+  .hv-gallery-empty
+  .hv-gallery-grid
+  .hv-gallery-hero
+  .hv-gallery-hero__line
+  .hv-gallery-hero__sub
+  .hv-gallery-hero__title
+  .hv-gallery-item
+  .hv-gallery-item__artist
+  .hv-gallery-item__image
+  .hv-gallery-item__overlay
+  .hv-gallery-item__title
+  .hv-gallery__grid
+  .hv-grid
+  .hv-grid--4
+  .hv-header__logo-text
+  .hv-hero-layout-page
+  .hv-hero-premium
+  .hv-hero-premium__actions
+  .hv-hero-premium__bg
+  .hv-hero-premium__content
+  .hv-hero-premium__gradient
+  .hv-hero-premium__overlay
+  .hv-hero-premium__scroll
+  .hv-hero__scroll
+  .hv-hero__stat
+  .hv-hero__stat-divider
+  .hv-hero__stat-label
+  .hv-hero__stat-number
+  .hv-hero__stats
+  .hv-hero__title-line--accent
+  .hv-img-loading
+  .hv-intro
+  .hv-intro-text
+  .hv-intro__content
+  .hv-intro__text
+  .hv-js-ready
+  .hv-lang-switcher
+  .hv-lightbox-backdrop
+  .hv-lightbox-container
+  .hv-lightbox-counter
+  .hv-lightbox-loader
+  .hv-lightbox-open
+  .hv-lightbox-overlay
+  .hv-lightbox-spinner
+  .hv-map-placeholder
+  .hv-page-hero
+  .hv-product-card__badge--new
+  .hv-product-title
+  .hv-section--lg
+  .hv-service-archive
+  .hv-service-archive-hero
+  .hv-service-archive-hero__bg
+  .hv-service-archive-hero__content
+  .hv-service-archive-hero__overline
+  .hv-service-archive-hero__subtitle
+  .hv-service-archive-hero__title
+  .hv-service-block
+  .hv-service-block--right
+  .hv-service-block__content
+  .hv-service-block__media
+  .hv-service-block__placeholder
+  .hv-service-card--skeleton
+  .hv-service-card-archive
+  .hv-service-card-archive__arrow
+  .hv-service-card-archive__content
+  .hv-service-card-archive__desc
+  .hv-service-card-archive__link
+  .hv-service-card-archive__media
+  .hv-service-card-archive__number
+  .hv-service-card-archive__overlay
+  .hv-service-card-archive__placeholder
+  .hv-service-card-archive__title
+  .hv-service-card__btn
+  .hv-service-card__content
+  .hv-service-card__icon
+  .hv-service-card__img
+  .hv-service-card__number
+  .hv-service-card__overlay
+  .hv-service-card__placeholder--1
+  .hv-service-card__placeholder--2
+  .hv-service-card__placeholder--3
+  .hv-service-card__placeholder--4
+  .hv-service-content
+  .hv-service-gallery__grid
+  .hv-service-hero
+  .hv-service-hero--full
+  .hv-service-hero-archive
+  .hv-service-hero-archive__content
+  .hv-service-hero-archive__desc
+  .hv-service-hero-archive__divider
+  .hv-service-hero-archive__inner
+  .hv-service-hero-archive__label
+  .hv-service-hero-archive__title
+  .hv-service-hero__bg
+  .hv-service-hero__content
+  .hv-service-hero__gradient
+  .hv-service-hero__media
+  .hv-service-hero__overlay
+  .hv-service-hero__overline
+  .hv-service-hero__subtitle
+  .hv-service-hero__title
+  .hv-service-intro-text
+  .hv-services-archive-grid
+  .hv-services-archive-grid__inner
+  .hv-services-archive__grid
+  .hv-services-cards
+  .hv-services-cta
+  .hv-services-cta__btn
+  .hv-services-cta__content
+  .hv-services-cta__desc
+  .hv-services-cta__label
+  .hv-services-cta__title
+  .hv-services-grid
+  .hv-services-hero
+  .hv-services-hero__bg
+  .hv-services-hero__content
+  .hv-services-hero__gradient
+  .hv-services-hero__inner
+  .hv-services-hero__line
+  .hv-services-hero__lines
+  .hv-services-hero__orb
+  .hv-services-hero__overline
+  .hv-services-hero__scroll
+  .hv-services-hero__stat
+  .hv-services-hero__stat-divider
+  .hv-services-hero__stat-label
+  .hv-services-hero__stat-number
+  .hv-services-hero__stats
+  .hv-services-hero__subtitle
+  .hv-services-hero__text
+  .hv-services-hero__title
+  .hv-services-hero__title-line
+  .hv-services-hero__title-line--accent
+  .hv-services__grid
+  .hv-shop-hero
+  .hv-shop-hero__content
+  .hv-shop-link-wrapper
+  .hv-shop-subtitle
+  .hv-skeleton
+  .hv-text-left
+  .hv-text-right
+  .in-stock
+  .loaded
+  .loading
+  .menu
+  .menu-open
+  .mini_cart_item
+  .next
+  .onsale
+  .order-total
+  .out-of-stock
+  .page-numbers
+  .post-navigation
+  .prev
+  .product_meta
+  .reset_variations
+  .return-to-shop
+  .revealed
+  .scrolled
+  .single-product
+  .site-footer
+  .site-header-primary-section-left
+  .site-header-primary-section-right
+  .sku
+  .sku_wrapper
+  .tagged_as
+  .variation
+  .variations
+  body
+  button
+  html
+  img
+  input
+  p
+
+PRESERVED SELECTORS (WordPress/Libraries - Manually Verify):
+───────────────────────────────────────────────────────────────
+  #ast-desktop-header
+  #ast-mobile-header
+  #ast-scroll-top
+  .active
+  .ast-builder-header-row
+  .ast-builder-menu
+  .ast-container
+  .ast-desktop-header-wrap
+  .ast-footer-container
+  .ast-header-menu
+  .ast-header-menu-btn
+  .ast-masthead
+  .ast-mobile-cart-active
+  .ast-mobile-header-wrap
+  .ast-mobile-menu-buttons
+  .ast-nav-menu
+  .ast-primary
+  .ast-primary-header-bar
+  .ast-row
+  .ast-single-post-order
+  .ast-site-identity
+  .astra-cart-drawer
+  .astra-mobile-cart-overlay
+  .cart
+  .has-items
+  .is-active
+  .is-loading
+  .is-visible
+  .product
+  .products
+  .rtl
+  .wc-proceed-to-checkout
+  .woocommerce
+  .woocommerce-Price-currencySymbol
+  .woocommerce-breadcrumb
+  .woocommerce-cart
+  .woocommerce-cart-form
+  .woocommerce-cart-form__contents
+  .woocommerce-checkout
+  .woocommerce-error
+  .woocommerce-form-row
+  .woocommerce-info
+  .woocommerce-loop-product
+  .woocommerce-loop-product__title
+  .woocommerce-message
+  .woocommerce-mini-cart__buttons
+  .woocommerce-mini-cart__total
+  .woocommerce-page
+  .woocommerce-pagination
+  .woocommerce-product-gallery
+  .woocommerce-product-gallery__image
+  .woocommerce-product-gallery__wrapper
+
+
+──────────────────────────────────────────────────────────────────────
+assets/css/hv-store-premium.css
+──────────────────────────────────────────────────────────────────────
+Total selectors: 78
+Used: 50 (64.1%)
+Unused: 26 (33.3%)
+Preserved: 2 (2.6%)
+
+UNUSED SELECTORS:
+─────────────────
+  .hv-filter-btn--active
+  .hv-product-title
+  .hv-shop-hero-premium
+  .hv-shop-hero-premium__bg
+  .hv-shop-hero-premium__content
+  .hv-shop-hero-premium__gradient
+  .hv-shop-hero-premium__inner
+  .hv-shop-hero-premium__line
+  .hv-shop-hero-premium__lines
+  .hv-shop-hero-premium__orb
+  .hv-shop-hero-premium__orb--1
+  .hv-shop-hero-premium__orb--2
+  .hv-shop-hero-premium__orb--3
+  .hv-shop-hero-premium__overline
+  .hv-shop-hero-premium__scroll
+  .hv-shop-hero-premium__stat
+  .hv-shop-hero-premium__stat-divider
+  .hv-shop-hero-premium__stat-label
+  .hv-shop-hero-premium__stat-number
+  .hv-shop-hero-premium__stats
+  .hv-shop-hero-premium__subtitle
+  .hv-shop-hero-premium__text
+  .hv-shop-hero-premium__title
+  .hv-shop-hero-premium__title-line
+  .hv-shop-hero-premium__title-line--accent
+  html
+
+PRESERVED SELECTORS (WordPress/Libraries - Manually Verify):
+───────────────────────────────────────────────────────────────
+  .woocommerce-product-gallery
+  .woocommerce-product-gallery__image
+
+======================================================================
+VALIDATION NOTES:
+======================================================================
+• This scanner uses EXACT selector matching - no partial matches
+• Only classes/IDs found directly in source files are considered "used"
+• "Preserved" selectors are WordPress/library classes that may be needed
+• Some unused selectors may be added dynamically via JavaScript
+• Some may be used in conditionals not captured by static analysis
+
+======================================================================
+IMPLEMENTATION GUIDE
+======================================================================
+
+PHASE 1: PREPARATION
+  1. Backup all CSS files before making changes
+  2. Review the "Unused Selectors" list carefully
+  3. Search codebase for any dynamic class additions
+  4. Review "Preserved" selectors - some may still be removable
+
+PHASE 2: TESTING
+  1. Create a test branch
+  2. Remove unused selectors from CSS files
+  3. Test all pages on the website
+  4. Check all breakpoints (mobile, tablet, desktop)
+  5. Test all interactive states (hover, focus, active)
+  6. Verify WooCommerce functionality
+
+PHASE 3: DEPLOYMENT
+  1. Commit changes with clear message
+  2. Deploy to staging environment first
+  3. Run full QA on staging
+  4. Monitor for any visual issues
+  5. If all tests pass, deploy to production
+
+IMPORTANT NOTES:
+  - Some selectors may be added via JavaScript libraries
+  - WordPress classes vary based on plugins and settings
+  - WooCommerce has conditional classes for different states
+  - Always test on a staging site before production
+  - Consider performance gain vs risk of breaking changes
+

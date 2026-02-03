@@ -15109,3 +15109,86 @@ html[dir="rtl"] .hv-footer__links a:hover {
 .hv-gallery-carousel__btn:active {
     transform: scale(0.95);
 }
+
+/* -------------------------------------------------------------------------
+   PREMIUM LIGHTBOX UPGRADE
+   ------------------------------------------------------------------------- */
+.hv-lightbox-overlay {
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(20px);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hv-lightbox-image {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    max-height: 85vh;
+}
+
+.hv-lightbox-caption {
+    font-family: var(--font-heading, "Heebo", sans-serif);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    margin-top: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.hv-lightbox-nav {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    line-height: 1;
+    padding-bottom: 6px; /* Optical center adjust for arrows */
+}
+
+.hv-lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.1);
+}
+
+.hv-lightbox-close {
+    background: transparent;
+    color: white;
+    font-size: 3rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.hv-lightbox-close:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+/* -------------------------------------------------------------------------
+   CAROUSEL DRAG CURSORS
+   ------------------------------------------------------------------------- */
+.hv-gallery-carousel__track {
+    cursor: grab;
+    /* Hide scrollbar completely to ensure clean look */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.hv-gallery-carousel__track::-webkit-scrollbar {
+    display: none;
+}
+
+.hv-gallery-carousel__track.active {
+    cursor: grabbing;
+    scroll-snap-type: none; /* Disable snap while dragging for fluid feel */
+    scroll-behavior: auto !important; /* Disable smooth scroll while dragging */
+}
+
+.hv-gallery-carousel__img-wrap {
+    /* Ensure image doesn't drag natively */
+    user-select: none;
+    -webkit-user-drag: none;
+}

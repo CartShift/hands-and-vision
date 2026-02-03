@@ -11,5 +11,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^8.0.0",
+    "glob": "^13.0.0",
+    "purgecss": "^8.0.0"
+  }
 }
