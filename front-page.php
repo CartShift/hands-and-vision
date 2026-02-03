@@ -240,7 +240,7 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
         </div>
     </section>
 
-    <?php get_template_part( 'template-parts/gallery/gallery-mosaic', null, array( 'items' => $gallery_items ) ); ?>
+    <?php get_template_part( 'template-parts/gallery/gallery-carousel', null, array( 'items' => $gallery_items ) ); ?>
 
     <section class="hv-cta-section">
         <div class="hv-container hv-text-center">

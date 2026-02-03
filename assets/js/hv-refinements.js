@@ -321,6 +321,35 @@
 
 	/**
 	 * ========================================
+	 * GALLERY CAROUSEL
+	 * ========================================
+	 */
+	const initGalleryCarousel = () => {
+		const track = document.querySelector(".hv-gallery-carousel__track");
+		const prevBtn = document.querySelector(".hv-gallery-carousel__btn--prev");
+		const nextBtn = document.querySelector(".hv-gallery-carousel__btn--next");
+
+		if (!track || !prevBtn || !nextBtn) return;
+
+		const scrollAmount = () => track.offsetWidth * 0.8;
+
+		prevBtn.addEventListener("click", () => {
+			track.scrollBy({
+				left: -scrollAmount(),
+				behavior: "smooth"
+			});
+		});
+
+		nextBtn.addEventListener("click", () => {
+			track.scrollBy({
+				left: scrollAmount(),
+				behavior: "smooth"
+			});
+		});
+	};
+
+	/**
+	 * ========================================
 	 * INITIALIZATION
 	 * ========================================
 	 */
@@ -345,6 +374,7 @@
 		initImageLoading();
 		initFormEnhancements();
 		initSmoothScroll();
+		initGalleryCarousel();
 	};
 
 	const onPageLoad = () => {

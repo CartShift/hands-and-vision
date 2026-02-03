@@ -635,12 +635,20 @@ ul.hv-nav-menu {
 		justify-content: center;
 		align-items: center;
 		-webkit-tap-highlight-color: transparent;
+		tap-highlight-color: transparent;
 		outline: none;
+		box-shadow: none;
 	}
 	.hv-header__menu-toggle:active,
-	.hv-header__menu-toggle:focus {
-		background: transparent;
-		outline: none;
+	.hv-header__menu-toggle:focus,
+	.hv-header__menu-toggle:focus:not(:focus-visible) {
+		background: transparent !important;
+		outline: none !important;
+		box-shadow: none !important;
+	}
+	.hv-header__menu-toggle:focus-visible {
+		outline: 2px solid var(--hv-lilac);
+		outline-offset: 2px;
 	}
 
 	.hv-hamburger {
@@ -5190,12 +5198,20 @@ ul.hv-nav-menu a,
 		justify-content: center;
 		align-items: center;
 		-webkit-tap-highlight-color: transparent;
+		tap-highlight-color: transparent;
 		outline: none;
+		box-shadow: none;
 	}
 	.hv-header__menu-toggle:active,
-	.hv-header__menu-toggle:focus {
-		background: transparent;
-		outline: none;
+	.hv-header__menu-toggle:focus,
+	.hv-header__menu-toggle:focus:not(:focus-visible) {
+		background: transparent !important;
+		outline: none !important;
+		box-shadow: none !important;
+	}
+	.hv-header__menu-toggle:focus-visible {
+		outline: 2px solid var(--hv-lilac);
+		outline-offset: 2px;
 	}
 
 	.hv-hamburger {
@@ -13514,7 +13530,6 @@ html[dir="rtl"] .hv-footer__links a:hover {
 	margin: 0 0 40px;
 }
 
-
 /* Animation: Fade In */
 @keyframes fadeIn {
 	from {
@@ -13841,6 +13856,7 @@ html[dir="rtl"] .hv-footer__links a:hover {
 	min-height: 500px;
 	overflow: hidden;
 	background: #f0f0f0;
+	max-width: 100%;
 }
 
 .hv-service-showcase-card__media img {
@@ -14170,8 +14186,25 @@ html[dir="rtl"] .hv-footer__links a:hover {
 
 @media (max-width: 600px) {
 	.hv-artist-grid-premium {
-		grid-template-columns: 1fr;
-		gap: 32px;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 16px 12px;
+		padding: 24px 0;
+	}
+	.hv-artist-grid-premium .hv-artist-card-premium__media-wrapper {
+		margin-bottom: 8px;
+		max-width: none;
+	}
+	.hv-artist-grid-premium .hv-artist-card-premium__excerpt-wrap {
+		display: none;
+	}
+	.hv-artist-grid-premium .hv-artist-card-premium__name {
+		font-size: 0.7rem;
+	}
+	.hv-artist-grid-premium .hv-artist-card-premium__discipline {
+		font-size: 0.6rem;
+	}
+	.hv-artist-grid-premium .hv-artist-card-premium__info {
+		padding: 0 2px;
 	}
 }
 
@@ -14916,4 +14949,163 @@ html[dir="rtl"] .hv-footer__links a:hover {
 .hv-quick-view-btn:hover {
 	background: var(--hv-petrol);
 	color: white;
+}
+
+/* -------------------------------------------------------------------------
+   GALLERY CAROUSEL
+   ------------------------------------------------------------------------- */
+.hv-gallery-carousel-section {
+    overflow: hidden;
+    padding-bottom: var(--size-12);
+}
+
+.hv-gallery-carousel {
+    position: relative;
+    width: 100%;
+    margin-top: var(--size-8);
+}
+
+.hv-gallery-carousel__track-wrapper {
+    overflow: hidden;
+    padding: var(--size-8) 0;
+}
+
+.hv-gallery-carousel__track {
+    display: flex;
+    gap: var(--size-6);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: max(2rem, calc((100vw - var(--container-width)) / 2));
+    padding-inline: max(2rem, calc((100vw - var(--container-width)) / 2));
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    align-items: center;
+}
+
+.hv-gallery-carousel__track::-webkit-scrollbar {
+    display: none;
+}
+
+.hv-gallery-carousel__item {
+    flex: 0 0 80vw;
+    scroll-snap-align: center;
+    position: relative;
+    transition: transform 0.4s var(--ease-out);
+}
+
+@media (min-width: 768px) {
+    .hv-gallery-carousel__item {
+        flex: 0 0 40vw;
+    }
+}
+
+@media (min-width: 1200px) {
+    .hv-gallery-carousel__item {
+        flex: 0 0 25vw;
+    }
+}
+
+.hv-gallery-carousel__link {
+    display: block;
+    position: relative;
+    text-decoration: none;
+}
+
+.hv-gallery-carousel__img-wrap {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+    transition: all 0.5s var(--ease-out);
+}
+
+.hv-gallery-carousel__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s var(--ease-out);
+}
+
+/* Hover Effects */
+.hv-gallery-carousel__link:hover .hv-gallery-carousel__img-wrap {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+}
+
+.hv-gallery-carousel__link:hover .hv-gallery-carousel__img {
+    transform: scale(1.05);
+}
+
+.hv-gallery-carousel__info {
+    margin-top: var(--size-4);
+    text-align: center;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.hv-gallery-carousel__link:hover .hv-gallery-carousel__info {
+    opacity: 1;
+}
+
+.hv-gallery-carousel__title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    color: var(--color-white);
+    margin: 0;
+    font-weight: 300;
+}
+
+.hv-gallery-carousel__artist {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-lilac-light);
+    margin-top: var(--size-1);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Controls */
+.hv-gallery-carousel__controls {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    padding-inline: var(--size-4);
+}
+
+.hv-gallery-carousel__btn {
+    pointer-events: auto;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.hv-gallery-carousel:hover .hv-gallery-carousel__btn {
+    opacity: 1;
+}
+
+.hv-gallery-carousel__btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.hv-gallery-carousel__btn:active {
+    transform: scale(0.95);
 }
