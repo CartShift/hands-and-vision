@@ -466,7 +466,7 @@ html {
 /* Language Switcher at start (left in LTR, right in RTL) */
 .hv-header__lang {
 	position: absolute;
-	inset-inline-start: 40px;
+	inset-inline-end: 40px;
 	display: flex;
 	align-items: center;
 	font-family: "Heebo", sans-serif;
@@ -502,7 +502,7 @@ html {
 
 .hv-header__logo {
 	position: absolute;
-	inset-inline-end: 40px;
+	inset-inline-start: 40px;
 	top: 50%;
 	transform: translateY(-50%);
 }
@@ -1779,6 +1779,10 @@ html[dir="rtl"] .hv-lightbox-next {
 	padding-inline: 24px;
 }
 
+.hv-mt-8 {
+	margin-top: 24px;
+}
+
 .hv-services-carousel-bleed {
 	width: 100%;
 	overflow-x: auto;
@@ -1829,7 +1833,7 @@ html[dir="rtl"] .hv-lightbox-next {
 .hv-services-carousel .hv-service-card .hv-service-card__link {
 	display: block;
 	text-align: center;
-	padding: 0 16px;
+	padding: 16px;
 }
 
 .hv-service-card__thumb {
@@ -5008,7 +5012,7 @@ img {
 /* Language Switcher at start (left in LTR, right in RTL) */
 .hv-header__lang {
 	position: absolute;
-	inset-inline-start: 40px;
+	inset-inline-end: 40px;
 	display: flex;
 	align-items: center;
 	font-family: "Heebo", sans-serif;
@@ -5044,7 +5048,7 @@ img {
 
 .hv-header__logo {
 	position: absolute;
-	inset-inline-end: 40px;
+	inset-inline-start: 40px;
 	top: 50%;
 	transform: translateY(-50%);
 }
@@ -5118,7 +5122,7 @@ ul.hv-nav-menu {
 	}
 	.hv-header__logo {
 		position: static;
-		inset-inline-end: auto;
+		inset-inline-start: auto;
 		top: auto;
 		transform: none;
 	}
@@ -14703,11 +14707,6 @@ html[dir="rtl"] .hv-footer__links a:hover {
 /* Reset hover zoom for circle */
 .hv-artist-card-premium:hover .hv-artist-card-premium__media {
 	transform: scale(1.05); /* Gentle zoom */
-}
-
-/* RTL Support for Overlay */
-[dir="rtl"] .hv-artist-card-premium__info {
-	text-align: right;
 }
 
 /* Add subtle scaling to image */

@@ -93,7 +93,7 @@ html {
 /* Language Switcher at start (left in LTR, right in RTL) */
 .hv-header__lang {
 	position: absolute;
-	inset-inline-start: 40px;
+	inset-inline-end: 40px;
 	display: flex;
 	align-items: center;
 	font-family: "Heebo", sans-serif;
@@ -129,7 +129,7 @@ html {
 
 .hv-header__logo {
 	position: absolute;
-	inset-inline-end: 40px;
+	inset-inline-start: 40px;
 	top: 50%;
 	transform: translateY(-50%);
 }
@@ -207,7 +207,7 @@ ul.hv-nav-menu {
 
 	.hv-header__logo {
 		position: static;
-		inset-inline-end: auto;
+		inset-inline-start: auto;
 		top: auto;
 		transform: none;
 	}
@@ -1293,7 +1293,7 @@ html[dir="rtl"] .hv-lightbox-next {
 .hv-services-carousel .hv-service-card .hv-service-card__link {
 	display: block;
 	text-align: center;
-	padding: 0 16px;
+	padding: 16px;
 }
 
 .hv-service-card__thumb {
@@ -4691,7 +4691,7 @@ img {
 /* Language Switcher at start (left in LTR, right in RTL) */
 .hv-header__lang {
 	position: absolute;
-	inset-inline-start: 40px;
+	inset-inline-end: 40px;
 	display: flex;
 	align-items: center;
 	font-family: "Heebo", sans-serif;
