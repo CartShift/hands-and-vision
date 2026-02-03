@@ -16,6 +16,11 @@ $artist_id = get_the_ID();
 // Artist Data
 $portrait = get_field( 'artist_portrait', $artist_id );
 $portrait_url = ( is_array( $portrait ) && isset( $portrait['url'] ) ) ? $portrait['url'] : get_the_post_thumbnail_url( $artist_id, 'full' );
+if ( ! $portrait_url ) {
+    $portrait_url = function_exists( 'handandvision_get_placeholder_image' )
+        ? handandvision_get_placeholder_image()
+        : get_stylesheet_directory_uri() . '/assets/images/placeholder.jpg';
+}
 $discipline = get_field( 'artist_discipline', $artist_id );
 if ( empty( $discipline ) ) {
     $discipline = handandvision_is_hebrew() ? 'אמן/ית' : 'Artist';
