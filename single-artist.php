@@ -16,9 +16,6 @@ $artist_id = get_the_ID();
 // Artist Data
 $portrait = get_field( 'artist_portrait', $artist_id );
 $portrait_url = ( is_array( $portrait ) && isset( $portrait['url'] ) ) ? $portrait['url'] : get_the_post_thumbnail_url( $artist_id, 'full' );
-if ( ! $portrait_url ) {
-    $portrait_url = handandvision_get_placeholder_image(); // Defined in functions.php or hardcoded fallback
-}
 $discipline = get_field( 'artist_discipline', $artist_id );
 if ( empty( $discipline ) ) {
     $discipline = handandvision_is_hebrew() ? 'אמן/ית' : 'Artist';
@@ -80,12 +77,12 @@ if ( empty( $social ) || ! is_array( $social ) ) {
                         ?>
                     </div>
 
-                    <?php if ( ! empty( $social ) ) : ?>
+                    <?php
+                    $social_links = array_filter( $social, function ( $url ) { return is_string( $url ) && $url !== ''; } );
+                    if ( ! empty( $social_links ) ) : ?>
                     <div class="hv-artist-socials hv-mt-6 hv-reveal">
-                        <?php foreach($social as $platform => $url): ?>
-                            <a href="<?php echo esc_url($url); ?>" class="hv-social-link-text" target="_blank" rel="noopener">
-                                <?php echo ucfirst($platform); ?>
-                            </a>
+                        <?php foreach ( $social_links as $platform => $url ) : ?>
+                            <a href="<?php echo esc_url( $url ); ?>" class="hv-social-link-text" target="_blank" rel="noopener"><?php echo esc_html( ucfirst( $platform ) ); ?></a>
                         <?php endforeach; ?>
                     </div>
                     <?php endif; ?>

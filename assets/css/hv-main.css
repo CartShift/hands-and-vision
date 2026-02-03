@@ -667,11 +667,11 @@ html[dir="rtl"] .hv-lightbox-next {
 	}
 
 	.hv-footer__column {
-		text-align: center !important;
+		text-align: start !important;
 	}
 
 	.hv-footer__links {
-		align-items: center !important;
+		align-items: flex-start !important;
 	}
 
 	.hv-footer__logo {

@@ -653,3 +653,12 @@ function handandvision_maybe_run_fix_site_url() {
 add_action( 'init', 'handandvision_maybe_run_fix_site_url', 1 );
 
 require_once get_template_directory() . '/inc/ajax-handlers/quick-view.php';
+
+/**
+ * Get placeholder image URL
+ *
+ * @return string URL to placeholder image
+ */
+function handandvision_get_placeholder_image() {
+    return get_stylesheet_directory_uri() . '/assets/images/placeholder.jpg';
+}
