@@ -473,11 +473,9 @@
 			this.toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
 
 			if (isOpen) {
-				// Store previously focused element
 				this.previouslyFocused = document.activeElement;
-				// Setup focus trap
+				this.toggle.blur();
 				this.setupFocusTrap();
-				// Focus first nav item
 				if (this.firstFocusable) {
 					setTimeout(() => this.firstFocusable.focus(), 100);
 				}
@@ -896,8 +894,8 @@
 					const formData = new FormData(form);
 					const params = new URLSearchParams(formData);
 					// Add filter_artist explicitly if needed
-					if (!params.has('filter_artist') && select.name === 'filter_artist') {
-						params.set('filter_artist', select.value);
+					if (!params.has("filter_artist") && select.name === "filter_artist") {
+						params.set("filter_artist", select.value);
 					}
 
 					const url = new URL(window.location.href);
@@ -1055,8 +1053,8 @@
 
 			// Trigger animation
 			requestAnimationFrame(() => {
-				flyImg.style.left = (cartRect.left + cartRect.width / 2 - 20) + "px";
-				flyImg.style.top = (cartRect.top + cartRect.height / 2 - 20) + "px";
+				flyImg.style.left = cartRect.left + cartRect.width / 2 - 20 + "px";
+				flyImg.style.top = cartRect.top + cartRect.height / 2 - 20 + "px";
 				flyImg.style.width = "40px";
 				flyImg.style.height = "40px";
 				flyImg.style.opacity = "0";
@@ -1083,24 +1081,30 @@
 	 * Artist Bio Expander
 	 */
 	const ArtistInfo = {
-		init: function() {
-			document.querySelectorAll('.hv-artist-card-premium__expander').forEach(btn => {
-				btn.addEventListener('click', function(e) {
+		init: function () {
+			document.querySelectorAll(".hv-artist-card-premium__expander").forEach(btn => {
+				btn.addEventListener("click", function (e) {
 					e.preventDefault();
 					e.stopPropagation(); // prevent navigation
-					const wrapper = this.closest('.hv-artist-card-premium__excerpt-wrap');
-					const fullBio = wrapper.querySelector('.hv-artist-card-premium__full-bio');
-					const isExpanded = this.getAttribute('aria-expanded') === 'true';
-					const isHebrew = document.documentElement.lang === 'he-IL' || document.dir === 'rtl';
+					const wrapper = this.closest(".hv-artist-card-premium__excerpt-wrap");
+					const fullBio = wrapper.querySelector(".hv-artist-card-premium__full-bio");
+					const isExpanded = this.getAttribute("aria-expanded") === "true";
+					const isHebrew = document.documentElement.lang === "he-IL" || document.dir === "rtl";
 
 					if (isExpanded) {
 						fullBio.hidden = true;
-						this.setAttribute('aria-expanded', 'false');
-						this.innerHTML = '<span class="hv-expander-text">' + (isHebrew ? 'קרא עוד' : 'Read More') + '</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>';
+						this.setAttribute("aria-expanded", "false");
+						this.innerHTML =
+							'<span class="hv-expander-text">' +
+							(isHebrew ? "קרא עוד" : "Read More") +
+							'</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>';
 					} else {
 						fullBio.hidden = false;
-						this.setAttribute('aria-expanded', 'true');
-						this.innerHTML = '<span class="hv-expander-text">' + (isHebrew ? 'סגור' : 'Close') + '</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"/></svg>';
+						this.setAttribute("aria-expanded", "true");
+						this.innerHTML =
+							'<span class="hv-expander-text">' +
+							(isHebrew ? "סגור" : "Close") +
+							'</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 15l7-7 7 7"/></svg>';
 					}
 				});
 			});
@@ -1111,22 +1115,22 @@
 	   QUICK VIEW FUNCTIONALITY
 	   ========================================== */
 	const QuickView = {
-		init: function() {
-			document.body.addEventListener('click', function(e) {
-				if (e.target.closest('.hv-quick-view-btn')) {
+		init: function () {
+			document.body.addEventListener("click", function (e) {
+				if (e.target.closest(".hv-quick-view-btn")) {
 					e.preventDefault();
-					const btn = e.target.closest('.hv-quick-view-btn');
+					const btn = e.target.closest(".hv-quick-view-btn");
 					const productId = btn.dataset.productId;
 					QuickView.open(productId, btn);
 				}
 			});
 		},
 
-		open: function(productId, triggerBtn) {
+		open: function (productId, triggerBtn) {
 			// Create modal structure if not exists
-			if (!document.querySelector('.hv-quick-view-modal')) {
-				const modal = document.createElement('div');
-				modal.className = 'hv-quick-view-modal';
+			if (!document.querySelector(".hv-quick-view-modal")) {
+				const modal = document.createElement("div");
+				modal.className = "hv-quick-view-modal";
 				modal.innerHTML = `
 					<div class="hv-quick-view-modal__overlay"></div>
 					<div class="hv-quick-view-modal__container">
@@ -1138,64 +1142,64 @@
 				document.body.appendChild(modal);
 
 				// Close events
-				modal.querySelector('.hv-quick-view-close').addEventListener('click', this.close);
-				modal.querySelector('.hv-quick-view-modal__overlay').addEventListener('click', this.close);
-				document.addEventListener('keydown', (e) => {
-					if (e.key === 'Escape' && document.body.classList.contains('hv-quick-view-open')) {
+				modal.querySelector(".hv-quick-view-close").addEventListener("click", this.close);
+				modal.querySelector(".hv-quick-view-modal__overlay").addEventListener("click", this.close);
+				document.addEventListener("keydown", e => {
+					if (e.key === "Escape" && document.body.classList.contains("hv-quick-view-open")) {
 						this.close();
 					}
 				});
 			}
 
-			const modal = document.querySelector('.hv-quick-view-modal');
-			const content = modal.querySelector('.hv-quick-view-content-wrap');
-			const loader = modal.querySelector('.hv-quick-view-loader');
+			const modal = document.querySelector(".hv-quick-view-modal");
+			const content = modal.querySelector(".hv-quick-view-content-wrap");
+			const loader = modal.querySelector(".hv-quick-view-loader");
 
 			// Reset
-			content.innerHTML = '';
-			loader.style.display = 'block';
-			modal.classList.add('active');
-			document.body.classList.add('hv-quick-view-open');
+			content.innerHTML = "";
+			loader.style.display = "block";
+			modal.classList.add("active");
+			document.body.classList.add("hv-quick-view-open");
 
 			// Fetch Data
 			const data = new FormData();
-			data.append('action', 'hv_quick_view');
-			data.append('product_id', productId);
+			data.append("action", "hv_quick_view");
+			data.append("product_id", productId);
 			// data.append('nonce', hv_ajax.nonce); // If implemented
 
 			fetch(hv_ajax.ajaxurl, {
-				method: 'POST',
+				method: "POST",
 				body: data
 			})
-			.then(response => response.json())
-			.then(response => {
-				loader.style.display = 'none';
-				if (response.success) {
-					content.innerHTML = response.data.html;
-					// Re-init variations forms if needed (requires WC scripts)
-					if ( typeof wc_add_to_cart_variation_params !== 'undefined' ) {
-						jQuery( '.variations_form' ).each( function() {
-							jQuery( this ).wc_variation_form();
-						});
+				.then(response => response.json())
+				.then(response => {
+					loader.style.display = "none";
+					if (response.success) {
+						content.innerHTML = response.data.html;
+						// Re-init variations forms if needed (requires WC scripts)
+						if (typeof wc_add_to_cart_variation_params !== "undefined") {
+							jQuery(".variations_form").each(function () {
+								jQuery(this).wc_variation_form();
+							});
+						}
+					} else {
+						content.innerHTML = '<p class="hv-text-error">Error loading product.</p>';
 					}
-				} else {
-					content.innerHTML = '<p class="hv-text-error">Error loading product.</p>';
-				}
-			})
-			.catch(err => {
-				loader.style.display = 'none';
-				console.error(err);
-				content.innerHTML = '<p class="hv-text-error">Connection error.</p>';
-			});
+				})
+				.catch(err => {
+					loader.style.display = "none";
+					console.error(err);
+					content.innerHTML = '<p class="hv-text-error">Connection error.</p>';
+				});
 		},
 
-		close: function() {
-			const modal = document.querySelector('.hv-quick-view-modal');
+		close: function () {
+			const modal = document.querySelector(".hv-quick-view-modal");
 			if (modal) {
-				modal.classList.remove('active');
-				document.body.classList.remove('hv-quick-view-open');
+				modal.classList.remove("active");
+				document.body.classList.remove("hv-quick-view-open");
 				setTimeout(() => {
-					modal.querySelector('.hv-quick-view-content-wrap').innerHTML = '';
+					modal.querySelector(".hv-quick-view-content-wrap").innerHTML = "";
 				}, 300);
 			}
 		}

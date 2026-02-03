@@ -329,146 +329,240 @@
 		const prevBtn = document.querySelector(".hv-gallery-carousel__btn--prev");
 		const nextBtn = document.querySelector(".hv-gallery-carousel__btn--next");
 
-		if (!track || !prevBtn || !nextBtn) return;
+		if (!track) return;
 
 		// --------------------------------------------------------
-		// 1. DRAG TO SCROLL (Mouse & Touch)
+		// 0. SETUP: Clone & Center Logic
+		// --------------------------------------------------------
+		const items = Array.from(track.children);
+		const itemWidth = items[0].offsetWidth; // Approximate initial width
+		const gap = 40; // CSS gap
+
+		// 1. Double Clone for smoother infinite loop (Buffer of 2 viewport widths)
+		// We clone enough to cover wide screens
+		const leftClones = items.map(i => {
+			const c = i.cloneNode(true);
+			c.classList.add('hv-clone');
+			c.setAttribute('aria-hidden', 'true');
+			return c;
+		});
+		const rightClones = items.map(i => {
+			const c = i.cloneNode(true);
+			c.classList.add('hv-clone');
+			c.setAttribute('aria-hidden', 'true');
+			return c;
+		});
+
+		// Prepend reversed clones to start, Append regular clones to end
+		// Note: We duplicate the whole set once on each side
+		leftClones.reverse().forEach(c => track.insertBefore(c, track.firstChild));
+		rightClones.forEach(c => track.appendChild(c));
+
+		// Re-query all items including clones
+		const allItems = Array.from(track.children);
+
+		// Force initial scroll to the "Real" start set
+		const realSetStartIndex = items.length; // Length of left buffer
+
+		const centerOnItem = (index, behavior = 'auto') => {
+			const target = allItems[index];
+			if (!target) return;
+
+			// Center calculation:
+			// scrollLeft = targetCenter - viewportCenter
+			const trackRect = track.getBoundingClientRect();
+			const targetLeft = target.offsetLeft;
+			const targetWidth = target.offsetWidth;
+
+			const scrollPos = targetLeft - (trackRect.width / 2) + (targetWidth / 2);
+
+			track.scrollTo({
+				left: scrollPos,
+				behavior: behavior
+			});
+		};
+
+		// --------------------------------------------------------
+		// 1. INTERACTION ENGINE (Momentum Drag + Snapping)
 		// --------------------------------------------------------
 		let isDown = false;
 		let startX;
 		let scrollLeft;
-		let isDragging = false; // To distinguish click vs drag
+		let velocity = 0;
+		let lastX = 0;
+		let lastTime = 0;
+		let animationId;
+		let isDragging = false;
 
 		const startDrag = (e) => {
 			isDown = true;
 			isDragging = false;
-			track.classList.add('active'); // Change cursor
+			track.classList.add('active');
 			startX = (e.pageX || e.touches[0].pageX) - track.offsetLeft;
 			scrollLeft = track.scrollLeft;
+
+			// Reset momentum
+			velocity = 0;
+			lastX = e.pageX || e.touches[0].pageX;
+			lastTime = Date.now();
+			cancelAnimationFrame(animationId);
 		};
 
 		const endDrag = () => {
+			if (!isDown) return;
 			isDown = false;
 			track.classList.remove('active');
-			requestAnimationFrame(() => {
-				setTimeout(() => { isDragging = false; }, 50); // Small buffer
-			});
+
+			// Apply Momentum if velocity is significant
+			if (Math.abs(velocity) > 0.5) {
+				applyMomentum();
+			} else {
+				snapToNearest();
+			}
+
+			setTimeout(() => { isDragging = false; }, 50);
 		};
 
 		const moveDrag = (e) => {
 			if (!isDown) return;
 			e.preventDefault();
 			isDragging = true;
-			const x = (e.pageX || e.touches[0].pageX) - track.offsetLeft;
-			const walk = (x - startX) * 2; // Scroll speed
+
+			const x = (e.pageX || e.touches[0].pageX);
+			const walk = (x - track.offsetLeft - startX) * 1.5; // 1.5x speed
 			track.scrollLeft = scrollLeft - walk;
+
+			// Calculate velocity
+			const now = Date.now();
+			const dt = now - lastTime;
+			if (dt > 0) {
+				velocity = (x - lastX) / dt;
+				lastX = x;
+				lastTime = now;
+			}
 		};
 
-		// Mouse Events
+		const applyMomentum = () => {
+			// Decay velocity
+			velocity *= 0.95; // Friction
+			track.scrollLeft -= velocity * 15; // Move based on velocity
+
+			if (Math.abs(velocity) > 0.1) {
+				animationId = requestAnimationFrame(applyMomentum);
+			} else {
+				snapToNearest();
+			}
+		};
+
+		const snapToNearest = () => {
+			// Find item closest to center
+			const center = track.scrollLeft + (track.offsetWidth / 2);
+			let minDist = Infinity;
+			let closestIndex = -1;
+
+			// Optimization: Search only visible items roughly
+			// We can iterate all for robustness on modern devices
+			for (let i = 0; i < allItems.length; i++) {
+				const item = allItems[i];
+				const itemCenter = item.offsetLeft + (item.offsetWidth / 2);
+				const dist = Math.abs(center - itemCenter);
+				if (dist < minDist) {
+					minDist = dist;
+					closestIndex = i;
+				}
+			}
+
+			if (closestIndex !== -1) {
+				centerOnItem(closestIndex, 'smooth');
+			}
+		};
+
+		// Event Bindings
 		track.addEventListener('mousedown', startDrag);
+		track.addEventListener('touchstart', startDrag, { passive: true });
+
 		track.addEventListener('mouseleave', endDrag);
 		track.addEventListener('mouseup', endDrag);
+		track.addEventListener('touchend', endDrag);
+
 		track.addEventListener('mousemove', moveDrag);
+		track.addEventListener('touchmove', moveDrag, { passive: false });
 
-		// Touch Events (optional, native scroll is usually better, but this unifies feeling)
-		// We'll stick to native touch scroll for mobile as it's smoother with scroll-snap
-
-		// Prevent clicking links whilst dragging
-		const links = track.querySelectorAll('a');
-		links.forEach(link => {
+		// Prevent link clicks during drag
+		track.querySelectorAll('a').forEach(link => {
 			link.addEventListener('click', (e) => {
 				if (isDragging) e.preventDefault();
 			});
 		});
 
 		// --------------------------------------------------------
-		// 2. INFINITE LOOP LOGIC
+		// 2. VISUAL LOOP & ACTIVE STATE
 		// --------------------------------------------------------
-		// Clone items to create an invalid start/end buffer
-		const originalItems = Array.from(track.children);
-		if (originalItems.length === 0) return;
+		const updateActiveState = () => {
+			const center = track.scrollLeft + (track.offsetWidth / 2);
 
-		// Clone enough items to fill the viewport width at least once
-		// For safety, let's clone the entire set once at start and once at end
-		// if the set is small.
+			allItems.forEach(item => {
+				const itemCenter = item.offsetLeft + (item.offsetWidth / 2);
+				const dist = Math.abs(center - itemCenter);
+				const maxDist = track.offsetWidth / 2;
 
-		const originalWidth = track.scrollWidth;
-		const itemWidth = originalItems[0].offsetWidth + 24; // Width + Gap (approx)
+				// "Is Center" Class Logic (strict)
+				if (dist < (item.offsetWidth / 2)) {
+					if (!item.classList.contains('is-center')) {
+						allItems.forEach(i => i.classList.remove('is-center'));
+						item.classList.add('is-center');
+					}
+				}
 
-		// Clone set at end
-		originalItems.forEach(item => {
-			const clone = item.cloneNode(true);
-			clone.setAttribute('aria-hidden', 'true');
-			clone.classList.add('hv-clone');
-			track.appendChild(clone);
-		});
+				// Parallax Effect
+				const img = item.querySelector('img');
+				if (img && dist < maxDist) {
+					// 0 at center, -10/10 at edges
+					const move = (dist / maxDist) * 15 * (itemCenter > center ? -1 : 1);
+					img.style.transform = `scale(1.1) translateX(${move}%)`;
+				}
+			});
 
-		// Clone set at start
-		originalItems.reverse().forEach(item => {
-			const clone = item.cloneNode(true);
-			clone.setAttribute('aria-hidden', 'true');
-			clone.classList.add('hv-clone');
-			track.insertBefore(clone, track.firstChild);
-		});
-
-		// Original set is now in the middle.
-		// Calculate the scroll position of the "real" start
-		// It is exactly the width of the Prepended Clones (which is the length of original items)
-		// We need to wait for layout to act correct.
-
-		const updateScrollPos = () => {
-			// Get width of one full set
-			// We can estimate it or measure the first N items
-			// Simpler: The "real" set starts at index = originalItems.length
-			const realSetStartItem = track.children[originalItems.length];
-			if (realSetStartItem) {
-				const startPos = realSetStartItem.offsetLeft;
-				track.scrollLeft = startPos - parseFloat(getComputedStyle(track).paddingLeft || 0);
+			// Infinite Loop Jump Logic
+			const totalWidth = track.scrollWidth;
+			// If we are in the left buffer zone
+			if (track.scrollLeft < (track.offsetWidth / 4)) {
+				// Jump forward to real set
+				// Calculate relative position
+				const setWidth = totalWidth / 3;
+				track.scrollLeft += setWidth;
+			}
+			// If we are in the right buffer zone
+			else if (track.scrollLeft > (totalWidth - (track.offsetWidth / 2))) {
+				const setWidth = totalWidth / 3;
+				track.scrollLeft -= setWidth;
 			}
 		};
 
-		// Initial position
-		// Use setTimeout to ensure rendering is done
-		setTimeout(updateScrollPos, 100);
-
-		// Scroll Loop Check
-		const handleScroll = () => {
-			const maxScroll = track.scrollWidth - track.clientWidth;
-
-			// We define "bounds" for the loop.
-			// The "Real" set is in the middle.
-			// Prepended Clones (Set A) | Real Set (Set B) | Appended Clones (Set C)
-			// Total items = 3 * N
-
-			const oneSetWidth = (track.scrollWidth / 3);
-
-			// Thresholds
-			const jumpThresholdLeft = oneSetWidth * 0.5;
-			const jumpThresholdRight = oneSetWidth * 2.5;
-
-			if (track.scrollLeft < 50) {
-				// Too far left (into Set A), jump to end of Set B
-				track.scrollLeft += oneSetWidth;
-			} else if (track.scrollLeft > (maxScroll - 50)) {
-				// Too far right (into Set C), jump to start of Set B
-				track.scrollLeft -= oneSetWidth;
-			}
-		};
-
-		track.addEventListener('scroll', handleScroll, { passive: true });
-
+		track.addEventListener('scroll', () => {
+			requestAnimationFrame(updateActiveState);
+		});
 
 		// --------------------------------------------------------
-		// 3. BUTTON CONTROLS
+		// 3. INITIALIZATION
 		// --------------------------------------------------------
-		const scrollAmount = () => track.offsetWidth * 0.6; // Scroll 60% of viewport
+		// Wait for layout repaint then center
+		setTimeout(() => {
+			centerOnItem(realSetStartIndex, 'auto');
+			updateActiveState();
+		}, 100);
 
-		const scrollSmooth = (amount) => {
-			track.scrollBy({ left: amount, behavior: 'smooth' });
-		};
+		// Button Controls
+		if (prevBtn) prevBtn.addEventListener('click', () => {
+			// Find current centered item index
+			const current = allItems.findIndex(i => i.classList.contains('is-center'));
+			if (current > 0) centerOnItem(current - 1, 'smooth');
+		});
 
-		prevBtn.addEventListener("click", () => scrollSmooth(-scrollAmount()));
-		nextBtn.addEventListener("click", () => scrollSmooth(scrollAmount()));
+		if (nextBtn) nextBtn.addEventListener('click', () => {
+			const current = allItems.findIndex(i => i.classList.contains('is-center'));
+			if (current < allItems.length - 1) centerOnItem(current + 1, 'smooth');
+		});
 	};
 
 	/**
