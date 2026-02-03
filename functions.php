@@ -297,6 +297,7 @@ require_once ASTRA_THEME_DIR . 'inc/gallery-helpers.php';
 require_once ASTRA_THEME_DIR . 'inc/acf-display-helper.php';
 // Service Helpers (icon SVGs)
 require_once ASTRA_THEME_DIR . 'inc/service-helpers.php';
+require_once ASTRA_THEME_DIR . 'inc/fix-site-url.php';
 
 // Custom Breadcrumbs
 require_once ASTRA_THEME_DIR . 'inc/breadcrumb-helpers.php';
@@ -632,4 +633,23 @@ function handandvision_custom_footer() {
 	}
 	get_template_part( 'footer' );
 }
+/**
+ * One-time URL fix: replace old site URL in DB. Run as admin: ?hv_fix_url=1
+ */
+function handandvision_maybe_run_fix_site_url() {
+	if ( ! isset( $_GET['hv_fix_url'] ) || ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	$result = handandvision_fix_site_url_in_db();
+	if ( ! empty( $result['skipped'] ) ) {
+		wp_die( esc_html( $result['message'] ), '', array( 'response' => 200 ) );
+	}
+	wp_die(
+		'URL fix done. Replaced: ' . wp_json_encode( $result['replaced'] ) . ' New URL: ' . esc_html( $result['new_url'] ),
+		'',
+		array( 'response' => 200 )
+	);
+}
+add_action( 'init', 'handandvision_maybe_run_fix_site_url', 1 );
+
 require_once get_template_directory() . '/inc/ajax-handlers/quick-view.php';

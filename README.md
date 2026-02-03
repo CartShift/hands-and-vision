@@ -21,6 +21,7 @@ Theme follows WordPress Coding Standards (escaping output, sanitization, nonce v
 
 1. **Install Dependencies**: `npm install` (for tools/testing).
 2. **WooCommerce Setup**: See [WOOCOMMERCE-INTEGRATION.md](WOOCOMMERCE-INTEGRATION.md).
+3. **Site URL fix (after migration)**: If you moved from `https://ggr.zmk.mybluehost.me/website_8422dc8c`, log in as admin and visit `?hv_fix_url=1` on any front-end page to replace the old URL with the current home URL in the database (options, posts, postmeta).
 
 ## Linting (WordPress PHP)
 
