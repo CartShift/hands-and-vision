@@ -22,9 +22,8 @@ if ( empty( $items ) ) {
 			<span class="hv-overline hv-overline--light"><?php echo esc_html( handandvision_is_hebrew() ? 'מהאוסף' : 'From the Collection' ); ?></span>
 			<h2 id="gallery-heading" class="hv-headline-2 hv-text-white"><?php echo esc_html( handandvision_is_hebrew() ? 'הגלריה' : 'Gallery' ); ?></h2>
 		</header>
-	</div>
 
-	<div class="hv-gallery-carousel swiper">
+		<div class="hv-gallery-carousel swiper">
 		<div class="hv-gallery-carousel__controls">
             <button type="button" class="hv-gallery-carousel__btn hv-gallery-carousel__btn--prev" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'הבא' : 'Previous' ); ?>">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
@@ -45,7 +44,7 @@ if ( empty( $items ) ) {
 						<div class="hv-gallery-carousel__img-wrap">
 							<?php
 							if ( ! empty( $img['id'] ) ) {
-								echo wp_get_attachment_image( $img['id'], 'large', false, array( 'class' => 'hv-gallery-carousel__img', 'loading' => 'lazy' ) );
+								echo wp_get_attachment_image( $img['id'], 'medium_large', false, array( 'class' => 'hv-gallery-carousel__img', 'loading' => 'lazy' ) );
 							} else {
 								echo '<img src="' . esc_url( $img['url'] ) . '" alt="' . esc_attr( $title ) . '" class="hv-gallery-carousel__img" loading="lazy">';
 							}
@@ -59,10 +58,11 @@ if ( empty( $items ) ) {
 				</div>
 			<?php endforeach; ?>
 		</div>
-        <div class="swiper-pagination"></div>
+		</div>
+		<div class="swiper-pagination"></div>
 	</div>
 
-	<div class="hv-container hv-text-center hv-mt-8">
+	<div class="hv-container hv-text-center hv-mt-12">
 		<a href="<?php echo esc_url( get_post_type_archive_link( 'gallery_item' ) ); ?>" class="hv-btn hv-btn--outline-light"><?php echo esc_html( handandvision_is_hebrew() ? 'לגלריה המלאה' : 'Full Gallery' ); ?></a>
 	</div>
 </section>

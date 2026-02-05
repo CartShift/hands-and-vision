@@ -134,9 +134,9 @@
 		const galleryCarousel = document.querySelector(".hv-gallery-carousel");
 		if (galleryCarousel && !initializedSwipers.has(galleryCarousel)) {
 			initSwiper(".hv-gallery-carousel", {
-				slidesPerView: "auto",
-				centeredSlides: true,
-				spaceBetween: 30,
+				slidesPerView: 1.2,
+				centeredSlides: false,
+				spaceBetween: 20,
 				speed: 600,
 				grabCursor: true,
 				loop: false,
@@ -153,9 +153,8 @@
 					onlyInViewport: true
 				},
 				breakpoints: {
-					320: { spaceBetween: 20 },
-					768: { spaceBetween: 30 },
-					1024: { spaceBetween: 40 }
+					640: { slidesPerView: 2, spaceBetween: 24 },
+					1024: { slidesPerView: 3, spaceBetween: 30 }
 				}
 			});
 		}
