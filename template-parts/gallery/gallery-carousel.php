@@ -42,7 +42,7 @@ if ( empty( $items ) ) {
 			?>
 				<div class="hv-gallery-carousel__item swiper-slide" role="listitem">
 					<a href="<?php echo esc_url( $img['url'] ); ?>" class="hv-lightbox hv-gallery-carousel__link" data-caption="<?php echo esc_attr( $data_caption ); ?>">
-						<div class="hv-gallery-carousel__img-wrap" data-swiper-parallax="20%">
+						<div class="hv-gallery-carousel__img-wrap">
 							<?php
 							if ( ! empty( $img['id'] ) ) {
 								echo wp_get_attachment_image( $img['id'], 'large', false, array( 'class' => 'hv-gallery-carousel__img', 'loading' => 'lazy' ) );
@@ -51,9 +51,9 @@ if ( empty( $items ) ) {
 							}
 							?>
 						</div>
-						<div class="hv-gallery-carousel__info" data-swiper-parallax="-100">
-							<?php if ( $title ) : ?><h3 class="hv-gallery-carousel__title" data-swiper-parallax="-200"><?php echo esc_html( $title ); ?></h3><?php endif; ?>
-							<?php if ( $caption ) : ?><span class="hv-gallery-carousel__artist" data-swiper-parallax="-100"><?php echo esc_html( $caption ); ?></span><?php endif; ?>
+						<div class="hv-gallery-carousel__info">
+							<?php if ( $title ) : ?><h3 class="hv-gallery-carousel__title"><?php echo esc_html( $title ); ?></h3><?php endif; ?>
+							<?php if ( $caption ) : ?><span class="hv-gallery-carousel__artist"><?php echo esc_html( $caption ); ?></span><?php endif; ?>
 						</div>
 					</a>
 				</div>

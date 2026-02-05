@@ -14971,6 +14971,12 @@ html[dir="rtl"] .hv-footer__links a:hover {
     display: block;
     position: relative;
     text-decoration: none;
+    width: 100%;
+    height: 100%;
+    pointer-events: auto;
+    z-index: 1;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .hv-gallery-carousel__img-wrap {
@@ -14987,6 +14993,11 @@ html[dir="rtl"] .hv-footer__links a:hover {
     height: 100%;
     object-fit: cover;
     transition: transform 0.8s var(--ease-out);
+    display: block;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    backface-visibility: hidden;
 }
 
 /* Hover Effects */
@@ -15168,9 +15179,6 @@ html[dir="rtl"] .hv-footer__links a:hover {
     background: var(--hv-gray-900);
 }
 
-.hv-gallery-carousel__item.is-center:hover .hv-gallery-carousel__img-wrap {
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-}
 
 /* Parallax Image */
 .hv-gallery-carousel__img {
@@ -15280,9 +15288,18 @@ html[dir="rtl"] .hv-footer__links a:hover {
     position: relative;
 }
 
+.hv-gallery-carousel {
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    contain: layout style paint;
+}
+
 .hv-gallery-carousel .swiper-wrapper {
     align-items: center;
     display: flex;
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 .hv-gallery-carousel .swiper-slide {
@@ -15290,6 +15307,10 @@ html[dir="rtl"] .hv-footer__links a:hover {
     height: auto;
     display: flex;
     align-items: stretch;
+    pointer-events: auto;
+    flex-shrink: 0;
+    backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
 .hv-gallery-carousel__item {
@@ -15298,13 +15319,11 @@ html[dir="rtl"] .hv-footer__links a:hover {
     display: flex;
     flex-direction: column;
     position: relative;
-    transition: filter 0.4s ease;
-    filter: brightness(0.7);
-}
-
-.hv-gallery-carousel .swiper-slide-active .hv-gallery-carousel__item {
-    filter: brightness(1);
-    z-index: 10;
+    pointer-events: auto;
+    cursor: pointer;
+    flex-shrink: 0;
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 @media (min-width: 768px) {
@@ -15335,13 +15354,18 @@ html[dir="rtl"] .hv-footer__links a:hover {
         pointer-events: none;
     }
 
-    .hv-gallery-carousel__btn {
-        pointer-events: auto;
-        width: 64px;
-        height: 64px;
-        background: rgba(255, 255, 255, 0.08);
-        border-color: rgba(255, 255, 255, 0.2);
-    }
+.hv-gallery-carousel__btn {
+    pointer-events: auto;
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    position: relative;
+    z-index: 10;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    will-change: transform;
+}
 
     .hv-gallery-carousel__btn:hover {
         background: var(--hv-lilac);
