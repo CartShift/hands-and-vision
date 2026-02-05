@@ -23,6 +23,7 @@ if ( empty( $items ) ) {
 			<h2 id="gallery-heading" class="hv-headline-2 hv-text-white"><?php echo esc_html( handandvision_is_hebrew() ? 'הגלריה' : 'Gallery' ); ?></h2>
 		</header>
 
+		<div class="hv-gallery-carousel-bleed">
 		<div class="hv-gallery-carousel swiper">
 		<div class="hv-gallery-carousel__controls">
             <button type="button" class="hv-gallery-carousel__btn hv-gallery-carousel__btn--prev" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'הבא' : 'Previous' ); ?>">
@@ -60,6 +61,7 @@ if ( empty( $items ) ) {
 		</div>
 		</div>
 		<div class="swiper-pagination"></div>
+		</div>
 	</div>
 
 	<div class="hv-container hv-text-center hv-mt-12">

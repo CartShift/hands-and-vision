@@ -15111,6 +15111,21 @@ html[dir="rtl"] .hv-footer__links a:hover {
    ========================================== */
 
 /* 1. Gallery Carousel - Swiper Integration */
+@media (max-width: 767px) {
+    .hv-gallery-carousel-section {
+        overflow-x: hidden;
+    }
+    .hv-gallery-carousel-section .hv-gallery-carousel-bleed {
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: auto;
+        margin-left: -50vw;
+        margin-right: 0;
+        padding-inline: 0;
+    }
+}
+
 .hv-gallery-carousel {
     position: relative;
     width: 100%;
