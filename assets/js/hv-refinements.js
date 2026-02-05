@@ -321,248 +321,89 @@
 
 	/**
 	 * ========================================
-	 * GALLERY CAROUSEL
+	 * GALLERY CAROUSEL (SWIPER)
 	 * ========================================
 	 */
 	const initGalleryCarousel = () => {
-		const track = document.querySelector(".hv-gallery-carousel__track");
-		const prevBtn = document.querySelector(".hv-gallery-carousel__btn--prev");
-		const nextBtn = document.querySelector(".hv-gallery-carousel__btn--next");
+		if (typeof Swiper === 'undefined') return;
 
-		if (!track) return;
-
-		// --------------------------------------------------------
-		// 0. SETUP: Clone & Center Logic
-		// --------------------------------------------------------
-		const items = Array.from(track.children);
-		const itemWidth = items[0].offsetWidth; // Approximate initial width
-		const gap = 40; // CSS gap
-
-		// 1. Double Clone for smoother infinite loop (Buffer of 2 viewport widths)
-		// We clone enough to cover wide screens
-		const leftClones = items.map(i => {
-			const c = i.cloneNode(true);
-			c.classList.add('hv-clone');
-			c.setAttribute('aria-hidden', 'true');
-			return c;
-		});
-		const rightClones = items.map(i => {
-			const c = i.cloneNode(true);
-			c.classList.add('hv-clone');
-			c.setAttribute('aria-hidden', 'true');
-			return c;
-		});
-
-		// Prepend reversed clones to start, Append regular clones to end
-		// Note: We duplicate the whole set once on each side
-		leftClones.reverse().forEach(c => track.insertBefore(c, track.firstChild));
-		rightClones.forEach(c => track.appendChild(c));
-
-		// Re-query all items including clones
-		const allItems = Array.from(track.children);
-
-		// Force initial scroll to the "Real" start set
-		const realSetStartIndex = items.length; // Length of left buffer
-
-		const centerOnItem = (index, behavior = 'auto') => {
-			const target = allItems[index];
-			if (!target) return;
-
-			// Center calculation:
-			// scrollLeft = targetCenter - viewportCenter
-			const trackRect = track.getBoundingClientRect();
-			const targetLeft = target.offsetLeft;
-			const targetWidth = target.offsetWidth;
-
-			const scrollPos = targetLeft - (trackRect.width / 2) + (targetWidth / 2);
-
-			track.scrollTo({
-				left: scrollPos,
-				behavior: behavior
-			});
-		};
-
-		// --------------------------------------------------------
-		// 1. INTERACTION ENGINE (Momentum Drag + Snapping)
-		// --------------------------------------------------------
-		let isDown = false;
-		let startX;
-		let scrollLeft;
-		let velocity = 0;
-		let lastX = 0;
-		let lastTime = 0;
-		let animationId;
-		let isDragging = false;
-
-		const startDrag = (e) => {
-			isDown = true;
-			isDragging = false;
-			track.classList.add('active');
-			startX = (e.pageX || e.touches[0].pageX) - track.offsetLeft;
-			scrollLeft = track.scrollLeft;
-
-			// Reset momentum
-			velocity = 0;
-			lastX = e.pageX || e.touches[0].pageX;
-			lastTime = Date.now();
-			cancelAnimationFrame(animationId);
-		};
-
-		const endDrag = () => {
-			if (!isDown) return;
-			isDown = false;
-			track.classList.remove('active');
-
-			// Apply Momentum if velocity is significant
-			if (Math.abs(velocity) > 0.5) {
-				applyMomentum();
-			} else {
-				snapToNearest();
-			}
-
-			setTimeout(() => { isDragging = false; }, 50);
-		};
-
-		const moveDrag = (e) => {
-			if (!isDown) return;
-			e.preventDefault();
-			isDragging = true;
-
-			const x = (e.pageX || e.touches[0].pageX);
-			const walk = (x - track.offsetLeft - startX) * 1.5; // 1.5x speed
-			track.scrollLeft = scrollLeft - walk;
-
-			// Calculate velocity
-			const now = Date.now();
-			const dt = now - lastTime;
-			if (dt > 0) {
-				velocity = (x - lastX) / dt;
-				lastX = x;
-				lastTime = now;
-			}
-		};
-
-		const applyMomentum = () => {
-			// Decay velocity
-			velocity *= 0.95; // Friction
-			track.scrollLeft -= velocity * 15; // Move based on velocity
-
-			if (Math.abs(velocity) > 0.1) {
-				animationId = requestAnimationFrame(applyMomentum);
-			} else {
-				snapToNearest();
-			}
-		};
-
-		const snapToNearest = () => {
-			// Find item closest to center
-			const center = track.scrollLeft + (track.offsetWidth / 2);
-			let minDist = Infinity;
-			let closestIndex = -1;
-
-			// Optimization: Search only visible items roughly
-			// We can iterate all for robustness on modern devices
-			for (let i = 0; i < allItems.length; i++) {
-				const item = allItems[i];
-				const itemCenter = item.offsetLeft + (item.offsetWidth / 2);
-				const dist = Math.abs(center - itemCenter);
-				if (dist < minDist) {
-					minDist = dist;
-					closestIndex = i;
-				}
-			}
-
-			if (closestIndex !== -1) {
-				centerOnItem(closestIndex, 'smooth');
-			}
-		};
-
-		// Event Bindings
-		track.addEventListener('mousedown', startDrag);
-		track.addEventListener('touchstart', startDrag, { passive: true });
-
-		track.addEventListener('mouseleave', endDrag);
-		track.addEventListener('mouseup', endDrag);
-		track.addEventListener('touchend', endDrag);
-
-		track.addEventListener('mousemove', moveDrag);
-		track.addEventListener('touchmove', moveDrag, { passive: false });
-
-		// Prevent link clicks during drag
-		track.querySelectorAll('a').forEach(link => {
-			link.addEventListener('click', (e) => {
-				if (isDragging) e.preventDefault();
-			});
-		});
-
-		// --------------------------------------------------------
-		// 2. VISUAL LOOP & ACTIVE STATE
-		// --------------------------------------------------------
-		const updateActiveState = () => {
-			const center = track.scrollLeft + (track.offsetWidth / 2);
-
-			allItems.forEach(item => {
-				const itemCenter = item.offsetLeft + (item.offsetWidth / 2);
-				const dist = Math.abs(center - itemCenter);
-				const maxDist = track.offsetWidth / 2;
-
-				// "Is Center" Class Logic (strict)
-				if (dist < (item.offsetWidth / 2)) {
-					if (!item.classList.contains('is-center')) {
-						allItems.forEach(i => i.classList.remove('is-center'));
-						item.classList.add('is-center');
+		// 1. Core Gallery Carousel
+		if (document.querySelector('.hv-gallery-carousel')) {
+			try {
+				new Swiper('.hv-gallery-carousel', {
+					init: true,
+					// RTL Support: Swiper automatically detects dir="rtl" on html,
+					// but just in case we can force it if using rtl param, though usually default is fine.
+					direction: 'horizontal',
+					loop: true,
+					speed: 800,
+					spaceBetween: 30,
+					centeredSlides: true,
+					slidesPerView: 'auto',
+					grabCursor: true,
+					parallax: true,
+					navigation: {
+						nextEl: '.hv-gallery-carousel__btn--next',
+						prevEl: '.hv-gallery-carousel__btn--prev',
+					},
+					pagination: {
+						el: '.swiper-pagination',
+						clickable: true,
+					},
+					keyboard: {
+						enabled: true,
+					},
+					breakpoints: {
+						320: { spaceBetween: 16 },
+						768: { spaceBetween: 24 },
+						1024: { spaceBetween: 40 }
 					}
-				}
-
-				// Parallax Effect
-				const img = item.querySelector('img');
-				if (img && dist < maxDist) {
-					// 0 at center, -10/10 at edges
-					const move = (dist / maxDist) * 15 * (itemCenter > center ? -1 : 1);
-					img.style.transform = `scale(1.1) translateX(${move}%)`;
-				}
-			});
-
-			// Infinite Loop Jump Logic
-			const totalWidth = track.scrollWidth;
-			// If we are in the left buffer zone
-			if (track.scrollLeft < (track.offsetWidth / 4)) {
-				// Jump forward to real set
-				// Calculate relative position
-				const setWidth = totalWidth / 3;
-				track.scrollLeft += setWidth;
+				});
+			} catch (e) {
+				console.error("Swiper init failed", e);
 			}
-			// If we are in the right buffer zone
-			else if (track.scrollLeft > (totalWidth - (track.offsetWidth / 2))) {
-				const setWidth = totalWidth / 3;
-				track.scrollLeft -= setWidth;
-			}
-		};
+		}
 
-		track.addEventListener('scroll', () => {
-			requestAnimationFrame(updateActiveState);
-		});
+		// 2. Services Carousel
+		if (document.querySelector('.hv-services-carousel')) {
+			try {
+				new Swiper('.hv-services-carousel', {
+					init: true,
+					speed: 600,
+					spaceBetween: 20,
+					slidesPerView: 1.2,
+					grabCursor: true,
+					breakpoints: {
+						500: { slidesPerView: 2.2 },
+						1024: { slidesPerView: 3.5, spaceBetween: 30 },
+						1400: { slidesPerView: 4.5, spaceBetween: 40 }
+					},
+					// Optional nav if exist
+					navigation: {
+						nextEl: '.hv-services-next',
+						prevEl: '.hv-services-prev',
+					}
+				});
+			} catch (e) {}
+		}
 
-		// --------------------------------------------------------
-		// 3. INITIALIZATION
-		// --------------------------------------------------------
-		// Wait for layout repaint then center
-		setTimeout(() => {
-			centerOnItem(realSetStartIndex, 'auto');
-			updateActiveState();
-		}, 100);
-
-		// Button Controls
-		if (prevBtn) prevBtn.addEventListener('click', () => {
-			// Find current centered item index
-			const current = allItems.findIndex(i => i.classList.contains('is-center'));
-			if (current > 0) centerOnItem(current - 1, 'smooth');
-		});
-
-		if (nextBtn) nextBtn.addEventListener('click', () => {
-			const current = allItems.findIndex(i => i.classList.contains('is-center'));
-			if (current < allItems.length - 1) centerOnItem(current + 1, 'smooth');
-		});
+		// 3. Artists Carousel
+		if (document.querySelector('.hv-artists-showcase')) {
+			try {
+				new Swiper('.hv-artists-showcase', {
+					init: true,
+					speed: 600,
+					spaceBetween: 20,
+					slidesPerView: 1.2,
+					grabCursor: true,
+					breakpoints: {
+						500: { slidesPerView: 2.2 },
+						1024: { slidesPerView: 3.5, spaceBetween: 30 },
+						1400: { slidesPerView: 4 }
+					}
+				});
+			} catch (e) {}
+		}
 	};
 
 	/**
@@ -605,7 +446,7 @@
 	// Start initialization
 	init();
 
-	// Add CSS for ripple effect
+	// Add CSS for ripple and animations
 	const style = document.createElement("style");
 	style.textContent = `
         .hv-ripple {

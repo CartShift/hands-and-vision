@@ -15213,16 +15213,13 @@ html[dir="rtl"] .hv-footer__links a:hover {
 /* Track & Layout */
 .hv-gallery-carousel__track {
     display: flex;
-    gap: 40px; /* More breathing room */
-    padding-inline: 50vw; /* Center the first item */
-    padding-block: 40px; /* Space for scaling/shadows */
-    overflow-x: auto;
-    scroll-behavior: smooth; /* Native smooth scroll */
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    align-items: center;
-    cursor: grab;
+    /* Gap is handled by Swiper spaceBetween */
+    /* Padding is handled by Swiper centeredSlides or offset */
+    box-sizing: content-box;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
 }
 
 .hv-gallery-carousel__track::-webkit-scrollbar {
@@ -15231,8 +15228,6 @@ html[dir="rtl"] .hv-footer__links a:hover {
 
 .hv-gallery-carousel__track.active {
     cursor: grabbing;
-    scroll-snap-type: none;
-    scroll-behavior: auto;
 }
 
 /* Carousel Item */

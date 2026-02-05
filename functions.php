@@ -384,8 +384,9 @@ function handandvision_enqueue_custom_assets() {
     );
 
     // Swiper Carousel
-    wp_enqueue_style( 'swiper', $theme_uri . '/assets/css/swiper-bundle.min.css', array(), '11.0.0' );
-    wp_enqueue_script( 'swiper', $theme_uri . '/assets/js/swiper-bundle.min.js', array(), '11.0.0', true );
+    // Swiper Carousel (CDN)
+    wp_enqueue_style( 'swiper', 'https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css', array(), '12.0.0' );
+    wp_enqueue_script( 'swiper', 'https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js', array(), '12.0.0', true );
     wp_enqueue_script( 'hv-swiper-init', $theme_uri . '/assets/js/hv-swiper-init.js', array( 'swiper' ), HV_THEME_VERSION, true );
     wp_enqueue_script( 'hv-parallax', $theme_uri . '/assets/js/hv-parallax.js', array(), HV_THEME_VERSION, true );
     wp_enqueue_script( 'hv-view-transitions', $theme_uri . '/assets/js/hv-view-transitions.js', array(), HV_THEME_VERSION, true );
