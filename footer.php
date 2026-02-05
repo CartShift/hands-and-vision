@@ -17,9 +17,7 @@ if ( function_exists( 'astra_content_bottom' ) ) {
 if ( ! defined( 'HV_FOOTER_RENDERING' ) ) {
 	define( 'HV_FOOTER_RENDERING', true );
 }
-if ( function_exists( 'astra_footer' ) ) {
-	astra_footer();
-}
+// Removed recursive astra_footer() call used in legacy versions
 $footer_tagline = handandvision_is_hebrew()
 	? 'כאשר אמנות פוגשת כוונה. אנחנו מחברים בין אמנים לאספנים, בין יצירה לחלל, בין חזון למציאות.'
 	: 'When art meets intention. We connect artists with collectors, creation with space, vision with reality.';

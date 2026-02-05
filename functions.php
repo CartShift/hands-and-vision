@@ -272,6 +272,9 @@ add_action( 'acf/init', 'handandvision_load_acf_fields', 5 );
  * ==========================================================================
  */
 
+// Maintenance Mode - Gatekeeper
+require_once ASTRA_THEME_DIR . 'inc/maintenance-mode.php';
+
 // IMPORTANT: Load accessibility first - other modules depend on handandvision_is_hebrew()
 require_once ASTRA_THEME_DIR . 'inc/accessibility/language-rtl.php';
 
@@ -385,14 +388,14 @@ function handandvision_enqueue_custom_assets() {
         true
     );
 
-    // Drag to Scroll for Carousels
-    wp_enqueue_script(
-        'handandvision-drag-scroll',
-        $theme_uri . '/assets/js/hv-drag-scroll.js',
-        array(),
-        HV_THEME_VERSION,
-        true
-    );
+    // Drag to Scroll - DEPRECATED (Replaced by Swiper)
+    // wp_enqueue_script(
+    //     'handandvision-drag-scroll',
+    //     $theme_uri . '/assets/js/hv-drag-scroll.js',
+    //     array(),
+    //     HV_THEME_VERSION,
+    //     true
+    // );
 
     // Swiper Carousel
     // Swiper Carousel (CDN)
