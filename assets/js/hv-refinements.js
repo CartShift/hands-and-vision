@@ -319,92 +319,7 @@
 		});
 	};
 
-	/**
-	 * ========================================
-	 * GALLERY CAROUSEL (SWIPER)
-	 * ========================================
-	 */
-	const initGalleryCarousel = () => {
-		if (typeof Swiper === 'undefined') return;
-
-		// 1. Core Gallery Carousel
-		if (document.querySelector('.hv-gallery-carousel')) {
-			try {
-				new Swiper('.hv-gallery-carousel', {
-					init: true,
-					// RTL Support: Swiper automatically detects dir="rtl" on html,
-					// but just in case we can force it if using rtl param, though usually default is fine.
-					direction: 'horizontal',
-					loop: true,
-					speed: 800,
-					spaceBetween: 30,
-					centeredSlides: true,
-					slidesPerView: 'auto',
-					grabCursor: true,
-					parallax: true,
-					navigation: {
-						nextEl: '.hv-gallery-carousel__btn--next',
-						prevEl: '.hv-gallery-carousel__btn--prev',
-					},
-					pagination: {
-						el: '.swiper-pagination',
-						clickable: true,
-					},
-					keyboard: {
-						enabled: true,
-					},
-					breakpoints: {
-						320: { spaceBetween: 16 },
-						768: { spaceBetween: 24 },
-						1024: { spaceBetween: 40 }
-					}
-				});
-			} catch (e) {
-				console.error("Swiper init failed", e);
-			}
-		}
-
-		// 2. Services Carousel
-		if (document.querySelector('.hv-services-carousel')) {
-			try {
-				new Swiper('.hv-services-carousel', {
-					init: true,
-					speed: 600,
-					spaceBetween: 20,
-					slidesPerView: 1.2,
-					grabCursor: true,
-					breakpoints: {
-						500: { slidesPerView: 2.2 },
-						1024: { slidesPerView: 3.5, spaceBetween: 30 },
-						1400: { slidesPerView: 4.5, spaceBetween: 40 }
-					},
-					// Optional nav if exist
-					navigation: {
-						nextEl: '.hv-services-next',
-						prevEl: '.hv-services-prev',
-					}
-				});
-			} catch (e) {}
-		}
-
-		// 3. Artists Carousel
-		if (document.querySelector('.hv-artists-showcase')) {
-			try {
-				new Swiper('.hv-artists-showcase', {
-					init: true,
-					speed: 600,
-					spaceBetween: 20,
-					slidesPerView: 1.2,
-					grabCursor: true,
-					breakpoints: {
-						500: { slidesPerView: 2.2 },
-						1024: { slidesPerView: 3.5, spaceBetween: 30 },
-						1400: { slidesPerView: 4 }
-					}
-				});
-			} catch (e) {}
-		}
-	};
+	// Swiper initialization removed - handled by hv-swiper-init.js to prevent conflicts
 
 	/**
 	 * ========================================
@@ -432,7 +347,6 @@
 		initImageLoading();
 		initFormEnhancements();
 		initSmoothScroll();
-		initGalleryCarousel();
 	};
 
 	const onPageLoad = () => {
