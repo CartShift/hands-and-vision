@@ -44,9 +44,11 @@ $is_hebrew = function_exists('handandvision_is_hebrew') ? handandvision_is_hebre
             <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hv-btn hv-btn--primary">
                 <?php echo $is_hebrew ? 'חזרה לדף הבית' : 'Back to Home'; ?>
             </a>
-            <a href="<?php echo esc_url( get_permalink( wc_get_page_id( 'shop' ) ) ); ?>" class="hv-btn hv-btn--outline">
-                <?php echo $is_hebrew ? 'ביקור בחנות' : 'Visit Shop'; ?>
-            </a>
+            <?php if ( class_exists( 'WooCommerce' ) ) : ?>
+                <a href="<?php echo esc_url( get_permalink( wc_get_page_id( 'shop' ) ) ); ?>" class="hv-btn hv-btn--outline">
+                    <?php echo $is_hebrew ? 'ביקור בחנות' : 'Visit Shop'; ?>
+                </a>
+            <?php endif; ?>
         </div>
     </div>
 </main>

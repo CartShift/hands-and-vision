@@ -187,9 +187,10 @@
 				// Use a heuristic or data attribute if we stored it,
 				// or find an image with matching src in the document
 				const currentSrc = this.images[index].src;
-				const thumb = Array.from(document.querySelectorAll('a[href="' + currentSrc + '"] img, img[src="' + currentSrc + '"]')).pop();
+				const thumbMatches = document.querySelectorAll('a[href="' + currentSrc + '"] img, img[src="' + currentSrc + '"]');
+				const thumb = thumbMatches.length > 0 ? thumbMatches[thumbMatches.length - 1] : null;
 
-				if (thumb) {
+				if (thumb && thumb.nodeType === 1) {
 					// Set temporary names
 					thumb.style.viewTransitionName = "lightbox-img";
 					this.image.style.viewTransitionName = "lightbox-img";
@@ -225,28 +226,36 @@
 
 			if (document.startViewTransition && this.overlay.classList.contains("active")) {
 				// Find target thumbnail again
-				const currentSrc = this.image.src;
-				// Need to strip host if absolute vs relative issues occur, but usually exact match works for lightbox links
-				// We look for a link pointing to this image, and find its inner img
-				const thumbLink = document.querySelector('a[href="' + currentSrc + '"]');
-				const thumb = thumbLink ? thumbLink.querySelector("img") : null;
+				const currentSrc = this.image ? this.image.src : "";
+				if (currentSrc) {
+					// Need to strip host if absolute vs relative issues occur, but usually exact match works for lightbox links
+					// We look for a link pointing to this image, and find its inner img
+					const thumbLink = document.querySelector('a[href="' + currentSrc + '"]');
+					const thumb = thumbLink ? thumbLink.querySelector("img") : null;
 
-				if (thumb) {
-					// Apply names for the closing transition
-					thumb.style.viewTransitionName = "lightbox-img";
-					this.image.style.viewTransitionName = "lightbox-img";
+					if (thumb && thumb.nodeType === 1) {
+						// Apply names for the closing transition
+						thumb.style.viewTransitionName = "lightbox-img";
+						if (this.image) {
+							this.image.style.viewTransitionName = "lightbox-img";
+						}
 
-					const transition = document.startViewTransition(() => {
+						const transition = document.startViewTransition(() => {
+							closeLogic();
+							// In the new state (closed), the lightbox image is gone (or hidden),
+							// and the thumb is visible.
+							// The API handles the morph from 'lightbox-img' (overlay) to 'lightbox-img' (thumb).
+						});
+
+						transition.finished.finally(() => {
+							thumb.style.viewTransitionName = "";
+							if (this.image) {
+								this.image.style.viewTransitionName = "";
+							}
+						});
+					} else {
 						closeLogic();
-						// In the new state (closed), the lightbox image is gone (or hidden),
-						// and the thumb is visible.
-						// The API handles the morph from 'lightbox-img' (overlay) to 'lightbox-img' (thumb).
-					});
-
-					transition.finished.finally(() => {
-						thumb.style.viewTransitionName = "";
-						this.image.style.viewTransitionName = "";
-					});
+					}
 				} else {
 					closeLogic();
 				}
@@ -1028,6 +1037,10 @@
 		startFlyAnimation: function (sourceImg) {
 			if (!this.cartIcon) return;
 
+			// Get cart icon position
+			const cartRect = this.cartIcon.getBoundingClientRect();
+			if (!cartRect || cartRect.width === 0 || cartRect.height === 0) return;
+
 			// Ensure source image is actually visible in viewport
 			const rect = sourceImg.getBoundingClientRect();
 			if (rect.width === 0 || rect.height === 0) return;
@@ -1176,10 +1189,18 @@
 					loader.style.display = "none";
 					if (response.success) {
 						content.innerHTML = response.data.html;
-						// Re-init variations forms if needed (requires WC scripts)
+						// Re-init variations forms if needed (vanilla JS - no jQuery)
 						if (typeof wc_add_to_cart_variation_params !== "undefined") {
-							jQuery(".variations_form").each(function () {
-								jQuery(this).wc_variation_form();
+							const variationForms = content.querySelectorAll(".variations_form");
+							variationForms.forEach(function (form) {
+								if (typeof wc_variation_form !== "undefined") {
+									wc_variation_form(form);
+								} else if (window.wc_variation_form) {
+									window.wc_variation_form(form);
+								} else {
+									const event = new Event("wc_variation_form", { bubbles: true });
+									form.dispatchEvent(event);
+								}
 							});
 						}
 					} else {

@@ -17,7 +17,5 @@
     "glob": "^13.0.0",
     "purgecss": "^8.0.0"
   },
-  "dependencies": {
-    "swiper": "^12.1.0"
-  }
+  "dependencies": {}
 }

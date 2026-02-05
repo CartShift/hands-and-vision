@@ -15451,19 +15451,32 @@ html[dir="rtl"] .hv-footer__links a:hover {
 /* 3. Pagination Dots - Custom Style */
 .hv-gallery-carousel .swiper-pagination {
     bottom: 0;
+    pointer-events: none; /* Let clicks pass through container */
 }
 
 .swiper-pagination-bullet {
-    width: 8px;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.3);
-    opacity: 1;
-    transition: all 0.3s ease;
+    width: 6px;
+    height: 6px;
+    background: var(--hv-white);
+    opacity: 0.2;
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    border-radius: 4px; /* Soft square/pill */
+    margin: 0 6px !important;
+    pointer-events: auto;
+    position: relative;
+}
+
+.swiper-pagination-bullet:hover {
+    opacity: 0.5;
+    transform: scale(1.2);
 }
 
 .swiper-pagination-bullet-active {
-    background: var(--hv-lilac);
-    transform: scale(1.5);
+    background: var(--hv-lilac); /* Brand Lilac */
+    opacity: 1;
+    width: 24px; /* Elongate active dot */
+    transform: scale(1);
+    box-shadow: 0 0 10px var(--hv-lilac-soft);
 }
 
 /* 4. Info box Adjustment for Swiper */

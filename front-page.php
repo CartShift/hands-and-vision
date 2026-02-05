@@ -45,8 +45,11 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
             $poster_url = ( is_array( $hero_poster ) && isset( $hero_poster['url'] ) ) ? $hero_poster['url'] : ( is_string( $hero_poster ) ? $hero_poster : '' );
             if ( $hero_video_url ) :
             ?>
-            <video autoplay muted loop playsinline poster="<?php echo $poster_url ? esc_url( $poster_url ) : ''; ?>">
+            <video id="hero-video" autoplay muted loop playsinline poster="<?php echo $poster_url ? esc_url( $poster_url ) : ''; ?>" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'וידאו רקע' : 'Background video' ); ?>">
                 <source src="<?php echo esc_url( $hero_video_url ); ?>" type="video/mp4">
+                <?php if ( $poster_url ) : ?>
+                    <img src="<?php echo esc_url( $poster_url ); ?>" alt="<?php echo esc_attr( $hero_title ?: 'Hands and Vision' ); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                <?php endif; ?>
             </video>
             <?php endif; ?>
             <div class="hv-hero-video__overlay"></div>

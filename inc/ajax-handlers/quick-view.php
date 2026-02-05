@@ -14,19 +14,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Handle Quick View Request
  */
 function handandvision_ajax_quick_view() {
-	// Verify nonce (optional for public read-only, but good practice if adding to cart)
-	// check_ajax_referer( 'hv_quick_view', 'nonce' );
+	// Verify nonce
+	check_ajax_referer( 'hv_quick_view', 'nonce' );
 
 	$product_id = isset( $_POST['product_id'] ) ? absint( $_POST['product_id'] ) : 0;
 
 	if ( ! $product_id ) {
-		wp_send_json_error( array( 'message' => 'Invalid product ID' ) );
+		wp_send_json_error( array( 'message' => esc_html__( 'Invalid product ID', 'astra' ) ) );
 	}
 
 	$product = wc_get_product( $product_id );
 
 	if ( ! $product ) {
-		wp_send_json_error( array( 'message' => 'Product not found' ) );
+		wp_send_json_error( array( 'message' => esc_html__( 'Product not found', 'astra' ) ) );
 	}
 
 	// Prepare data

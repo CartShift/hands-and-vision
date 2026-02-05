@@ -92,73 +92,14 @@ $current_year = date( 'Y' );
                 <?php endif; ?>
                 <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'צור קשר' : 'Contact' ); ?></a>
                 <span>·</span>
-                <span><?php echo esc_html( handandvision_is_hebrew() ? 'תנאי שימוש' : 'Terms' ); ?></span>
+                <a href="<?php echo esc_url( home_url( '/terms' ) ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'תנאי שימוש' : 'Terms' ); ?></a>
                 <span>·</span>
-                <span><?php echo esc_html( handandvision_is_hebrew() ? 'נגישות' : 'Accessibility' ); ?></span>
+                <a href="<?php echo esc_url( home_url( '/accessibility' ) ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'נגישות' : 'Accessibility' ); ?></a>
             </nav>
         </div>
     </div>
 </footer>
 
-<!-- Drag to Scroll for Carousels -->
-<script>
-(function() {
-    document.addEventListener('DOMContentLoaded', function() {
-        // Reusable function for drag scrolling
-        function enableDragScroll(container) {
-            if (!container) return;
-
-            let isDown = false;
-            let startX;
-            let scrollLeft;
-
-            container.addEventListener('mousedown', function(e) {
-                isDown = true;
-                container.style.cursor = 'grabbing';
-                container.style.scrollSnapType = 'none';
-                startX = e.pageX - container.offsetLeft;
-                scrollLeft = container.scrollLeft;
-                e.preventDefault();
-            });
-
-            container.addEventListener('mouseleave', function() {
-                isDown = false;
-                container.style.cursor = 'grab';
-            });
-
-            container.addEventListener('mouseup', function() {
-                isDown = false;
-                container.style.cursor = 'grab';
-                container.style.scrollSnapType = 'x mandatory';
-            });
-
-            document.addEventListener('mouseup', function() {
-                if (isDown) {
-                    isDown = false;
-                    container.style.cursor = 'grab';
-                    container.style.scrollSnapType = 'x mandatory';
-                }
-            });
-
-            container.addEventListener('mousemove', function(e) {
-                if (!isDown) return;
-                e.preventDefault();
-                const x = e.pageX - container.offsetLeft;
-                const walk = (x - startX) * 1.5;
-                container.scrollLeft = scrollLeft - walk;
-            });
-        }
-
-        // Apply to artists showcase
-        const artistsShowcase = document.querySelector('.hv-artists-showcase');
-        enableDragScroll(artistsShowcase);
-
-        // Apply to services carousel (homepage)
-        const servicesCarousel = document.querySelector('.hv-services-carousel');
-        enableDragScroll(servicesCarousel);
-    });
-})();
-</script>
 
 <?php wp_footer(); ?>
 

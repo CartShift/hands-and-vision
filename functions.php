@@ -222,17 +222,21 @@ require_once ASTRA_THEME_DIR . 'inc/core/deprecated/deprecated-functions.php';
  */
 
 /**
- * ACF Fallback - Polite warning if ACF is not installed
+ * ACF Dependency Check - Throws error if ACF is not installed
+ * No fallbacks or mock data per SSOT strategy
  */
 if ( ! function_exists( 'get_field' ) ) {
-	function get_field( $selector, $post_id = false ) {
-		if ( is_admin() && current_user_can( 'activate_plugins' ) && ! has_action( 'admin_notices', 'handandvision_acf_missing_notice' ) ) {
-			add_action( 'admin_notices', 'handandvision_acf_missing_notice' );
-		}
-		return '';
-	}
 	function handandvision_acf_missing_notice() {
 		echo '<div class="notice notice-error"><p>' . esc_html__( 'Hand and Vision theme requires the Advanced Custom Fields (ACF) plugin. Please install and activate ACF.', 'astra' ) . '</p></div>';
+	}
+	add_action( 'admin_notices', 'handandvision_acf_missing_notice' );
+
+	if ( is_admin() ) {
+		wp_die(
+			esc_html__( 'This theme requires Advanced Custom Fields (ACF) plugin. Please install and activate ACF to continue.', 'astra' ),
+			esc_html__( 'Plugin Required', 'astra' ),
+			array( 'back_link' => true )
+		);
 	}
 }
 
@@ -299,8 +303,6 @@ require_once ASTRA_THEME_DIR . 'inc/acf-display-helper.php';
 require_once ASTRA_THEME_DIR . 'inc/service-helpers.php';
 require_once ASTRA_THEME_DIR . 'inc/fix-site-url.php';
 
-// Custom Breadcrumbs
-require_once ASTRA_THEME_DIR . 'inc/breadcrumb-helpers.php';
 
 /**
  * ==========================================================================
@@ -379,6 +381,15 @@ function handandvision_enqueue_custom_assets() {
         'handandvision-refinements',
         $theme_uri . '/assets/js/hv-refinements.js',
         array( 'handandvision-main' ),
+        HV_THEME_VERSION,
+        true
+    );
+
+    // Drag to Scroll for Carousels
+    wp_enqueue_script(
+        'handandvision-drag-scroll',
+        $theme_uri . '/assets/js/hv-drag-scroll.js',
+        array(),
         HV_THEME_VERSION,
         true
     );

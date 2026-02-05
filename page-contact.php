@@ -63,6 +63,8 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
                             <input type="hidden" name="action" value="hv_contact_form">
                             <input type="hidden" name="page_id" value="<?php echo esc_attr( $page_id ); ?>">
 
+                            <input type="text" name="website" style="display:none !important;" tabindex="-1" autocomplete="off" aria-hidden="true">
+
                             <div class="hv-form-row">
                                 <div class="hv-form-group">
                                     <label for="name" class="hv-form-label"><?php echo esc_html( handandvision_is_hebrew() ? 'שם מלא' : 'Full Name' ); ?> <span class="hv-required">*</span></label>

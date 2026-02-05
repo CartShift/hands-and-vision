@@ -10,7 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'HV_OLD_SITE_URL', 'https://ggr.zmk.mybluehost.me/website_8422dc8c' );
+// Define old URL from constant or environment variable
+define( 'HV_OLD_SITE_URL', defined( 'HV_OLD_SITE_URL_OVERRIDE' ) ? HV_OLD_SITE_URL_OVERRIDE : 'https://ggr.zmk.mybluehost.me/website_8422dc8c' );
 
 /**
  * Replace old site URL with current home URL in options, posts, postmeta.
