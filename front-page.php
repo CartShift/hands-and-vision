@@ -102,7 +102,7 @@ $gallery_items = handandvision_get_home_gallery_images( $front_page_id );
 
             <?php if ( ! empty( $display_services ) ) : ?>
             <div class="hv-services-carousel-bleed">
-            <div class="hv-services-carousel swiper" role="group" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'שירותים' : 'Services' ); ?>">
+            <div class="hv-services-carousel swiper">
                 <div class="swiper-wrapper">
                 <?php
                 foreach ( $display_services as $i => $service_item ) :

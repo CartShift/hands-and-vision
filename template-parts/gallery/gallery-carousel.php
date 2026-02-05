@@ -24,7 +24,7 @@ if ( empty( $items ) ) {
 		</header>
 	</div>
 
-	<div class="hv-gallery-carousel hv-animate swiper">
+	<div class="hv-gallery-carousel swiper">
 		<div class="hv-gallery-carousel__controls">
             <button type="button" class="hv-gallery-carousel__btn hv-gallery-carousel__btn--prev" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'הבא' : 'Previous' ); ?>">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
@@ -34,7 +34,7 @@ if ( empty( $items ) ) {
             </button>
         </div>
 
-		<div class="hv-gallery-carousel__track swiper-wrapper" role="list">
+		<div class="swiper-wrapper">
 			<?php foreach ( $items as $i => $img ) :
 				$title = $img['title'] ?? '';
 				$caption = $img['caption'] ?? '';
