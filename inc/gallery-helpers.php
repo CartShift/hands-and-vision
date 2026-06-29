@@ -31,18 +31,20 @@ function handandvision_get_home_gallery_images( $front_page_id = 0 ) {
 	}
 
 	$posts = get_posts( array(
-		'post_type'      => 'gallery_item',
-		'posts_per_page' => 12,
-		'orderby'        => 'menu_order date',
-		'order'          => 'ASC',
-		'post_status'    => 'publish',
-		'meta_key'       => '_thumbnail_id',
+		'post_type'              => 'gallery_item',
+		'posts_per_page'         => 12,
+		'orderby'                => 'menu_order date',
+		'order'                  => 'ASC',
+		'post_status'            => 'publish',
+		'meta_key'               => '_thumbnail_id',
+		'no_found_rows'          => true,
+		'update_post_term_cache' => false,
 	) );
 
 	foreach ( $posts as $post_item ) {
 		$img_id = get_post_thumbnail_id( $post_item->ID );
 		$url = wp_get_attachment_image_url( $img_id, 'large' );
-		if ( ! $url && ! $img_id ) continue;
+		if ( ! $url ) continue;
 
 		$artist_raw = get_field( 'gallery_artist', $post_item->ID );
 		$artist_id = is_object( $artist_raw ) ? (int) $artist_raw->ID : (int) $artist_raw;
@@ -69,6 +71,9 @@ function handandvision_normalize_gallery_grid_items( $acf_gallery, $placeholder_
 				'src'     => $img['sizes']['medium_large'] ?? $url,
 				'alt'     => $img['alt'] ?? '',
 				'caption' => $img['caption'] ?? '',
+				'image'   => $url,
+				'title'   => $img['caption'] ?? ( $img['title'] ?? '' ),
+				'link'    => '',
 			);
 		}
 		return $items;
@@ -82,6 +87,50 @@ function handandvision_normalize_gallery_grid_items( $acf_gallery, $placeholder_
 		);
 	}
 	return $out;
+}
+
+/**
+ * Build service gallery items from project repeater or legacy gallery field.
+ *
+ * @param int $service_id Service post ID.
+ * @return array[]
+ */
+function handandvision_get_service_gallery_items( $service_id ) {
+	$project_rows = get_field( 'service_project_gallery', $service_id );
+	if ( is_array( $project_rows ) && ! empty( $project_rows ) ) {
+		$items = array();
+		foreach ( $project_rows as $row ) {
+			$image = $row['image'] ?? null;
+			if ( ! is_array( $image ) || empty( $image['url'] ) ) {
+				continue;
+			}
+			$img_id = (int) ( $image['ID'] ?? 0 );
+			if ( $img_id && empty( handandvision_filter_excluded_media_ids( array( $img_id ) ) ) ) {
+				continue;
+			}
+			$artist_obj = $row['artist'] ?? null;
+			$artist_name = is_object( $artist_obj ) ? $artist_obj->post_title : '';
+			$project = trim( (string) ( $row['project_title'] ?? '' ) );
+			$caption_parts = array_filter( array( $artist_name, $project ) );
+			$items[] = array(
+				'url'         => $image['url'],
+				'src'         => $image['sizes']['medium_large'] ?? $image['url'],
+				'image'       => $image['url'],
+				'alt'         => $image['alt'] ?? '',
+				'artist_name' => $artist_name,
+				'project'     => $project,
+				'title'       => implode( ' · ', $caption_parts ),
+				'caption'     => implode( ' · ', $caption_parts ),
+				'link'        => is_object( $artist_obj ) ? get_permalink( $artist_obj->ID ) : '',
+			);
+		}
+		if ( ! empty( $items ) ) {
+			return $items;
+		}
+	}
+
+	$legacy = get_field( 'service_gallery', $service_id );
+	return handandvision_normalize_gallery_grid_items( is_array( $legacy ) ? $legacy : array(), array() );
 }
 
 /**
@@ -101,12 +150,14 @@ function handandvision_get_artist_gallery_items( $artist_id, $limit = -1 ) {
 	// Query gallery items where the gallery_artist field matches this artist
 	// ACF post_object can store value as ID or serialized string depending on config
 	$gallery_posts = get_posts( array(
-		'post_type'      => 'gallery_item',
-		'posts_per_page' => $limit,
-		'orderby'        => 'menu_order date',
-		'order'          => 'DESC',
-		'post_status'    => 'publish',
-		'meta_query'     => array(
+		'post_type'              => 'gallery_item',
+		'posts_per_page'         => $limit > 0 ? $limit : 100,
+		'orderby'                => 'menu_order date',
+		'order'                  => 'DESC',
+		'post_status'            => 'publish',
+		'no_found_rows'          => true,
+		'update_post_term_cache' => false,
+		'meta_query'             => array(
 			'relation' => 'OR',
 			array(
 				'key'     => 'gallery_artist',

@@ -12,32 +12,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 
-// Check if handandvision_is_hebrew exists, if not create a fallback
-if ( ! function_exists( 'handandvision_is_hebrew' ) ) {
-    function handandvision_is_hebrew() {
-        return false;
-    }
-}
+$is_hebrew = handandvision_is_hebrew();
 
-$is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
-
-// Safely get services
 $services = get_posts( array(
-    'post_type'      => 'service',
-    'posts_per_page' => -1,
-    'orderby'        => 'menu_order',
-    'order'          => 'ASC',
-    'post_status'    => 'publish',
+    'post_type'              => 'service',
+    'posts_per_page'         => 50,
+    'orderby'                => 'menu_order',
+    'order'                  => 'ASC',
+    'post_status'            => 'publish',
+    'no_found_rows'          => true,
+    'update_post_term_cache' => false,
 ) );
-
-if ( ! $services ) {
-    $services = array();
-}
+$services = handandvision_sort_services_for_display( is_array( $services ) ? $services : array() );
 
 $total_services = count( $services );
 ?>
 
-<main id="primary" class="hv-hero-layout hv-services-page">
+<main id="primary" class="hv-hero-layout hv-services-page hv-services-editorial">
 
 <?php
 get_template_part( 'template-parts/hero/page-hero', null, array(
@@ -67,13 +58,11 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
                 $service_title = $service->post_title;
 
                 // Handle language-specific fields
-                if ( function_exists( 'handandvision_is_hebrew' ) && ! handandvision_is_hebrew() ) {
-                    if ( function_exists( 'get_field' ) ) {
-                        $en_title = get_field( 'service_title_en', $service->ID );
-                        $en_desc  = get_field( 'service_desc_en', $service->ID );
-                        if ( ! empty( $en_title ) ) $service_title = $en_title;
-                        if ( ! empty( $en_desc ) ) $short_desc = $en_desc;
-                    }
+                if ( ! $is_hebrew ) {
+                    $en_title = get_field( 'service_title_en', $service->ID );
+                    $en_desc  = get_field( 'service_desc_en', $service->ID );
+                    if ( ! empty( $en_title ) ) $service_title = $en_title;
+                    if ( ! empty( $en_desc ) ) $short_desc = $en_desc;
                 }
 
                 // Determine card style: first card is featured, then alternate grid
@@ -82,7 +71,7 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
             ?>
 
                 <article class="<?php echo esc_attr( $card_class ); ?>" data-service-index="<?php echo esc_attr( $i + 1 ); ?>">
-                    <a href="<?php echo esc_url( get_permalink( $service->ID ) ); ?>" class="hv-service-showcase-card__link">
+                    <a href="<?php echo esc_url( get_permalink( $service->ID ) ); ?>" class="hv-service-showcase-card__link" data-service-id="<?php echo esc_attr( (string) $service->ID ); ?>">
                         <div class="hv-service-showcase-card__media">
                             <?php if ( $image_url ) : ?>
                                 <img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $service_title ); ?>" loading="lazy">
@@ -164,7 +153,7 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
                         ? 'נשמח לשמוע על החזון האמנותי שלכם ולעזור להפוך אותו למציאות.'
                         : "We'd love to hear about your artistic vision and help bring it to life." ); ?>
                 </p>
-                <a href="<?php echo esc_url( function_exists( 'handandvision_get_contact_url' ) ? handandvision_get_contact_url() : home_url( '/contact' ) ); ?>" class="hv-btn hv-btn--primary-gold hv-services-cta-premium__btn">
+                <a href="<?php echo esc_url( function_exists( 'handandvision_get_contact_url' ) ? handandvision_get_contact_url() : home_url( '/contact' ) ); ?>" class="hv-btn hv-btn--cta hv-services-cta-premium__btn">
                     <span><?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Get in Touch' ); ?></span>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <?php if ( $is_hebrew ) : ?>

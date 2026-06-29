@@ -19,6 +19,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void Sends JSON response
  */
 function handandvision_handle_contact_form() {
+    // Verify nonce first — before any rate-limit state is created for this IP.
+    $nonce = isset( $_POST['hv_contact_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['hv_contact_nonce'] ) ) : '';
+    if ( ! wp_verify_nonce( $nonce, 'hv_contact_action' ) ) {
+        wp_send_json_error( [
+            'message' => handandvision_is_hebrew()
+                ? 'אימות נכשל. אנא טענו את הדף מחדש.'
+                : 'Security check failed. Please refresh the page.'
+        ] );
+        return;
+    }
+
     // Rate limiting - prevent spam with IP-based throttling
     $ip_address = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
     $rate_key = 'hv_contact_rate_' . md5( $ip_address );
@@ -29,17 +40,6 @@ function handandvision_handle_contact_form() {
             'message' => handandvision_is_hebrew()
                 ? 'אנא המתינו דקה לפני שליחת פנייה נוספת.'
                 : 'Please wait a minute before submitting another message.'
-        ] );
-        return;
-    }
-
-    // Verify nonce with proper sanitization
-    $nonce = isset( $_POST['hv_contact_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['hv_contact_nonce'] ) ) : '';
-    if ( ! wp_verify_nonce( $nonce, 'hv_contact_action' ) ) {
-        wp_send_json_error( [
-            'message' => handandvision_is_hebrew()
-                ? 'אימות נכשל. אנא טענו את הדף מחדש.'
-                : 'Security check failed. Please refresh the page.'
         ] );
         return;
     }
@@ -95,19 +95,29 @@ function handandvision_handle_contact_form() {
     // Get admin email from ACF or WordPress settings
     $submitted_page_id = isset( $_POST['page_id'] ) ? intval( $_POST['page_id'] ) : 0;
     $to = get_field( 'contact_email', $submitted_page_id ) ?: get_option( 'admin_email' );
+    $is_hebrew = handandvision_is_hebrew();
 
-    // Subject line
-    $email_subject = 'פנייה חדשה מאתר Hand & Vision: ' . sanitize_text_field( $subject );
-
-    // Email Content - sanitize all user input
-    $body = "נשלחה פנייה חדשה מהאתר:\n\n";
-    $body .= "שם: " . sanitize_text_field( $name ) . "\n";
-    $body .= "אימייל: " . sanitize_email( $email ) . "\n";
-    if ( ! empty( $phone ) ) {
-        $body .= "טלפון: " . sanitize_text_field( $phone ) . "\n";
+    if ( $is_hebrew ) {
+        $email_subject = 'פנייה חדשה מאתר Hand & Vision: ' . sanitize_text_field( $subject );
+        $body  = "נשלחה פנייה חדשה מהאתר:\n\n";
+        $body .= "שם: " . sanitize_text_field( $name ) . "\n";
+        $body .= "אימייל: " . sanitize_email( $email ) . "\n";
+        if ( ! empty( $phone ) ) {
+            $body .= "טלפון: " . sanitize_text_field( $phone ) . "\n";
+        }
+        $body .= "נושא: " . sanitize_text_field( $subject ) . "\n\n";
+        $body .= "הודעה:\n" . sanitize_textarea_field( $message ) . "\n";
+    } else {
+        $email_subject = 'New inquiry from Hand & Vision: ' . sanitize_text_field( $subject );
+        $body  = "A new message was submitted from the website:\n\n";
+        $body .= "Name: " . sanitize_text_field( $name ) . "\n";
+        $body .= "Email: " . sanitize_email( $email ) . "\n";
+        if ( ! empty( $phone ) ) {
+            $body .= "Phone: " . sanitize_text_field( $phone ) . "\n";
+        }
+        $body .= "Subject: " . sanitize_text_field( $subject ) . "\n\n";
+        $body .= "Message:\n" . sanitize_textarea_field( $message ) . "\n";
     }
-    $body .= "נושא: " . sanitize_text_field( $subject ) . "\n\n";
-    $body .= "הודעה:\n" . sanitize_textarea_field( $message ) . "\n";
 
     $headers = [
         'Content-Type: text/plain; charset=UTF-8',
@@ -198,11 +208,13 @@ function handandvision_get_contact_url() {
         return get_permalink( $page );
     }
     $pages = get_posts( [
-        'post_type'      => 'page',
-        'posts_per_page' => 1,
-        'meta_key'       => '_wp_page_template',
-        'meta_value'     => 'page-contact.php',
-        'post_status'    => 'publish',
+        'post_type'              => 'page',
+        'posts_per_page'         => 1,
+        'meta_key'               => '_wp_page_template',
+        'meta_value'             => 'page-contact.php',
+        'post_status'            => 'publish',
+        'no_found_rows'          => true,
+        'update_post_term_cache' => false,
     ] );
     if ( ! empty( $pages ) ) {
         return get_permalink( $pages[0] );

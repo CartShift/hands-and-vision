@@ -43,7 +43,7 @@ if ( ! $term || ! isset( $term->name ) ) {
                     $artist_name = $artist_id ? get_the_title( $artist_id ) : '';
                 ?>
                     <article <?php wc_product_class( 'hv-product-card', $product ); ?>>
-                        <a href="<?php the_permalink(); ?>" class="hv-product-card__link">
+                        <a href="<?php the_permalink(); ?>" class="hv-product-card__link" data-product-id="<?php echo esc_attr( (string) $product->get_id() ); ?>">
                             <div class="hv-product-card__image">
                                 <?php
                                 if ( has_post_thumbnail() ) {
@@ -122,7 +122,7 @@ if ( ! $term || ! isset( $term->name ) ) {
                     : 'Discover more pieces from different categories in our shop'
                 ); ?>
             </p>
-            <a href="<?php echo esc_url( get_permalink( wc_get_page_id( 'shop' ) ) ); ?>" class="hv-btn hv-btn--primary-gold hv-reveal">
+            <a href="<?php echo esc_url( get_permalink( wc_get_page_id( 'shop' ) ) ); ?>" class="hv-btn hv-btn--cta hv-reveal">
                 <?php echo esc_html( $is_hebrew ? 'לכל החנות' : 'View All Shop' ); ?>
             </a>
         </div>

@@ -7,17 +7,22 @@
  * @version 2.0.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 get_header();
 
-// Get all artists for filtering
 $artists = get_posts([
-    'post_type'      => 'artist',
-    'posts_per_page' => -1,
-    'orderby'        => 'title',
-    'order'          => 'ASC',
+    'post_type'              => 'artist',
+    'posts_per_page'         => 200,
+    'orderby'                => 'title',
+    'order'                  => 'ASC',
+    'no_found_rows'          => true,
+    'update_post_meta_cache' => false,
+    'update_post_term_cache' => false,
 ]);
 
-// Build artist lookup array for efficient access
 $artist_map = [];
 foreach ($artists as $artist) {
     $artist_map[$artist->ID] = [
@@ -26,12 +31,13 @@ foreach ($artists as $artist) {
     ];
 }
 
-// Get gallery items
 $gallery_items = new WP_Query([
-    'post_type'      => 'gallery_item',
-    'posts_per_page' => -1,
-    'orderby'        => 'date',
-    'order'          => 'DESC',
+    'post_type'              => 'gallery_item',
+    'posts_per_page'         => 200,
+    'orderby'                => 'date',
+    'order'                  => 'DESC',
+    'no_found_rows'          => true,
+    'update_post_term_cache' => false,
 ]);
 
 // Calculate item counts per artist
@@ -53,7 +59,7 @@ if ($gallery_items->have_posts()) {
 $is_hebrew = handandvision_is_hebrew();
 ?>
 
-<main id="primary" class="hv-hero-layout hv-gallery-page">
+<main id="primary" class="hv-hero-layout hv-gallery-page hv-gallery-editorial">
 
 <?php
 get_template_part( 'template-parts/hero/page-hero', null, array(
@@ -77,9 +83,9 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
                 tabindex="0"
             >
                 <span class="hv-gallery-filters__label">
-                    <?php echo $is_hebrew ? 'הכל' : 'All'; ?>
+                    <?php echo esc_html( $is_hebrew ? 'הכל' : 'All' ); ?>
                 </span>
-                <span class="hv-gallery-filters__count"><?php echo $total_count; ?></span>
+                <span class="hv-gallery-filters__count"><?php echo absint( $total_count ); ?></span>
             </button>
 
             <?php foreach ($artists as $artist) :
@@ -113,6 +119,7 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
 
         <!-- Results Counter -->
         <div class="hv-gallery__meta">
+            <span class="hv-gallery__meta-eyebrow"><?php echo esc_html( $is_hebrew ? 'מציג' : 'Showing' ); ?></span>
             <span class="hv-gallery__counter" aria-live="polite">
                 <?php printf(
                     $is_hebrew ? '%d מתוך %d' : '%d / %d',
@@ -120,6 +127,7 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
                     $total_count
                 ); ?>
             </span>
+            <span class="hv-gallery__meta-label"><?php echo esc_html( $is_hebrew ? 'יצירות' : 'works' ); ?></span>
         </div>
     </section>
 

@@ -9,8 +9,9 @@ You are an expert WordPress Developer specializing in high-end, bespoke themes.
 ## 🎨 Aesthetic & Design
 - **Style**: Premium, minimalist, "Art Gallery". Dark modes, high contrast typography.
 - **Rules**:
-  - **CSS**: `assets/css/hv-unified.css` is the **Source of Truth**.
+  - **CSS**: `assets/css/hv-unified.css` is the **Source of Truth** (tokens + components).
   - **Refinements**: Use `assets/css/hv-design-refinements.css` for polish/overrides.
+  - **Buttons**: `.hv-btn--cta` = conversion CTA; `.hv-btn--primary` = petrol solid; `--hv-primary` red = sale/error only.
   - **RTL**: Mandatory `[dir="rtl"]` overrides. Use `$is_hebrew ? 'HE' : 'EN'` pattern in PHP.
 
 ## 🛠 Tech Stack Constraints

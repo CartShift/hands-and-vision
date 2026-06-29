@@ -27,7 +27,9 @@ The primary audience is Hebrew-speaking. All designs must be tested for RTL (Rig
 - **Colors**: **Professional Gradient Strategy** (Client Palette):
   - **Text**: Petrol Blue (`--hv-petrol`) for headings/body.
   - **Accents**: Lilac/Purple (`--hv-lilac`) for overlines, highlights & hover.
-  - **CTAs**: Deep Red (`--hv-primary`) - Only for main actions.
+  - **CTAs**: `.hv-btn--cta` (lilac gradient) for main conversion actions.
+  - **Strong actions**: `.hv-btn--primary` (petrol solid) for form submits.
+  - **Alert/Sale only**: Deep Red (`--hv-primary`) — not for general CTAs.
   - **Backgrounds**: Soft Pink (`--hv-bg-secondary`) & Warm Cream.
   - **Note**: Avoid Orange for text. Use Lilac/Purple for "brand" feel.
 - **Typography**: Inter / Heebo. High contrast.

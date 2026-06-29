@@ -24,13 +24,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <?php
-$hero_poster = get_field( 'hero_poster', get_option( 'page_on_front' ) );
-if ( $hero_poster ) {
-    $poster_url = ( is_array( $hero_poster ) && isset( $hero_poster['url'] ) ) ? $hero_poster['url'] : ( is_string( $hero_poster ) ? $hero_poster : '' );
-    if ( $poster_url ) {
-        echo '<link rel="preload" as="image" href="' . esc_url( $poster_url ) . '" fetchpriority="high">';
-    }
-}
 $favicon_url = get_stylesheet_directory_uri() . '/favicon.ico';
 if ( file_exists( get_stylesheet_directory() . '/favicon.ico' ) ) {
     echo '<link rel="icon" href="' . esc_url( $favicon_url ) . '" sizes="any">';

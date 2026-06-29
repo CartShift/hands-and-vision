@@ -5,7 +5,7 @@
  * A standalone template for the password-protected coming soon page.
  */
 
-$is_hebrew = function_exists( 'handandvision_is_hebrew' ) ? handandvision_is_hebrew() : false;
+$is_hebrew = handandvision_is_hebrew();
 $dir       = $is_hebrew ? 'rtl' : 'ltr';
 $lang      = $is_hebrew ? 'he' : 'en';
 
@@ -18,7 +18,7 @@ $error     = get_query_var( 'hv_maintenance_error' );
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $is_hebrew ? 'בקרוב - ' : 'Coming Soon - '; bloginfo( 'name' ); ?></title>
+    <title><?php echo esc_html( $is_hebrew ? 'בקרוב - ' : 'Coming Soon - ' ); bloginfo( 'name' ); ?></title>
 
     <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,9 +30,9 @@ $error     = get_query_var( 'hv_maintenance_error' );
 
     <style>
         :root {
-            --hv-maintenance-bg: #F9F5F0; /* Warm Cream */
-            --hv-maintenance-text: #2C3E50; /* Petrol */
-            --hv-maintenance-accent: #A890F0; /* Lilac */
+            --hv-maintenance-bg: var(--hv-warm-cream);
+            --hv-maintenance-text: var(--hv-petrol);
+            --hv-maintenance-accent: var(--hv-purple);
         }
 
         body {
@@ -202,13 +202,13 @@ $error     = get_query_var( 'hv_maintenance_error' );
         </div>
 
         <h1 class="hv-maintenance-title">
-            <?php echo $is_hebrew ? 'בקרוב...' : 'Coming Soon'; ?>
+            <?php echo esc_html( $is_hebrew ? 'בקרוב...' : 'Coming Soon' ); ?>
         </h1>
 
         <p class="hv-maintenance-text">
-            <?php echo $is_hebrew
+            <?php echo esc_html( $is_hebrew
                 ? 'אנחנו בונים משהו חדש ומרגש. האתר יפתח בקרוב.'
-                : 'We are curating a new experience. The gallery will open soon.'; ?>
+                : 'We are curating a new experience. The gallery will open soon.' ); ?>
         </p>
 
         <!-- Countdown Timer -->
@@ -231,18 +231,21 @@ $error     = get_query_var( 'hv_maintenance_error' );
             </div>
         </div>
 
+        <?php if ( defined( 'HV_MAINTENANCE_PASSWORD' ) && HV_MAINTENANCE_PASSWORD ) : ?>
         <form method="post" class="hv-pass-form">
+            <?php wp_nonce_field( 'hv_maintenance_login', 'hv_maintenance_nonce' ); ?>
             <input type="password"
                    name="hv_pass"
                    class="hv-pass-input"
-                   placeholder="<?php echo $is_hebrew ? 'סיסמאת גישה' : 'Enter Access Password'; ?>"
+                   placeholder="<?php echo esc_attr( $is_hebrew ? 'סיסמאת גישה' : 'Enter Access Password' ); ?>"
                    required
                    autofocus>
 
             <button type="submit" class="hv-pass-submit">
-                <?php echo $is_hebrew ? 'כניסה' : 'Enter'; ?>
+                <?php echo esc_html( $is_hebrew ? 'כניסה' : 'Enter' ); ?>
             </button>
         </form>
+        <?php endif; ?>
 
         <?php if ( ! empty( $error ) ) : ?>
             <div class="hv-error-message">

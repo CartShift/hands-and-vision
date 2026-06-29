@@ -6,7 +6,7 @@
 (function () {
 	"use strict";
 
-	const isRtl = document.documentElement.dir === "rtl" || document.body.dir === "rtl";
+	const isRtl = document.documentElement.dir === 'rtl' || document.body.dir === 'rtl';
 	const initializedSwipers = new WeakMap();
 	const initAttempts = new WeakMap();
 	const MAX_INIT_ATTEMPTS = 10;
@@ -17,7 +17,7 @@
 			console.warn("Swiper library not loaded. Skipping initialization for:", selector);
 			return null;
 		}
-
+		
 		const el = document.querySelector(selector);
 		if (!el) {
 			return null;
@@ -34,9 +34,9 @@
 		}
 		initAttempts.set(el, attempts + 1);
 
-		const wrapper = el.querySelector(".swiper-wrapper");
-		const slides = wrapper ? wrapper.querySelectorAll(".swiper-slide") : null;
-
+		const wrapper = el.querySelector('.swiper-wrapper');
+		const slides = wrapper ? wrapper.querySelectorAll('.swiper-slide') : null;
+		
 		if (!wrapper || !slides || slides.length === 0) {
 			console.warn("Swiper structure incomplete for:", selector, "- retrying...");
 			setTimeout(() => initSwiper(selector, options), 200);
@@ -55,14 +55,14 @@
 			preventClicks: true,
 			preventClicksPropagation: true,
 			on: {
-				init: function () {
+				init: function() {
 					this.update();
 					this.updateSlidesClasses();
 				},
-				imagesReady: function () {
+				imagesReady: function() {
 					this.update();
 				},
-				resize: function () {
+				resize: function() {
 					this.update();
 				},
 				...(options.on || {})
@@ -70,9 +70,13 @@
 		};
 
 		if (finalOptions.navigation) {
-			const nextEl = typeof finalOptions.navigation.nextEl === "string" ? el.closest(".hv-gallery-carousel-section")?.querySelector(finalOptions.navigation.nextEl) : finalOptions.navigation.nextEl;
-			const prevEl = typeof finalOptions.navigation.prevEl === "string" ? el.closest(".hv-gallery-carousel-section")?.querySelector(finalOptions.navigation.prevEl) : finalOptions.navigation.prevEl;
-
+			const nextEl = typeof finalOptions.navigation.nextEl === 'string' 
+				? el.closest('.hv-gallery-carousel-section')?.querySelector(finalOptions.navigation.nextEl) 
+				: finalOptions.navigation.nextEl;
+			const prevEl = typeof finalOptions.navigation.prevEl === 'string' 
+				? el.closest('.hv-gallery-carousel-section')?.querySelector(finalOptions.navigation.prevEl) 
+				: finalOptions.navigation.prevEl;
+			
 			if (!nextEl || !prevEl) {
 				delete finalOptions.navigation;
 			} else {
@@ -82,8 +86,10 @@
 		}
 
 		if (finalOptions.pagination) {
-			const paginationEl = typeof finalOptions.pagination.el === "string" ? el.querySelector(finalOptions.pagination.el) : finalOptions.pagination.el;
-
+			const paginationEl = typeof finalOptions.pagination.el === 'string'
+				? el.querySelector(finalOptions.pagination.el)
+				: finalOptions.pagination.el;
+			
 			if (!paginationEl) {
 				delete finalOptions.pagination;
 			} else {
@@ -107,8 +113,8 @@
 			clearTimeout(resizeTimeout);
 		}
 		resizeTimeout = setTimeout(() => {
-			initializedSwipers.forEach(swiper => {
-				if (swiper && typeof swiper.update === "function") {
+			initializedSwipers.forEach((swiper) => {
+				if (swiper && typeof swiper.update === 'function') {
 					try {
 						swiper.update();
 					} catch (e) {
@@ -159,13 +165,12 @@
 				loop: false,
 				speed: 600,
 				grabCursor: true,
-				slidesPerView: 1.2,
-				spaceBetween: 16,
-				freeMode: true,
-				breakpoints: {
-					480: { slidesPerView: 2.2, spaceBetween: 20 },
-					768: { slidesPerView: 3.2, spaceBetween: 24 },
-					1200: { slidesPerView: 4, spaceBetween: 32 }
+				slidesPerView: "auto",
+				spaceBetween: 20,
+				freeMode: {
+					enabled: true,
+					sticky: false,
+					momentumRatio: 0.8
 				}
 			});
 		}
@@ -183,6 +188,30 @@
 					480: { slidesPerView: 2.5, spaceBetween: 20 },
 					768: { slidesPerView: 4, spaceBetween: 24 },
 					1200: { slidesPerView: 5, spaceBetween: 32 }
+				}
+			});
+		}
+
+		const artistProjects = document.querySelector(".hv-artist-projects-carousel");
+		if (artistProjects && !initializedSwipers.has(artistProjects)) {
+			initSwiper(".hv-artist-projects-carousel", {
+				loop: true,
+				speed: 600,
+				grabCursor: true,
+				slidesPerView: 1.15,
+				spaceBetween: 20,
+				autoplay: {
+					delay: 5000,
+					disableOnInteraction: false,
+					pauseOnMouseEnter: true
+				},
+				pagination: {
+					el: ".hv-artist-projects-carousel .swiper-pagination",
+					clickable: true
+				},
+				breakpoints: {
+					640: { slidesPerView: 2.1, spaceBetween: 24 },
+					1024: { slidesPerView: 2.8, spaceBetween: 28 }
 				}
 			});
 		}
@@ -207,13 +236,14 @@
 	window.addEventListener("resize", handleResize, { passive: true });
 
 	if (window.MutationObserver) {
-		const observer = new MutationObserver(mutations => {
+		const observer = new MutationObserver((mutations) => {
 			let shouldReinit = false;
-			mutations.forEach(mutation => {
+			mutations.forEach((mutation) => {
 				if (mutation.addedNodes.length > 0) {
-					mutation.addedNodes.forEach(node => {
+					mutation.addedNodes.forEach((node) => {
 						if (node.nodeType === 1) {
-							if ((node.classList && node.classList.contains("hv-gallery-carousel")) || (node.querySelector && node.querySelector(".hv-gallery-carousel"))) {
+							if (node.classList && node.classList.contains('hv-gallery-carousel') ||
+								node.querySelector && node.querySelector('.hv-gallery-carousel')) {
 								shouldReinit = true;
 							}
 						}
@@ -232,11 +262,11 @@
 	}
 
 	if (window.addEventListener) {
-		document.addEventListener("visibilitychange", () => {
+		document.addEventListener('visibilitychange', () => {
 			if (!document.hidden) {
 				setTimeout(() => {
-					initializedSwipers.forEach(swiper => {
-						if (swiper && typeof swiper.update === "function") {
+					initializedSwipers.forEach((swiper) => {
+						if (swiper && typeof swiper.update === 'function') {
 							try {
 								swiper.update();
 							} catch (e) {

@@ -25,6 +25,19 @@ function handandvision_woocommerce_support() {
 add_action( 'after_setup_theme', 'handandvision_woocommerce_support' );
 
 /**
+ * Remove WooCommerce's default single-product title H1 because the custom
+ * single-product.php template already renders one in the hero. Prevents a
+ * duplicate H1 (accessibility + SEO issue).
+ *
+ * @since 3.3.11
+ * @return void
+ */
+function handandvision_remove_wc_single_product_title() {
+    remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_title', 5 );
+}
+add_action( 'init', 'handandvision_remove_wc_single_product_title' );
+
+/**
  * Customize WooCommerce product columns
  *
  * @since 3.3.0

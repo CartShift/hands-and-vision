@@ -14,7 +14,9 @@
  * 5. PAGES - Artist pages, Service pages, Archives, Contact
  * 6. UI OPTIMIZATIONS - Animations, scroll behavior, responsive polish
  *
- * CASCADE ORDER: Base → Components → Pages → Overrides → Polish
+ * CASCADE ORDER: hv-unified.css (tokens + base + components + pages)
+ *              → hv-design-refinements.css (client polish)
+ *              → hv-store-premium.css (WooCommerce only)
  * All responsive @media queries preserved
  * RTL support maintained throughout
  *
@@ -39,9 +41,11 @@
    - Petrol Blue   (#254B61) → Dark accent, headings, footer
 
    USAGE GUIDE:
-   - Use --hv-primary for CTAs and important actions
+   - Use .hv-btn--cta (lilac gradient) for main conversion actions
+   - Use .hv-btn--primary (petrol solid) for form submits & strong actions
+   - Use --hv-primary (deep red) ONLY for sales, errors, destructive states
    - Use --hv-petrol for headers, footers, and dark text
-   - Use --hv-lilac / --hv-purple for brand touches
+   - Use --hv-lilac / --hv-purple for brand touches & focus rings
    - Use --hv-cream / --hv-pink-soft for backgrounds
    ========================================================================== */
 
@@ -131,7 +135,9 @@
 	--hv-link: var(--hv-blue);
 	--hv-link-hover: var(--hv-purple);
 	--hv-hover-accent: var(--hv-lilac); /* General hover color */
-	--hv-focus-ring: var(--hv-purple);
+	--hv-focus-ring: var(--hv-lilac);
+	--hv-overlay-petrol: rgba(37, 75, 97, 0.35);
+	--hv-overlay-dark: rgba(13, 28, 38, 0.82);
 
 	/* Legacy Aliases */
 	--brand-lilac: var(--hv-lilac);
@@ -152,20 +158,120 @@
 	--hv-gradient-primary: linear-gradient(135deg, var(--hv-primary) 0%, var(--hv-orange) 100%);
 	--hv-gradient-petrol: linear-gradient(135deg, var(--hv-petrol) 0%, var(--hv-blue) 100%);
 
-	/* Shadows */
-	--hv-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
-	--hv-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-	--hv-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
-	--hv-shadow-lilac: 0 8px 24px rgba(217, 182, 220, 0.3);
-	--hv-shadow-purple: 0 8px 24px rgba(182, 165, 231, 0.25);
-	--hv-shadow-primary: 0 8px 24px rgba(208, 46, 4, 0.2);
+	/* Legacy compat aliases */
+	--hv-gray: var(--hv-text-muted);
+	--hv-gold: var(--hv-lilac);
+	--hv-gold-dark: var(--hv-petrol);
+	--hv-gray-300: var(--hv-platinum);
+	--hv-gray-900: var(--hv-charcoal);
+	--hv-dark: var(--hv-bg-dark);
+
+	/* Typography — fonts */
+	--hv-font-display: "Heebo", -apple-system, BlinkMacSystemFont, sans-serif;
+	--hv-font-heading: "Heebo", sans-serif;
+	--hv-font-body: "Heebo", "Inter", sans-serif;
+
+	/* Typography — scale */
+	--hv-text-xs: 0.75rem;
+	--hv-text-sm: 0.875rem;
+	--hv-text-base: 1rem;
+	--hv-text-lg: 1.125rem;
+	--hv-text-xl: 1.25rem;
+	--hv-text-2xl: 1.5rem;
+	--hv-text-3xl: clamp(1.875rem, 3vw, 2.5rem);
+	--hv-text-4xl: clamp(2.25rem, 5vw, 3.5rem);
+	--hv-text-5xl: clamp(3rem, 7vw, 5rem);
+
+	/* Typography — tracking & leading */
+	--hv-tracking-tight: -0.02em;
+	--hv-tracking-normal: 0;
+	--hv-tracking-wide: 0.05em;
+	--hv-tracking-wider: 0.1em;
+	--hv-tracking-widest: 0.2em;
+	--hv-tracking-ultra: 0.35em;
+	--hv-leading-tight: 1.1;
+	--hv-leading-snug: 1.25;
+	--hv-leading-normal: 1.5;
+	--hv-leading-relaxed: 1.7;
+	--hv-leading-loose: 2;
+
+	/* Layout */
 	--hv-header-height: 80px;
 	--hv-container-wide: 1400px;
 	--hv-container-narrow: 800px;
-	--hv-space-6: 32px;
 	--hv-hero-padding-top: 0;
 	--hv-hero-padding-bottom: 48px;
-	--hv-page-section-padding-top: 100px;
+	--hv-page-section-padding-top: 72px;
+	--hv-space-1: 4px;
+	--hv-space-2: 8px;
+	--hv-space-3: 12px;
+	--hv-space-4: 16px;
+	--hv-space-5: 24px;
+	--hv-space-6: 32px;
+	--hv-space-7: 48px;
+	--hv-space-8: 64px;
+	--hv-space-9: 96px;
+	--hv-space-10: 128px;
+	--hv-space-11: 80px;
+	--hv-space-12: 96px;
+	--hv-space-16: 160px;
+
+	/*
+	 * Semantic spacing aliases. Prefer these in new code.
+	 * The numeric --hv-space-{11,12} above have a legacy ordering quirk
+	 * (space-11 < space-10, space-12 == space-9) kept for back-compat.
+	 */
+	--hv-space-2xl: 96px;
+	--hv-space-3xl: 128px;
+	--hv-space-4xl: 160px;
+	--hv-space-5xl: 192px;
+	--hv-section-padding-y: 72px;
+	--hv-section-padding-x: var(--hv-space-5);
+
+	/* Breakpoints (reference for custom media) */
+	--hv-bp-sm: 640px;
+	--hv-bp-md: 768px;
+	--hv-bp-nav: 900px;
+	--hv-bp-lg: 1024px;
+	--hv-bp-xl: 1200px;
+
+	/* Border radius */
+	--hv-radius-none: 0;
+	--hv-radius-sm: 4px;
+	--hv-radius-md: 8px;
+	--hv-radius-lg: 12px;
+	--hv-radius-xl: 24px;
+	--hv-radius-2xl: 32px;
+	--hv-radius-full: 9999px;
+
+	/* Shadows */
+	--hv-shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.04);
+	--hv-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+	--hv-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+	--hv-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+	--hv-shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+	--hv-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.1);
+	--hv-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04);
+	--hv-shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.16);
+	--hv-shadow-elevated: 0 16px 48px rgba(0, 0, 0, 0.1), 0 6px 16px rgba(0, 0, 0, 0.05);
+	--hv-shadow-floating: 0 24px 64px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.06);
+	--hv-shadow-lilac: 0 8px 24px rgba(217, 182, 220, 0.3);
+	--hv-shadow-purple: 0 8px 24px rgba(182, 165, 231, 0.25);
+	--hv-shadow-primary: 0 8px 24px rgba(208, 46, 4, 0.2);
+	--hv-shadow-gold: 0 8px 32px rgba(217, 182, 220, 0.3);
+
+	/* Motion */
+	--hv-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+	--hv-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+	--hv-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+	--hv-ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+	--hv-ease-premium: var(--hv-ease-out);
+	--hv-duration-instant: 100ms;
+	--hv-duration-fast: 200ms;
+	--hv-duration-normal: 350ms;
+	--hv-duration-slow: 500ms;
+	--hv-duration-slower: 600ms;
+	--hv-duration-elegant: 800ms;
 }
 
 *,
@@ -180,6 +286,26 @@ body {
 html {
 	scroll-behavior: smooth;
 	scroll-padding-top: var(--hv-header-height);
+}
+
+body {
+	font-family: var(--hv-font-body);
+	font-size: var(--hv-text-base);
+	font-weight: 400;
+	color: var(--hv-text-secondary);
+	line-height: var(--hv-leading-relaxed);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+}
+
+/* Better wrapping for display copy — modern browsers only, gracefully ignored elsewhere. */
+h1, h2, h3, .hv-headline-1, .hv-headline-2, .hv-headline-3, .hv-hero__title,
+.hv-service-single-hero__title, .hv-artist-cinema-hero__name {
+	text-wrap: balance;
+}
+p, li, blockquote, .hv-text-body, .hv-hero__subtitle {
+	text-wrap: pretty;
 }
 /* ==========================================
    HEADER HEIGHT & CONTENT OFFSET (single source: --hv-header-height)
@@ -225,6 +351,38 @@ html {
 	animation-duration: 0.4s;
 	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 	will-change: transform, width, height, object-fit;
+}
+
+/* 3. Shared element morph for cards → singles (artist / product / service / gallery / post). */
+::view-transition-group(*) {
+	animation-duration: 0.5s;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+::view-transition-old(.hv-shared-media),
+::view-transition-new(.hv-shared-media) {
+	animation-duration: 0.5s;
+	animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+	mix-blend-mode: normal;
+}
+
+/* 4. Default root cross-fade (overrides default duration set above for richer feel). */
+::view-transition-old(root) {
+	animation: 0.35s ease-out both fade-out;
+}
+::view-transition-new(root) {
+	animation: 0.45s ease-out 0.05s both fade-in;
+}
+
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+
+/* 5. Respect reduced motion: disable all VT animations. */
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation: none !important;
+	}
 }
 
 @keyframes fade-in-up {
@@ -324,7 +482,7 @@ html {
 .hv-services-hero__gradient {
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(180deg, var(--hv-white) 0%, #faf9f7 100%);
+	background: linear-gradient(180deg, var(--hv-white) 0%, var(--hv-cream) 100%);
 }
 .hv-services-hero__orb,
 .hv-services-hero__lines {
@@ -1610,45 +1768,62 @@ html[dir="rtl"] .hv-lightbox-next {
 }
 
 /* Light button variants for dark backgrounds */
-.hv-btn--outline-light {
-	display: inline-block;
+.hv-btn.hv-btn--outline-light {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	padding: 14px 36px;
-	border: 1px solid rgba(255, 255, 255, 0.8);
+	border: 1.5px solid rgba(255, 255, 255, 0.75);
 	color: var(--hv-white);
 	background: transparent;
-	font-family: "Heebo", sans-serif;
-	font-size: 0.875rem;
+	font-family: var(--hv-font-heading);
+	font-size: var(--hv-text-sm);
 	font-weight: 400;
-	letter-spacing: 0.1em;
+	letter-spacing: var(--hv-tracking-wider);
 	text-decoration: none;
 	text-transform: uppercase;
-	transition: all 0.3s ease;
+	backdrop-filter: blur(4px);
+	-webkit-backdrop-filter: blur(4px);
+	transition:
+		background var(--hv-duration-fast) var(--hv-ease-out),
+		color var(--hv-duration-fast) var(--hv-ease-out),
+		border-color var(--hv-duration-fast) var(--hv-ease-out),
+		transform var(--hv-duration-fast) var(--hv-ease-out),
+		box-shadow var(--hv-duration-normal) var(--hv-ease-out);
 }
 
-.hv-btn--outline-light:hover {
-	background: var(--hv-white);
+.hv-btn.hv-btn--outline-light:hover {
+	background: rgba(255, 255, 255, 0.95);
 	color: var(--hv-petrol);
 	border-color: var(--hv-white);
 	transform: translateY(-2px);
+	box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2);
 }
 
-.hv-btn--ghost-light {
-	display: inline-block;
+.hv-btn.hv-btn.hv-btn--ghost-light {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	padding: 14px 36px;
-	color: var(--hv-white);
+	border: none;
+	color: rgba(255, 255, 255, 0.9);
 	background: transparent;
-	font-family: "Heebo", sans-serif;
-	font-size: 0.875rem;
+	font-family: var(--hv-font-heading);
+	font-size: var(--hv-text-sm);
 	font-weight: 400;
-	letter-spacing: 0.1em;
+	letter-spacing: var(--hv-tracking-wider);
 	text-decoration: none;
 	text-transform: uppercase;
-	transition: all 0.3s ease;
+	transition:
+		color var(--hv-duration-fast) var(--hv-ease-out),
+		transform var(--hv-duration-fast) var(--hv-ease-out);
 }
 
-.hv-btn--ghost-light:hover {
+.hv-btn.hv-btn--ghost-light:hover {
 	color: var(--hv-lilac);
 	transform: translateY(-2px);
+	box-shadow: none;
+	background: transparent;
 }
 
 /* Collective Introduction */
@@ -1796,8 +1971,7 @@ html[dir="rtl"] .hv-lightbox-next {
 }
 
 .hv-services-carousel-bleed {
-	width: 100%;
-	overflow-x: auto;
+	overflow-x: clip;
 	overflow-y: visible;
 }
 
@@ -2392,11 +2566,11 @@ html[dir="rtl"] .hv-lightbox-next {
 	}
 }
 
-/* CTA Section */
+/* CTA Section — light gallery block (matches services CTA) */
 .hv-cta-section {
-	background: var(--hv-black) !important;
-	padding: 160px 24px;
-	color: var(--hv-white) !important;
+	background: linear-gradient(180deg, var(--hv-cream) 0%, var(--hv-warm-cream) 100%);
+	padding: clamp(80px, 10vw, 120px) 24px;
+	color: var(--hv-petrol);
 	position: relative;
 	overflow: hidden;
 	isolation: isolate;
@@ -2406,8 +2580,9 @@ html[dir="rtl"] .hv-lightbox-next {
 	content: "";
 	position: absolute;
 	inset: 0;
-	background: radial-gradient(circle at center, rgba(184, 164, 217, 0.08) 0%, transparent 70%);
-	z-index: -1;
+	background: radial-gradient(circle at 50% 40%, rgba(217, 182, 220, 0.18) 0%, transparent 68%);
+	z-index: 0;
+	pointer-events: none;
 }
 
 .hv-cta-section::after {
@@ -2416,16 +2591,27 @@ html[dir="rtl"] .hv-lightbox-next {
 	top: 0;
 	inset-inline: 0;
 	height: 1px;
-	background: linear-gradient(90deg, transparent, rgba(184, 164, 217, 0.3), transparent);
+	background: linear-gradient(90deg, transparent, var(--hv-lilac-medium), transparent);
+	z-index: 0;
+}
+
+.hv-cta-section .hv-container {
+	position: relative;
+	z-index: 1;
 }
 
 .hv-cta-section .hv-headline-2 {
-	color: var(--hv-white) !important;
+	color: var(--hv-petrol);
 	font-size: clamp(2.5rem, 5vw, 4rem);
 	font-weight: 200;
 	margin-bottom: 24px;
-	letter-spacing: -0.02em;
-	text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+	letter-spacing: var(--hv-tracking-tight);
+	text-shadow: none;
+}
+
+.hv-cta-section .hv-overline,
+.hv-cta-section .hv-overline--gold {
+	color: var(--hv-lilac);
 }
 
 .hv-cta-premium .hv-headline-2 {
@@ -2453,55 +2639,16 @@ html[dir="rtl"] .hv-lightbox-next {
 }
 
 .hv-cta-text {
-	color: rgba(255, 255, 255, 0.7) !important;
+	color: var(--hv-slate);
 	font-size: clamp(1.1rem, 2vw, 1.35rem);
-	margin-bottom: 56px;
+	margin-bottom: 28px;
 	font-weight: 300;
 	line-height: 1.8;
 	max-width: 600px;
-	margin-left: auto;
-	margin-right: auto;
+	margin-inline: auto;
 }
 
-.hv-btn--primary-gold {
-	display: inline-block;
-	padding: 20px 60px;
-	background: linear-gradient(135deg, var(--hv-lilac), var(--hv-lilac-soft));
-	color: var(--hv-white);
-	font-family: "Heebo", sans-serif;
-	font-size: 0.95rem;
-	font-weight: 500;
-	letter-spacing: 0.15em;
-	text-decoration: none;
-	text-transform: uppercase;
-	border-radius: 50px;
-	position: relative;
-	overflow: hidden;
-	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-	box-shadow: 0 8px 30px rgba(184, 164, 217, 0.25), 0 2px 8px rgba(0, 0, 0, 0.05);
-	border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.hv-btn--primary-gold::before {
-	content: "";
-	position: absolute;
-	top: 0;
-	inset-inline-start: -100%;
-	width: 100%;
-	height: 100%;
-	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-	transition: inset-inline-start 0.6s ease;
-}
-
-.hv-btn--primary-gold:hover {
-	transform: translateY(-3px);
-	background: linear-gradient(135deg, var(--hv-purple), var(--hv-lilac));
-	box-shadow: 0 16px 48px rgba(184, 164, 217, 0.4), 0 4px 16px rgba(0, 0, 0, 0.1);
-}
-
-.hv-btn--primary-gold:hover::before {
-	inset-inline-start: 100%;
-}
+/* .hv-btn--cta — see modifier block after .hv-btn--glass */
 
 /* ==========================================
    4. COMPONENTS
@@ -2756,50 +2903,200 @@ html[dir="rtl"] .hv-services-cards .hv-service-card:nth-child(even) .hv-service-
 	background: linear-gradient(135deg, var(--hv-pink) 0%, var(--hv-blue-soft) 100%);
 }
 
-/* Buttons */
+/* Buttons — canonical system */
 .hv-btn {
-	display: inline-block;
-	padding: 16px 40px;
-	font-family: "Heebo", sans-serif;
-	font-size: 0.875rem;
-	font-weight: 400;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--hv-space-2);
+	padding: 14px 36px;
+	font-family: var(--hv-font-heading);
+	font-size: var(--hv-text-sm);
+	font-weight: 500;
 	text-transform: uppercase;
-	letter-spacing: 0.15em;
+	letter-spacing: var(--hv-tracking-wider);
 	text-decoration: none;
+	line-height: 1.2;
 	color: var(--hv-petrol);
 	border: 1px solid var(--hv-petrol);
 	background: transparent;
-	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	border-radius: var(--hv-radius-sm);
+	cursor: pointer;
+	position: relative;
+	overflow: hidden;
+	white-space: nowrap;
+	transition:
+		transform var(--hv-duration-fast) var(--hv-ease-out),
+		box-shadow var(--hv-duration-normal) var(--hv-ease-out),
+		background var(--hv-duration-fast) var(--hv-ease-out),
+		color var(--hv-duration-fast) var(--hv-ease-out),
+		border-color var(--hv-duration-fast) var(--hv-ease-out),
+		filter var(--hv-duration-fast) var(--hv-ease-out);
 }
 
-.hv-btn:hover {
-	background: var(--hv-charcoal);
-	color: var(--hv-white);
+.hv-btn:focus-visible {
+	outline: 2px solid var(--hv-focus-ring);
+	outline-offset: 3px;
+}
+
+.hv-btn:active {
+	transform: translateY(0) scale(0.98);
 }
 
 .hv-btn--large,
 .hv-btn--lg {
-	padding: 20px 60px;
-	font-size: 1rem;
+	padding: 18px 52px;
+	font-size: var(--hv-text-base);
+}
+
+.hv-btn--small {
+	padding: 0.625rem 1.25rem;
+	font-size: var(--hv-text-xs);
+	letter-spacing: var(--hv-tracking-wide);
 }
 
 .hv-btn--primary {
-	background: var(--hv-charcoal);
+	background: var(--hv-petrol);
 	color: var(--hv-white);
 	border-color: var(--hv-petrol);
+	box-shadow: var(--hv-shadow-soft);
 }
 
 .hv-btn--primary:hover {
-	background: #333;
+	background: var(--hv-charcoal);
+	border-color: var(--hv-charcoal);
+	color: var(--hv-white);
+	transform: translateY(-2px);
+	box-shadow: var(--hv-shadow-medium);
+}
+
+.hv-btn--outline {
+	background: transparent;
+	color: var(--hv-petrol);
+	border: 1.5px solid var(--hv-petrol);
+}
+
+.hv-btn--outline:hover {
+	background: var(--hv-petrol);
+	color: var(--hv-white);
+	border-color: var(--hv-petrol);
+	transform: translateY(-2px);
+	box-shadow: var(--hv-shadow-medium);
+}
+
+.hv-btn--ghost {
+	border: none;
+	background: transparent;
+	color: var(--hv-petrol);
+	padding: 12px 24px;
+}
+
+.hv-btn--ghost::after {
+	content: "";
+	position: absolute;
+	bottom: 8px;
+	inset-inline: 24px;
+	height: 1px;
+	background: currentColor;
+	transform: scaleX(0);
+	transform-origin: inline-end;
+	transition: transform var(--hv-duration-normal) var(--hv-ease-out);
+}
+
+.hv-btn--ghost:hover {
+	background: transparent;
+	color: var(--hv-purple);
+	transform: translateY(-1px);
+	box-shadow: none;
+}
+
+.hv-btn--ghost:hover::after {
+	transform: scaleX(1);
+	transform-origin: inline-start;
+}
+
+.hv-btn--glass {
+	background: rgba(255, 255, 255, 0.12);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.25);
+	color: var(--hv-white);
+}
+
+.hv-btn--glass:hover {
+	background: rgba(255, 255, 255, 0.22);
+	border-color: rgba(255, 255, 255, 0.4);
+	color: var(--hv-white);
+	transform: translateY(-2px);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.hv-btn--primary-gold,
+.hv-btn--cta {
+	background: var(--hv-gradient-brand);
+	color: var(--hv-white);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	border-radius: var(--hv-radius-full);
+	padding: 18px 52px;
+	box-shadow: var(--hv-shadow-lilac);
+}
+
+.hv-btn--primary-gold::before,
+.hv-btn--cta::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	inset-inline-start: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+	transition: inset-inline-start var(--hv-duration-slow) var(--hv-ease-out);
+}
+
+.hv-btn--primary-gold:hover,
+.hv-btn--cta:hover {
+	transform: translateY(-3px);
+	background: var(--hv-gradient-cool);
+	box-shadow: var(--hv-shadow-purple), var(--hv-shadow-medium);
+	color: var(--hv-white);
+	border-color: rgba(255, 255, 255, 0.25);
+	filter: brightness(1.03);
+}
+
+.hv-btn--primary-gold:hover::before,
+.hv-btn--cta:hover::before {
+	inset-inline-start: 100%;
+}
+
+.hv-btn.loading {
+	pointer-events: none;
+	opacity: 0.7;
+}
+
+.hv-btn.loading::after {
+	content: "";
+	width: 14px;
+	height: 14px;
+	border: 2px solid currentColor;
+	border-top-color: transparent;
+	border-radius: 50%;
+	animation: hvSpinner 0.6s linear infinite;
+	margin-inline-start: var(--hv-space-2);
+}
+
+@keyframes hvSpinner {
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 /* Section Styles */
 .hv-section {
-	padding: 100px 24px;
+	padding: var(--hv-section-padding-y) var(--hv-section-padding-x);
 }
 
 .hv-section--lg {
-	padding: 140px 24px;
+	padding: var(--hv-space-16) var(--hv-space-5);
 }
 
 .hv-section--white {
@@ -2844,34 +3141,38 @@ html[dir="rtl"] .hv-services-cards .hv-service-card:nth-child(even) .hv-service-
 
 /* Typography */
 .hv-headline-1 {
-	font-family: "Heebo", sans-serif;
-	font-size: 3.5rem;
+	font-family: var(--hv-font-heading);
+	font-size: var(--hv-text-5xl);
 	font-weight: 200;
-	color: var(--hv-petrol);
-	line-height: 1.1;
+	color: var(--hv-text-primary);
+	line-height: var(--hv-leading-tight);
+	letter-spacing: var(--hv-tracking-tight);
 }
 
 .hv-headline-2 {
-	font-family: "Heebo", sans-serif;
-	font-size: 2.5rem;
+	font-family: var(--hv-font-heading);
+	font-size: var(--hv-text-3xl);
 	font-weight: 300;
-	color: var(--hv-petrol);
-	line-height: 1.2;
+	color: var(--hv-text-primary);
+	line-height: var(--hv-leading-snug);
+	letter-spacing: var(--hv-tracking-tight);
 }
 
 .hv-headline-3 {
-	font-family: "Heebo", sans-serif;
-	font-size: 1.5rem;
+	font-family: var(--hv-font-heading);
+	font-size: var(--hv-text-2xl);
 	font-weight: 400;
-	color: var(--hv-petrol);
+	color: var(--hv-text-primary);
+	line-height: var(--hv-leading-snug);
 }
 
 .hv-overline {
-	font-size: 0.75rem;
+	font-family: var(--hv-font-heading);
+	font-size: var(--hv-text-xs);
 	font-weight: 500;
 	text-transform: uppercase;
-	letter-spacing: 0.25em;
-	color: var(--brand-lilac-text, var(--hv-purple));
+	letter-spacing: var(--hv-tracking-ultra);
+	color: var(--hv-text-accent);
 }
 
 .hv-section-header {
@@ -2883,17 +3184,20 @@ html[dir="rtl"] .hv-services-cards .hv-service-card:nth-child(even) .hv-service-
 }
 
 .hv-subtitle {
-	font-size: 1.125rem;
+	font-family: var(--hv-font-body);
+	font-size: var(--hv-text-lg);
 	font-weight: 300;
-	color: #6b6b6b;
-	line-height: 1.8;
+	color: var(--hv-text-muted);
+	line-height: var(--hv-leading-loose);
 }
 
 .hv-intro-statement {
-	font-size: 1.5rem;
-	line-height: 1.8;
-	color: var(--hv-slate);
+	font-family: var(--hv-font-body);
+	font-size: clamp(1.25rem, 3vw, 1.5rem);
+	line-height: var(--hv-leading-loose);
+	color: var(--hv-text-secondary);
 	font-weight: 300;
+	letter-spacing: 0.02em;
 }
 
 /* ==========================================
@@ -2902,7 +3206,7 @@ html[dir="rtl"] .hv-services-cards .hv-service-card:nth-child(even) .hv-service-
 
 .hv-artist-hero {
 	padding: 24px 20px;
-	background-color: #f7f7f5;
+	background-color: var(--hv-snow);
 }
 
 .hv-artist-hero__container {
@@ -3009,7 +3313,7 @@ html[dir="ltr"] .hv-artist-hero__container {
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	background-color: #f7f7f5;
+	background-color: var(--hv-snow);
 	overflow: hidden;
 }
 
@@ -3148,7 +3452,7 @@ html[dir="ltr"] .hv-artist-hero__container {
 /* Archive Pages */
 .hv-archive-header {
 	padding: var(--hv-hero-padding-top) 20px var(--hv-hero-padding-bottom);
-	background-color: #f7f7f5;
+	background-color: var(--hv-snow);
 	text-align: center;
 }
 
@@ -3209,7 +3513,7 @@ html[dir="ltr"] .hv-artist-hero__container {
 /* Contact Page */
 .hv-contact-header {
 	padding: var(--hv-hero-padding-top) 20px var(--hv-hero-padding-bottom);
-	background-color: #f7f7f5;
+	background-color: var(--hv-snow);
 	text-align: center;
 }
 
@@ -3384,8 +3688,9 @@ input[type="submit"]:active {
 
 /* Focus Visibility for Accessibility */
 :focus-visible {
-	outline: 2px solid var(--hv-lilac);
-	outline-offset: 4px;
+	outline: 2px solid var(--hv-focus-ring);
+	outline-offset: 3px;
+	border-radius: var(--hv-radius-sm);
 }
 
 /* Crisp Images */
@@ -3435,13 +3740,27 @@ img {
 /* Legacy Brand Colors - Now referencing main design system (at top of file) */
 /* All --brand-* variables are defined in the main :root block */
 
-/* Scroll To Top Customization */
+/* Scroll To Top (base styles — Astra dynamic CSS is dequeued with astra-theme-css) */
 #ast-scroll-top {
-	background-color: var(--hv-purple);
-	color: var(--hv-white);
-	opacity: 1;
-	transition: all 0.3s ease;
+	display: none;
+	position: fixed;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	cursor: pointer;
 	z-index: 1001;
+	width: 2.75rem;
+	height: 2.75rem;
+	color: var(--hv-white);
+	background-color: var(--hv-purple);
+	border-radius: 2px;
+	outline: inherit;
+	opacity: 1;
+	transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#ast-scroll-top.show {
+	display: flex;
 }
 
 #ast-scroll-top:hover {
@@ -3450,11 +3769,21 @@ img {
 	transform: translateY(-5px);
 }
 
-@media (max-width: 921px) {
-	#ast-scroll-top {
-		display: block;
-		background-color: var(--hv-purple);
-	}
+#ast-scroll-top .ast-icon.icon-arrow svg {
+	margin-inline-start: 0;
+	vertical-align: middle;
+	transform: translate(0, -20%) rotate(180deg);
+	width: 1.6em;
+}
+
+.ast-scroll-to-top-right {
+	inset-inline-end: 30px;
+	bottom: 30px;
+}
+
+.ast-scroll-to-top-left {
+	inset-inline-start: 30px;
+	bottom: 30px;
 }
 
 /* Astra Theme Full Width Override */
@@ -3532,7 +3861,8 @@ body.hv-hero-layout-page .hv-hero + .hv-section {
 
 /* RTL Support for Hebrew - Font Priority Swap */
 html[dir="rtl"] {
-	--hv-font-heading: "Heebo", "Outfit", sans-serif;
+	--hv-font-display: "Heebo", sans-serif;
+	--hv-font-heading: "Heebo", sans-serif;
 	--hv-font-body: "Heebo", "Inter", sans-serif;
 }
 
@@ -3927,6 +4257,7 @@ html[dir="rtl"] {
 		font-size: 0.875rem;
 	}
 
+	.hv-btn--cta,
 	.hv-btn--primary-gold {
 		padding: 14px 36px;
 		font-size: 0.8125rem;
@@ -3937,7 +4268,7 @@ html[dir="rtl"] {
 @media (max-width: 768px) {
 	.hv-cta-section,
 	.hv-cta-premium {
-		padding: 80px 20px;
+		padding: 48px 20px;
 	}
 
 	.hv-cta-section .hv-headline-2 {
@@ -3952,6 +4283,7 @@ html[dir="rtl"] {
 
 	.hv-cta-section .hv-container .hv-btn,
 	.hv-cta-premium .hv-btn,
+	.hv-cta-section .hv-btn--cta,
 	.hv-cta-section .hv-btn--primary-gold,
 	.hv-services-cta-premium__btn,
 	.hv-shop-cta-premium__btn {
@@ -4061,7 +4393,7 @@ html[dir="rtl"] {
 .hv-shop-hero {
 	background: linear-gradient(135deg, var(--hv-white) 0%, var(--hv-off-white) 100%);
 	padding: var(--hv-hero-padding-top) var(--hv-space-6) var(--hv-hero-padding-bottom);
-	margin-bottom: var(--hv-space-12);
+	margin-bottom: var(--hv-section-padding-y);
 }
 
 .hv-shop-hero__content {
@@ -4111,7 +4443,7 @@ html[dir="rtl"] {
 
 /* Shop Category Sections */
 .hv-shop-category {
-	padding: var(--hv-space-12) 0;
+	padding: var(--hv-section-padding-y) 0;
 	border-bottom: 1px solid var(--hv-silver);
 }
 
@@ -4264,7 +4596,7 @@ html[dir="rtl"] {
 }
 
 .hv-product-main {
-	padding: var(--hv-space-12) 0;
+	padding: var(--hv-section-padding-y) 0;
 	background: var(--hv-white);
 }
 
@@ -4277,7 +4609,7 @@ html[dir="rtl"] {
 @media (min-width: 768px) {
 	.hv-product-layout {
 		grid-template-columns: 1fr 1fr;
-		gap: var(--hv-space-12);
+		gap: var(--hv-section-padding-y);
 	}
 }
 
@@ -4370,6 +4702,21 @@ html[dir="rtl"] {
 	margin: var(--hv-space-8) 0;
 }
 
+/* Inquire-only product (no WooCommerce price set) — graceful fallback to a
+   "Request a Quote" path instead of an empty price + broken add-to-cart. */
+.hv-product-inquire-note {
+	font-size: var(--hv-text-lg);
+	line-height: var(--hv-leading-relaxed);
+	color: var(--hv-text-secondary);
+	margin: 0 0 var(--hv-space-5);
+}
+.hv-product-inquire-cta {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--hv-space-3);
+	margin-bottom: var(--hv-space-6);
+}
+
 .hv-product-meta .cart {
 	display: flex;
 	flex-direction: column;
@@ -4434,14 +4781,14 @@ html[dir="rtl"] {
 
 /* Product Description & Specifications */
 .hv-product-description {
-	padding: var(--hv-space-12) 0;
+	padding: var(--hv-section-padding-y) 0;
 	background: var(--hv-off-white);
 }
 
 .hv-product-tabs {
 	display: flex;
 	flex-direction: column;
-	gap: var(--hv-space-12);
+	gap: var(--hv-section-padding-y);
 }
 
 .hv-product-tab h2 {
@@ -4521,7 +4868,7 @@ html[dir="rtl"] {
 
 /* Cart Page */
 .hv-cart-page {
-	padding: var(--hv-space-12) 0;
+	padding: var(--hv-section-padding-y) 0;
 	background: var(--hv-off-white);
 }
 
@@ -4882,11 +5229,13 @@ body.rtl,
 	direction: rtl;
 }
 
-.hv-footer__brand,
-.hv-footer__column,
-.hv-footer__heading,
-.hv-footer__links {
-	text-align: start;
+@media (min-width: 901px) {
+	.hv-footer__brand,
+	.hv-footer__column,
+	.hv-footer__heading,
+	.hv-footer__links {
+		text-align: start;
+	}
 }
 
 .hv-footer__bottom {
@@ -4920,35 +5269,6 @@ html[dir="rtl"] .hv-lightbox-next svg {
  * HAND AND VISION - Layout Fixes & Critical CSS moved from functions.php
  * moved to file to allow proper cascading and RTL overrides.
  */
-
-/* ========================================
-   GLOBAL UI/UX OPTIMIZATIONS
-   ======================================== */
-html {
-	scroll-behavior: smooth;
-	scroll-padding-top: var(--hv-header-height);
-}
-
-/* Tactile Feedback for all interactive elements */
-.hv-btn:active,
-button:active,
-a.button:active,
-input[type="submit"]:active {
-	transform: scale(0.98) translateY(0) !important;
-	transition-duration: 0.1s !important;
-}
-
-/* Focus Visibility for Accessibility */
-:focus-visible {
-	outline: 2px solid var(--hv-gold, var(--hv-lilac));
-	outline-offset: 4px;
-}
-
-/* Crisp Images */
-img {
-	-webkit-backface-visibility: hidden;
-	backface-visibility: hidden;
-}
 
 .hv-hidden {
 	display: none !important;
@@ -5446,20 +5766,7 @@ ul.hv-nav-menu a,
 	background: var(--hv-petrol) !important; /* Dark Brand Blue */
 }
 
-/* CTA premium section */
-.hv-cta-section {
-	background: var(--hv-cream) !important; /* Cream Background */
-	padding: 120px 24px;
-	color: var(--hv-petrol) !important;
-}
-
-.hv-cta-section .hv-headline-2 {
-	color: var(--hv-petrol) !important;
-}
-
-.hv-cta-section .hv-cta-text {
-	color: var(--hv-slate) !important;
-}
+/* CTA premium section — base styles at .hv-cta-section (light warm block) */
 
 /* Gallery mosaic placeholder styling */
 .hv-gallery-mosaic__placeholder {
@@ -5560,22 +5867,6 @@ ul.hv-nav-menu a,
 .hv-overline,
 .hv-subtitle {
 	color: var(--hv-lilac) !important;
-}
-
-/* Buttons Gradients - Using new primary colors */
-.hv-btn--primary,
-button[type="submit"],
-input[type="submit"] {
-	background: var(--hv-gradient-cool) !important;
-	color: white !important;
-	border: none !important;
-	transition: all 0.3s ease !important;
-}
-
-.hv-btn--primary:hover {
-	background: var(--hv-gradient-brand) !important;
-	transform: translateY(-2px);
-	box-shadow: var(--hv-shadow-purple);
 }
 
 /* Service Icons - Unified Brand Style (Lilac/Purple) */
@@ -5788,55 +6079,13 @@ input[type="submit"] {
 	display: block;
 }
 
-/* Buttons */
-.hv-btn {
-	display: inline-block !important;
-	padding: 14px 32px !important;
-	font-family: "Heebo", sans-serif !important;
-	font-size: 0.875rem !important;
-	font-weight: 400 !important;
-	letter-spacing: 0.1em !important;
-	text-decoration: none !important;
-	text-transform: uppercase !important;
-	transition: all 0.3s ease !important;
-	cursor: pointer !important;
-}
-
-.hv-btn--outline {
-	border: 1px solid var(--hv-petrol) !important;
-	color: var(--hv-petrol) !important;
-	background: transparent !important;
-}
-
-.hv-btn--outline:hover {
-	background: var(--hv-charcoal) !important;
-	color: var(--hv-white) !important;
-}
-
-.hv-btn--ghost {
-	border: none !important;
-	color: var(--hv-petrol) !important;
-	background: transparent !important;
-	position: relative !important;
-}
-
-.hv-btn--primary {
-	background: var(--hv-charcoal) !important;
-	color: var(--hv-white) !important;
-	border: 1px solid var(--hv-petrol) !important;
-}
-
-.hv-btn--primary:hover {
-	background: #333 !important;
-}
-
 /* Section styles */
 .hv-section {
-	padding: 100px 24px !important;
+	padding: var(--hv-section-padding-y) 24px !important;
 }
 
 .hv-section--lg {
-	padding: 140px 24px !important;
+	padding: clamp(72px, 10vw, 96px) 24px !important;
 }
 
 /* Container */
@@ -6105,70 +6354,6 @@ input[type="submit"] {
 	z-index: 10;
 }
 
-/* Light button variants for dark backgrounds */
-.hv-btn--outline-light {
-	display: inline-block;
-	padding: 14px 36px;
-	border: 1px solid rgba(255, 255, 255, 0.8);
-	color: var(--brand-white);
-	background: transparent;
-	font-family: "Heebo", sans-serif;
-	font-size: 0.875rem;
-	font-weight: 400;
-	letter-spacing: 0.1em;
-	text-decoration: none;
-	text-transform: uppercase;
-	transition: all 0.3s ease;
-}
-
-.hv-btn--outline-light:hover {
-	background: var(--brand-white);
-	color: var(--hv-petrol);
-	border-color: var(--brand-white);
-	transform: translateY(-2px);
-}
-
-.hv-btn--ghost-light {
-	display: inline-block;
-	padding: 14px 36px;
-	color: var(--brand-white);
-	background: transparent;
-	font-family: "Heebo", sans-serif;
-	font-size: 0.875rem;
-	font-weight: 400;
-	letter-spacing: 0.1em;
-	text-decoration: none;
-	text-transform: uppercase;
-	transition: all 0.3s ease;
-}
-
-.hv-btn--ghost-light:hover {
-	color: var(--hv-lilac);
-	transform: translateY(-2px);
-}
-
-.hv-btn--outline-light:hover {
-	background: var(--hv-white);
-	color: var(--hv-petrol);
-}
-
-.hv-btn--ghost-light {
-	display: inline-block;
-	padding: 14px 36px;
-	border: none;
-	color: rgba(255, 255, 255, 0.85);
-	background: transparent;
-	font-family: "Heebo", sans-serif;
-	font-size: 0.875rem;
-	font-weight: 400;
-	letter-spacing: 0.1em;
-	text-decoration: none;
-}
-
-.hv-btn--ghost-light:hover {
-	color: var(--hv-lilac);
-}
-
 /* ========================================
    ASTRA THEME FULL WIDTH OVERRIDE (Homepage)
    ======================================== */
@@ -6244,14 +6429,13 @@ input[type="submit"] {
 	box-sizing: border-box !important;
 }
 
-/* 4. Fix Hero Video to be Full Screen */
+/* 4. Hero video — full viewport; header overlap handled in hv-design-refinements.css */
 .hv-hero-video {
-	height: 90vh !important; /* Slightly less than full height to show content exists */
-	min-height: 600px !important;
+	min-height: min(100svh, 900px);
 }
 
 .hv-section-header {
-	margin-bottom: 60px;
+	margin-bottom: var(--hv-space-7);
 	text-align: center;
 }
 
@@ -6625,40 +6809,7 @@ input[type="submit"] {
 	}
 }
 
-/* CTA Section */
-.hv-cta-section {
-	background: var(--hv-cream) !important; /* Cream Background */
-	padding: 120px 24px;
-	color: var(--hv-petrol) !important;
-}
-
-.hv-cta-section .hv-headline-2 {
-	color: var(--hv-petrol) !important;
-}
-
-.hv-cta-text {
-	color: var(--hv-slate) !important;
-	font-size: 1.1rem;
-	margin-bottom: 40px;
-}
-
-.hv-btn--primary-gold {
-	display: inline-block;
-	padding: 16px 48px;
-	background: var(--hv-lilac);
-	color: var(--hv-white);
-	font-family: "Heebo", sans-serif;
-	font-size: 0.9rem;
-	font-weight: 500;
-	letter-spacing: 0.1em;
-	text-decoration: none;
-	text-transform: uppercase;
-	transition: all 0.3s ease;
-}
-
-.hv-btn--primary-gold:hover {
-	background: var(--hv-purple);
-}
+/* CTA Section — see .hv-cta-section block in HOMEPAGE section */
 
 /* ========================================
    Responsive
@@ -7331,7 +7482,7 @@ html[dir="rtl"] .hv-services-cards .hv-service-card:hover .hv-service-card__btn 
 		grid-template-columns: 1fr;
 		grid-template-rows: 400px auto;
 		min-height: auto;
-		border-bottom: 10px solid #f7f7f5;
+		border-bottom: 10px solid var(--hv-snow);
 	}
 
 	.hv-services-cards .hv-service-card:last-child {
@@ -8778,9 +8929,9 @@ html[dir="rtl"] .hv-gallery-filters__count {
 
 .woocommerce .woocommerce-pagination ul li a:hover,
 .woocommerce .woocommerce-pagination ul li span.current {
-	background: var(--hv-primary, #2c5f2d);
+	background: var(--hv-petrol);
 	color: var(--hv-white);
-	border-color: var(--hv-primary, #2c5f2d);
+	border-color: var(--hv-petrol);
 }
 
 /* WooCommerce Messages */
@@ -8794,9 +8945,9 @@ html[dir="rtl"] .hv-gallery-filters__count {
 }
 
 .woocommerce-message {
-	background: #f0f9f0;
-	border-color: var(--hv-primary, #2c5f2d);
-	color: #1a5a1a;
+	background: var(--hv-lilac-soft);
+	border-color: var(--hv-purple);
+	color: var(--hv-petrol);
 }
 
 .woocommerce-info {
@@ -8831,7 +8982,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 }
 
 .woocommerce-breadcrumb a:hover {
-	color: var(--hv-primary, #2c5f2d);
+	color: var(--hv-petrol);
 }
 
 .hv-product-main {
@@ -8894,7 +9045,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 .hv-product-gallery .flex-control-thumbs li:hover img,
 .hv-product-gallery .flex-control-thumbs li.flex-active img {
 	opacity: 1;
-	border-color: var(--hv-primary, #2c5f2d);
+	border-color: var(--hv-petrol);
 }
 
 /* Sale Flash Badge */
@@ -8937,7 +9088,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 }
 
 .hv-product-artist__link:hover {
-	color: var(--hv-primary, #2c5f2d);
+	color: var(--hv-petrol);
 }
 
 .hv-product-artist h3 {
@@ -9032,7 +9183,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 
 .hv-product-meta .cart .quantity input[type="number"]:focus {
 	outline: none;
-	border-color: var(--hv-primary, #2c5f2d);
+	border-color: var(--hv-petrol);
 }
 
 .hv-product-meta .cart .button {
@@ -9041,7 +9192,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 	padding: 18px 40px;
 	font-size: 1rem;
 	font-weight: 600;
-	background: var(--hv-primary, #2c5f2d);
+	background: var(--hv-petrol);
 	color: var(--hv-white);
 	border: none;
 	border-radius: 0;
@@ -9097,7 +9248,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 
 .hv-product-meta .variations select:focus {
 	outline: none;
-	border-color: var(--hv-primary, #2c5f2d);
+	border-color: var(--hv-petrol);
 }
 
 .hv-product-meta .variations .reset_variations {
@@ -9110,7 +9261,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 }
 
 .hv-product-meta .variations .reset_variations:hover {
-	color: var(--hv-primary, #2c5f2d);
+	color: var(--hv-petrol);
 }
 
 .hv-product-status {
@@ -9196,7 +9347,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 }
 
 .product_meta a {
-	color: var(--hv-primary, #2c5f2d);
+	color: var(--hv-petrol);
 	text-decoration: none;
 	transition: color 0.3s ease;
 	font-weight: 500;
@@ -9399,17 +9550,12 @@ html[dir="rtl"] .hv-gallery-filters__count {
 
 /* Improved Focus States for Accessibility */
 .hv-product-card:focus-within {
-	outline: 2px solid var(--hv-primary, #2c5f2d);
+	outline: 2px solid var(--hv-focus-ring);
 	outline-offset: 2px;
 }
 
 .hv-product-card__link:focus {
 	outline: none;
-}
-
-.hv-btn:focus {
-	outline: 2px solid var(--hv-primary, #2c5f2d);
-	outline-offset: 2px;
 }
 
 /* ========================================
@@ -9425,57 +9571,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
    BASE COMPONENTS - Container, Button, Typography Utilities
    ========================================================================== */
 
-/* Design Tokens */
-/* NOTE: Color tokens are now defined in the main :root block at the top of this file */
-/* The following are layout/spacing tokens that complement the color system */
-:root {
-	/* Layout Spacing Scale */
-	--hv-space-1: 4px;
-	--hv-space-2: 8px;
-	--hv-space-3: 12px;
-	--hv-space-4: 16px;
-	--hv-space-5: 24px;
-	--hv-space-6: 32px;
-	--hv-space-7: 48px;
-	--hv-space-8: 64px;
-	--hv-space-9: 96px;
-	--hv-space-10: 128px;
-
-	/* Container Sizes */
-	--hv-container-wide: 1400px;
-	--hv-container-narrow: 800px;
-
-	/* Border Radius */
-	--hv-radius-sm: 4px;
-	--hv-radius-md: 8px;
-	--hv-radius-lg: 16px;
-	--hv-radius-xl: 24px;
-	--hv-radius-full: 9999px;
-
-	/* Neutral Shadows (kept for non-branded use) */
-	--hv-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
-	--hv-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-	--hv-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
-	--hv-shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.16);
-	--hv-shadow-gold: 0 8px 32px rgba(217, 182, 220, 0.3); /* Updated to new lilac */
-
-	/* Animation */
-	--hv-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-	--hv-duration-fast: 200ms;
-	--hv-duration-normal: 350ms;
-	--hv-duration-slow: 500ms;
-
-	/* Typography Scale */
-	--hv-text-xs: 0.75rem;
-	--hv-text-sm: 0.875rem;
-	--hv-text-base: 1rem;
-	--hv-text-lg: 1.125rem;
-	--hv-text-xl: 1.25rem;
-	--hv-text-2xl: 1.5rem;
-	--hv-text-3xl: clamp(1.875rem, 3vw, 2.5rem);
-	--hv-text-4xl: clamp(2.25rem, 5vw, 3.5rem);
-	--hv-text-5xl: clamp(3rem, 7vw, 5rem);
-}
+/* Design tokens — consolidated in :root at top of file */
 
 /* Container */
 .hv-container {
@@ -9505,91 +9601,39 @@ html[dir="rtl"] .hv-gallery-filters__count {
 }
 
 .hv-headline-1 {
-	font-family: "Heebo", sans-serif;
+	font-family: var(--hv-font-heading);
 	font-size: var(--hv-text-5xl);
 	font-weight: 200;
-	letter-spacing: -0.02em;
-	line-height: 1.1;
-	color: var(--hv-charcoal);
+	letter-spacing: var(--hv-tracking-tight);
+	line-height: var(--hv-leading-tight);
+	color: var(--hv-text-primary);
 	margin: 0;
 }
 
 .hv-headline-2 {
-	font-family: "Heebo", sans-serif;
+	font-family: var(--hv-font-heading);
 	font-size: var(--hv-text-3xl);
 	font-weight: 300;
-	letter-spacing: -0.01em;
-	line-height: 1.2;
-	color: var(--hv-charcoal);
+	letter-spacing: var(--hv-tracking-tight);
+	line-height: var(--hv-leading-snug);
+	color: var(--hv-text-primary);
 	margin: 0;
 }
 
 .hv-headline-3 {
-	font-family: "Heebo", sans-serif;
+	font-family: var(--hv-font-heading);
 	font-size: var(--hv-text-2xl);
 	font-weight: 300;
-	color: var(--hv-charcoal);
+	color: var(--hv-text-primary);
 	margin: 0;
 }
 
 .hv-subtitle {
+	font-family: var(--hv-font-body);
 	font-size: var(--hv-text-lg);
 	font-weight: 300;
-	color: var(--hv-gray);
-	line-height: 1.8;
-}
-
-/* Buttons */
-.hv-btn {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	gap: var(--hv-space-2);
-	padding: 1rem 2rem;
-	font-family: "Heebo", sans-serif;
-	font-size: var(--hv-text-sm);
-	font-weight: 500;
-	text-transform: uppercase;
-	letter-spacing: 0.15em;
-	text-decoration: none;
-	border: 1px solid transparent;
-	border-radius: var(--hv-radius-full);
-	cursor: pointer;
-	transition: all 0.4s var(--hv-ease-out);
-	position: relative;
-	overflow: hidden;
-}
-
-.hv-btn--primary {
-	background: var(--hv-charcoal);
-	color: var(--hv-white);
-	border-color: var(--hv-charcoal);
-	box-shadow: var(--hv-shadow-md);
-}
-
-.hv-btn--primary:hover {
-	background: var(--hv-gold-dark);
-	border-color: var(--hv-gold-dark);
-	transform: translateY(-3px);
-	box-shadow: var(--hv-shadow-lg), var(--hv-shadow-gold);
-}
-
-.hv-btn--outline {
-	background: transparent;
-	color: var(--hv-charcoal);
-	border-color: var(--hv-charcoal);
-}
-
-.hv-btn--outline:hover {
-	background: var(--hv-charcoal);
-	color: var(--hv-white);
-	transform: translateY(-2px);
-	box-shadow: var(--hv-shadow-md);
-}
-
-.hv-btn--small {
-	padding: 0.625rem 1.25rem;
-	font-size: var(--hv-text-xs);
+	color: var(--hv-text-muted);
+	line-height: var(--hv-leading-loose);
 }
 
 /* Reveal Animation - hidden only when .hv-js-ready; default visible for no-JS */
@@ -10257,29 +10301,6 @@ html[dir="rtl"] .hv-gallery-filters__count {
 	transform: translateX(-50%) translateY(0);
 }
 
-/* Loading State for Add to Cart */
-.hv-btn.loading {
-	pointer-events: none;
-	opacity: 0.7;
-}
-
-.hv-btn.loading::after {
-	content: "";
-	width: 14px;
-	height: 14px;
-	border: 2px solid currentColor;
-	border-top-color: transparent;
-	border-radius: 50%;
-	animation: hvSpinner 0.6s linear infinite;
-	margin-inline-start: var(--hv-space-2);
-}
-
-@keyframes hvSpinner {
-	to {
-		transform: rotate(360deg);
-	}
-}
-
 /* Added to Cart State */
 .hv-btn.added::after {
 	content: "✓";
@@ -10794,7 +10815,7 @@ html[dir="rtl"] .hv-gallery-filters__count {
 /* Empty Cart State */
 .woocommerce-cart .cart-empty {
 	text-align: center;
-	padding: var(--hv-space-12) var(--hv-space-6);
+	padding: var(--hv-section-padding-y) var(--hv-space-6);
 	background: var(--hv-cream);
 	border-radius: var(--hv-radius-lg);
 	margin: var(--hv-space-8) 0;
@@ -11174,24 +11195,6 @@ html[dir="rtl"] .hv-gallery-filters__count {
 	margin-bottom: var(--hv-space-3);
 }
 
-/* Accessibility - Focus States */
-.hv-product-card__link:focus,
-.hv-btn:focus {
-	outline: 3px solid var(--hv-lilac);
-	outline-offset: 3px;
-}
-
-.hv-product-card__link:focus:not(:focus-visible),
-.hv-btn:focus:not(:focus-visible) {
-	outline: none;
-}
-
-.hv-product-card__link:focus-visible,
-.hv-btn:focus-visible {
-	outline: 3px solid var(--hv-lilac);
-	outline-offset: 3px;
-}
-
 /* Empty States */
 .hv-empty-state {
 	text-align: center;
@@ -11253,63 +11256,11 @@ html[dir="rtl"] .hv-gallery-filters__count {
    1. REFINED CSS CUSTOM PROPERTIES (DESIGN TOKENS)
    ========================================================================== */
 
-/* NOTE: All color tokens are defined in the main :root block at the top of this file */
-/* The following are typography/animation refinement tokens */
-:root {
-	/* Typography Fonts */
-	--hv-font-display: "Heebo", -apple-system, BlinkMacSystemFont, sans-serif;
-	--hv-font-body: "Heebo", -apple-system, BlinkMacSystemFont, sans-serif;
-
-	/* Letter Spacing */
-	--hv-tracking-tight: -0.02em;
-	--hv-tracking-normal: 0;
-	--hv-tracking-wide: 0.05em;
-	--hv-tracking-wider: 0.1em;
-	--hv-tracking-widest: 0.2em;
-	--hv-tracking-ultra: 0.35em;
-
-	/* Line Heights */
-	--hv-leading-tight: 1.1;
-	--hv-leading-snug: 1.25;
-	--hv-leading-normal: 1.5;
-	--hv-leading-relaxed: 1.7;
-	--hv-leading-loose: 2;
-
-	/* Premium Shadows - Multi-layer (kept for refinement layer) */
-	--hv-shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.04);
-	--hv-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
-	--hv-shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
-	--hv-shadow-large: 0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04);
-	--hv-shadow-elevated: 0 16px 48px rgba(0, 0, 0, 0.1), 0 6px 16px rgba(0, 0, 0, 0.05);
-	--hv-shadow-floating: 0 24px 64px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.06);
-
-	/* Extended Timing Functions */
-	--hv-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-	--hv-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-	--hv-ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-	--hv-ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
-
-	/* Extended Durations */
-	--hv-duration-instant: 100ms;
-	--hv-duration-slower: 600ms;
-	--hv-duration-elegant: 800ms;
-
-	/* Extended Border Radii */
-	--hv-radius-none: 0;
-	--hv-radius-lg: 12px;
-	--hv-radius-2xl: 24px;
-}
+/* Design tokens — consolidated in :root at top of file */
 
 /* ==========================================================================
    2. REFINED TYPOGRAPHY
    ========================================================================== */
-
-/* Base text rendering */
-body {
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-rendering: optimizeLegibility;
-}
 
 /* Headings - Refined weight and spacing */
 .hv-display {
@@ -11359,138 +11310,6 @@ p,
 	line-height: var(--hv-leading-loose) !important;
 	letter-spacing: 0.02em !important;
 	color: var(--hv-slate) !important;
-}
-
-/* ==========================================================================
-   3. REFINED BUTTON SYSTEM
-   ========================================================================== */
-
-/* Base button refinements */
-.hv-btn {
-	position: relative !important;
-	overflow: hidden !important;
-	font-size: 0.8125rem !important; /* 13px */
-	font-weight: 500 !important;
-	letter-spacing: var(--hv-tracking-wider) !important;
-	padding: 14px 36px !important;
-	border-radius: var(--hv-radius-sm) !important;
-	transition: transform var(--hv-duration-fast) var(--hv-ease-out), box-shadow var(--hv-duration-normal) var(--hv-ease-out), background var(--hv-duration-fast) var(--hv-ease-out),
-		color var(--hv-duration-fast) var(--hv-ease-out), border-color var(--hv-duration-fast) var(--hv-ease-out) !important;
-	will-change: transform;
-}
-
-/* Button shine effect on hover */
-.hv-btn::before {
-	content: "";
-	position: absolute;
-	top: 0;
-	left: -100%;
-	width: 100%;
-	height: 100%;
-	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-	transition: left var(--hv-duration-slow) var(--hv-ease-out);
-	pointer-events: none;
-}
-
-.hv-btn:hover::before {
-	left: 100%;
-}
-
-/* Primary button - more premium */
-.hv-btn--primary {
-	background: linear-gradient(135deg, var(--hv-charcoal) 0%, var(--hv-graphite) 100%) !important;
-	border: 1px solid var(--hv-charcoal) !important;
-	box-shadow: var(--hv-shadow-soft) !important;
-}
-
-.hv-btn--primary:hover {
-	transform: translateY(-2px) !important;
-	box-shadow: var(--hv-shadow-medium) !important;
-	background: linear-gradient(135deg, var(--hv-graphite) 0%, var(--hv-slate) 100%) !important;
-}
-
-.hv-btn--primary:active {
-	transform: translateY(0) scale(0.98) !important;
-	box-shadow: var(--hv-shadow-subtle) !important;
-}
-
-/* Outline button refinements */
-.hv-btn--outline {
-	border-width: 1.5px !important;
-	background: transparent !important;
-}
-
-.hv-btn--outline:hover {
-	transform: translateY(-2px) !important;
-	background: var(--hv-charcoal) !important;
-	box-shadow: var(--hv-shadow-medium) !important;
-}
-
-/* Ghost button refinements */
-.hv-btn--ghost {
-	padding: 12px 24px !important;
-	position: relative !important;
-}
-
-.hv-btn--ghost::after {
-	content: "";
-	position: absolute;
-	bottom: 8px;
-	left: 24px;
-	right: 24px;
-	height: 1px;
-	background: currentColor;
-	transform: scaleX(0);
-	transform-origin: right;
-	transition: transform var(--hv-duration-normal) var(--hv-ease-out);
-}
-
-.hv-btn--ghost:hover::after {
-	transform: scaleX(1);
-	transform-origin: left;
-}
-
-/* Gold/Lilac accent button */
-.hv-btn--primary-gold {
-	background: linear-gradient(135deg, var(--hv-lilac) 0%, var(--hv-purple) 100%) !important;
-	border: none !important;
-	color: var(--hv-white) !important;
-	box-shadow: var(--hv-shadow-lilac) !important;
-	text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-}
-
-.hv-btn--primary-gold:hover {
-	transform: translateY(-3px) !important;
-	box-shadow: 0 12px 32px rgba(199, 178, 224, 0.3), 0 6px 12px rgba(199, 178, 224, 0.15) !important;
-	filter: brightness(1.05);
-}
-
-/* Light button variants */
-.hv-btn--outline-light {
-	border: 1.5px solid rgba(255, 255, 255, 0.7) !important;
-	backdrop-filter: blur(4px);
-	-webkit-backdrop-filter: blur(4px);
-}
-
-.hv-btn--outline-light:hover {
-	background: rgba(255, 255, 255, 0.95) !important;
-	border-color: var(--hv-white) !important;
-	color: var(--hv-charcoal) !important;
-	box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2) !important;
-}
-
-.hv-btn--glass {
-	background: rgba(255, 255, 255, 0.1) !important;
-	backdrop-filter: blur(8px) !important;
-	-webkit-backdrop-filter: blur(8px) !important;
-	border: 1px solid rgba(255, 255, 255, 0.2) !important;
-	color: var(--hv-white) !important;
-}
-
-.hv-btn--glass:hover {
-	background: rgba(255, 255, 255, 0.2) !important;
-	border-color: rgba(255, 255, 255, 0.35) !important;
-	transform: translateY(-2px) !important;
 }
 
 /* ==========================================================================
@@ -11802,7 +11621,7 @@ html[dir="rtl"] .hv-footer__links a:hover {
 
 /* Section headers - refined spacing */
 .hv-section-header {
-	margin-bottom: 56px !important;
+	margin-bottom: var(--hv-space-7) !important;
 }
 
 .hv-section-header .hv-overline {
@@ -11828,8 +11647,7 @@ html[dir="rtl"] .hv-footer__links a:hover {
    ========================================================================== */
 
 .hv-cta-section {
-	background: linear-gradient(135deg, var(--hv-cream) 0%, var(--hv-snow) 100%) !important;
-	padding: 140px 24px !important;
+	padding: clamp(64px, 9vw, 120px) 24px !important;
 	position: relative !important;
 	overflow: hidden !important;
 }
@@ -11838,26 +11656,27 @@ html[dir="rtl"] .hv-footer__links a:hover {
 	content: "";
 	position: absolute;
 	top: 50%;
-	left: 50%;
-	width: 800px;
-	height: 800px;
-	background: radial-gradient(circle, var(--hv-lilac-subtle) 0%, transparent 70%);
+	inset-inline-start: 50%;
+	width: min(800px, 120vw);
+	height: min(800px, 120vw);
+	background: radial-gradient(circle, var(--hv-lilac-soft) 0%, transparent 70%);
 	transform: translate(-50%, -50%);
 	pointer-events: none;
+	z-index: 0;
 }
 
 .hv-cta-section .hv-headline-2 {
 	font-size: clamp(2rem, 5vw, 3.5rem) !important;
 	font-weight: 200 !important;
 	letter-spacing: var(--hv-tracking-tight) !important;
-	color: var(--hv-charcoal) !important;
-	margin-bottom: 20px !important;
+	color: var(--hv-petrol) !important;
+	margin-bottom: 16px !important;
 }
 
 .hv-cta-section .hv-cta-text {
-	font-size: clamp(1rem, 2vw, 1.25rem) !important;
+	font-size: clamp(1rem, 2vw, 1.125rem) !important;
 	color: var(--hv-slate) !important;
-	margin-bottom: 40px !important;
+	margin-bottom: 28px !important;
 	font-weight: 300 !important;
 }
 
@@ -11943,13 +11762,6 @@ html[dir="rtl"] .hv-footer__links a:hover {
    13. ACCESSIBILITY REFINEMENTS
    ========================================================================== */
 
-/* Focus states - elegant and accessible */
-:focus-visible {
-	outline: 2px solid var(--hv-lilac) !important;
-	outline-offset: 3px !important;
-	border-radius: var(--hv-radius-sm);
-}
-
 /* Skip link */
 .skip-link:focus {
 	background: var(--hv-charcoal) !important;
@@ -11996,30 +11808,6 @@ html[dir="rtl"] .hv-footer__links a:hover {
 /* ==========================================================================
    14. MICRO-INTERACTIONS
    ========================================================================== */
-
-/* Loading state for buttons */
-.hv-btn.loading {
-	pointer-events: none;
-	opacity: 0.7;
-}
-
-.hv-btn.loading::after {
-	content: "";
-	position: absolute;
-	width: 16px;
-	height: 16px;
-	border: 2px solid transparent;
-	border-top-color: currentColor;
-	border-radius: 50%;
-	animation: hv-spin 0.6s linear infinite;
-	margin-left: 8px;
-}
-
-@keyframes hv-spin {
-	to {
-		transform: rotate(360deg);
-	}
-}
 
 /* Image loading placeholder */
 .hv-img-loading {
@@ -13635,7 +13423,7 @@ html[dir="rtl"] .hv-footer__links a:hover {
 .hv-services-hero__gradient {
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(180deg, var(--hv-white) 0%, #faf9f7 100%);
+	background: linear-gradient(180deg, var(--hv-white) 0%, var(--hv-cream) 100%);
 }
 
 .hv-services-hero__orb,
@@ -14960,18 +14748,22 @@ html[dir="rtl"] .hv-footer__links a:hover {
    ------------------------------------------------------------------------- */
 .hv-gallery-carousel-section {
     overflow: hidden;
-    padding-bottom: var(--size-12);
-    background: var(--hv-dark);
+    padding-bottom: var(--hv-space-6);
+    background: var(--hv-bg-dark);
 }
 
 .hv-gallery-carousel-section .hv-container:has(.hv-gallery-carousel) {
     padding-bottom: 0;
 }
 
+.hv-gallery-carousel-section > .hv-container:first-child {
+    padding-bottom: 0;
+}
+
 .hv-gallery-carousel {
     position: relative;
     width: 100%;
-    margin-top: var(--size-8);
+    margin-top: var(--hv-space-5);
     padding-bottom: 0;
     overflow: visible;
 }
@@ -14996,7 +14788,7 @@ html[dir="rtl"] .hv-footer__links a:hover {
     position: relative;
     aspect-ratio: 3/4;
     overflow: hidden;
-    border-radius: var(--radius-md);
+    border-radius: var(--hv-radius-md);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     background: var(--hv-gray-900);
@@ -15025,7 +14817,7 @@ html[dir="rtl"] .hv-footer__links a:hover {
 }
 
 .hv-gallery-carousel__info {
-    margin-top: var(--size-4);
+    margin-top: var(--hv-space-4);
     text-align: center;
     opacity: 0.85;
     transition: opacity 0.3s ease;
@@ -15111,25 +14903,10 @@ html[dir="rtl"] .hv-footer__links a:hover {
    ========================================== */
 
 /* 1. Gallery Carousel - Swiper Integration */
-@media (max-width: 767px) {
-    .hv-gallery-carousel-section {
-        overflow-x: hidden;
-    }
-    .hv-gallery-carousel-section .hv-gallery-carousel-bleed {
-        width: 100vw;
-        position: relative;
-        left: 50%;
-        right: auto;
-        margin-left: -50vw;
-        margin-right: 0;
-        padding-inline: 0;
-    }
-}
-
 .hv-gallery-carousel {
     position: relative;
     width: 100%;
-    margin-top: var(--size-8);
+    margin-top: var(--hv-space-5);
     padding-bottom: 0;
     overflow: visible;
 }
@@ -15304,10 +15081,10 @@ html[dir="rtl"] .hv-footer__links a:hover {
 
 /* 4. Info Styles - Optimized */
 .hv-gallery-carousel__title {
-    font-family: var(--font-heading);
-    font-size: var(--text-base);
-    color: var(--color-white);
-    margin: 0 0 var(--size-2) 0;
+    font-family: var(--hv-font-heading);
+    font-size: var(--hv-text-base);
+    color: var(--hv-white);
+    margin: 0 0 var(--hv-space-2) 0;
     font-weight: 400;
     line-height: 1.4;
     letter-spacing: -0.01em;
@@ -15315,8 +15092,8 @@ html[dir="rtl"] .hv-footer__links a:hover {
 
 .hv-gallery-carousel__artist {
     display: block;
-    font-family: var(--font-body);
-    font-size: var(--text-sm);
+    font-family: var(--hv-font-body);
+    font-size: var(--hv-text-sm);
     color: rgba(255, 255, 255, 0.65);
     line-height: 1.5;
     font-weight: 300;
@@ -15332,7 +15109,7 @@ html[dir="rtl"] .hv-footer__links a:hover {
 .hv-services-carousel,
 .hv-artists-showcase {
     overflow: hidden;
-    padding: 20px 0 60px; /* Space for shadow/hover effects */
+    padding: 8px 0 28px;
 }
 
 .hv-services-carousel .swiper-slide,
@@ -15392,3 +15169,5 @@ html[dir="rtl"] .hv-footer__links a:hover {
         }
     }
 }
+
+/* Client feedback polish → assets/css/hv-design-refinements.css */

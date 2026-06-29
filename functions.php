@@ -24,7 +24,7 @@ define( 'ASTRA_THEME_ORG_VERSION', file_exists( ASTRA_THEME_DIR . 'inc/w-org-ver
 /**
  * Hand and Vision Custom Theme Version
  */
-define( 'HV_THEME_VERSION', '3.3.2' );
+define( 'HV_THEME_VERSION', '3.3.10' );
 
 /**
  * Minimum Version requirement of the Astra Pro addon.
@@ -231,7 +231,12 @@ if ( ! function_exists( 'get_field' ) ) {
 	}
 	add_action( 'admin_notices', 'handandvision_acf_missing_notice' );
 
-	if ( is_admin() ) {
+	if (
+		is_admin()
+		&& ! wp_doing_ajax()
+		&& ! ( defined( 'DOING_CRON' ) && DOING_CRON )
+		&& ! ( defined( 'REST_REQUEST' ) && REST_REQUEST )
+	) {
 		wp_die(
 			esc_html__( 'This theme requires Advanced Custom Fields (ACF) plugin. Please install and activate ACF to continue.', 'astra' ),
 			esc_html__( 'Plugin Required', 'astra' ),
@@ -284,6 +289,9 @@ require_once ASTRA_THEME_DIR . 'inc/seo/class-hv-seo.php';
 // Custom Post Types
 require_once ASTRA_THEME_DIR . 'inc/post-types/register-cpts.php';
 
+// Client-friendly Admin Experience (login screen, dashboard, menu, list-table columns)
+require_once ASTRA_THEME_DIR . 'inc/admin/class-hv-admin.php';
+
 // Theme Support (before WooCommerce - provides helper functions)
 require_once ASTRA_THEME_DIR . 'inc/theme-support/setup.php';
 require_once ASTRA_THEME_DIR . 'inc/theme-support/image-optimization.php';
@@ -301,6 +309,7 @@ require_once ASTRA_THEME_DIR . 'inc/ajax-handlers/contact-form.php';
 
 // Gallery Helpers
 require_once ASTRA_THEME_DIR . 'inc/gallery-helpers.php';
+require_once ASTRA_THEME_DIR . 'inc/content-order.php';
 require_once ASTRA_THEME_DIR . 'inc/acf-display-helper.php';
 // Service Helpers (icon SVGs)
 require_once ASTRA_THEME_DIR . 'inc/service-helpers.php';
@@ -319,7 +328,7 @@ function handandvision_enqueue_custom_assets() {
 
     wp_enqueue_style(
         'handandvision-fonts',
-        'https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;600;700&family=Inter:wght@300;400;500&family=Outfit:wght@200;300;400;500&display=swap',
+        'https://fonts.googleapis.com/css2?family=Heebo:wght@200;300;400;500;600;700&family=Inter:wght@300;400;500&display=swap',
         array(),
         null
     );
@@ -332,43 +341,25 @@ function handandvision_enqueue_custom_assets() {
         HV_THEME_VERSION
     );
 
+    wp_enqueue_style(
+        'hv-design-refinements',
+        $theme_uri . '/assets/css/hv-design-refinements.css',
+        array( 'hv-unified' ),
+        HV_THEME_VERSION
+    );
+
     // Tell WordPress that hv-unified.css already includes RTL support
     // This prevents 404 errors when WordPress tries to find hv-unified-rtl.css
     wp_style_add_data( 'hv-unified', 'rtl', false );
 
-    // Premium Store CSS - only load on WooCommerce pages
-    // Use function_exists checks to avoid errors if WooCommerce is not fully loaded
-    if ( class_exists( 'WooCommerce' ) ) {
-        $is_wc_page = false;
-
-        // Check if we're on any WooCommerce page
-        if ( function_exists( 'is_woocommerce' ) && is_woocommerce() ) {
-            $is_wc_page = true;
-        } elseif ( function_exists( 'is_shop' ) && is_shop() ) {
-            $is_wc_page = true;
-        } elseif ( function_exists( 'is_product_category' ) && is_product_category() ) {
-            $is_wc_page = true;
-        } elseif ( function_exists( 'is_product_tag' ) && is_product_tag() ) {
-            $is_wc_page = true;
-        } elseif ( function_exists( 'is_product' ) && is_product() ) {
-            $is_wc_page = true;
-        } elseif ( function_exists( 'is_cart' ) && is_cart() ) {
-            $is_wc_page = true;
-        } elseif ( function_exists( 'is_checkout' ) && is_checkout() ) {
-            $is_wc_page = true;
-        } elseif ( function_exists( 'is_account_page' ) && is_account_page() ) {
-            $is_wc_page = true;
-        }
-
-        if ( $is_wc_page ) {
-            wp_enqueue_style(
-                'hv-store-premium',
-                $theme_uri . '/assets/css/hv-store-premium.css',
-                array( 'hv-unified' ),
-                HV_THEME_VERSION
-            );
-            wp_style_add_data( 'hv-store-premium', 'rtl', false );
-        }
+    if ( class_exists( 'WooCommerce' ) && handandvision_is_woocommerce_page() ) {
+        wp_enqueue_style(
+            'hv-store-premium',
+            $theme_uri . '/assets/css/hv-store-premium.css',
+            array( 'hv-unified', 'hv-design-refinements' ),
+            HV_THEME_VERSION
+        );
+        wp_style_add_data( 'hv-store-premium', 'rtl', false );
     }
 
     wp_enqueue_script(
@@ -379,7 +370,6 @@ function handandvision_enqueue_custom_assets() {
         true
     );
 
-    // UI Refinements - micro-interactions and scroll animations
     wp_enqueue_script(
         'handandvision-refinements',
         $theme_uri . '/assets/js/hv-refinements.js',
@@ -388,28 +378,28 @@ function handandvision_enqueue_custom_assets() {
         true
     );
 
-    // Drag to Scroll - DEPRECATED (Replaced by Swiper)
-    // wp_enqueue_script(
-    //     'handandvision-drag-scroll',
-    //     $theme_uri . '/assets/js/hv-drag-scroll.js',
-    //     array(),
-    //     HV_THEME_VERSION,
-    //     true
-    // );
+    if ( handandvision_needs_swiper_assets() ) {
+        wp_enqueue_style( 'swiper', $theme_uri . '/assets/css/swiper-bundle.min.css', array(), '12.0.0' );
+        wp_enqueue_script( 'swiper', $theme_uri . '/assets/js/swiper-bundle.min.js', array(), '12.0.0', true );
+        wp_enqueue_script( 'hv-swiper-init', $theme_uri . '/assets/js/hv-swiper-init.js', array( 'swiper' ), HV_THEME_VERSION, true );
+    }
 
-    // Swiper Carousel
-    // Swiper Carousel (CDN)
-    wp_enqueue_style( 'swiper', 'https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css', array(), '12.0.0' );
-    wp_enqueue_script( 'swiper', 'https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js', array(), '12.0.0', true );
-    wp_enqueue_script( 'hv-swiper-init', $theme_uri . '/assets/js/hv-swiper-init.js', array( 'swiper' ), HV_THEME_VERSION, true );
-    wp_enqueue_script( 'hv-parallax', $theme_uri . '/assets/js/hv-parallax.js', array(), HV_THEME_VERSION, true );
+    if ( handandvision_needs_parallax_assets() ) {
+        wp_enqueue_script( 'hv-parallax', $theme_uri . '/assets/js/hv-parallax.js', array(), HV_THEME_VERSION, true );
+    }
+
+    // View transitions are now sitewide: any page may originate or be a target of a
+    // shared-element transition (cards → singles, plus header continuity).
     wp_enqueue_script( 'hv-view-transitions', $theme_uri . '/assets/js/hv-view-transitions.js', array(), HV_THEME_VERSION, true );
-    wp_enqueue_script( 'hv-cart-animation', $theme_uri . '/assets/js/hv-cart-animation.js', array(), HV_THEME_VERSION, true );
 
-    // Pass AJAX URL and localized strings to JS
+    if ( handandvision_is_woocommerce_page() ) {
+        wp_enqueue_script( 'hv-cart-animation', $theme_uri . '/assets/js/hv-cart-animation.js', array(), HV_THEME_VERSION, true );
+    }
+
     wp_localize_script( 'handandvision-main', 'hv_ajax', array(
-        'ajaxurl' => admin_url( 'admin-ajax.php' ),
-        'nonce'   => wp_create_nonce( 'hv_contact_action' ),
+        'ajaxurl'          => admin_url( 'admin-ajax.php' ),
+        'nonce'            => wp_create_nonce( 'hv_contact_action' ),
+        'quick_view_nonce' => wp_create_nonce( 'hv_quick_view' ),
     ) );
 
     $is_hebrew = handandvision_is_hebrew();
@@ -417,6 +407,8 @@ function handandvision_enqueue_custom_assets() {
         'offline_message' => $is_hebrew ? 'אין חיבור לאינטרנט. ייתכן שחלק מהתוכן לא יהיה זמין.' : 'You are offline. Some content may not be available.',
         'lightbox_label'  => $is_hebrew ? 'תצוגת תמונה' : 'Image lightbox',
         'close_label'     => $is_hebrew ? 'סגור' : 'Close',
+        'prev_label'      => $is_hebrew ? 'תמונה קודמת' : 'Previous image',
+        'next_label'      => $is_hebrew ? 'תמונה הבאה' : 'Next image',
         'menu_label'      => $is_hebrew ? 'תפריט' : 'Menu',
         'cart_label'      => $is_hebrew ? 'עגלת קניות' : 'Shopping Cart',
         'form_errors'     => array(
@@ -428,17 +420,23 @@ function handandvision_enqueue_custom_assets() {
 add_action( 'wp_enqueue_scripts', 'handandvision_enqueue_custom_assets' );
 
 /**
- * Fix Astra 404 for missing assets and redirect to our unified CSS.
- * This ensures all Astra components use our premium styles.
+ * Dequeue Astra theme CSS — hv-unified.css is enqueued separately.
  */
-function handandvision_astra_style_fix( $src, $handle ) {
-    // Only intercept Astra's main theme styles to avoid breaking other plugins
-    if ( strpos( $handle, 'astra-theme-css' ) !== false || strpos( $handle, 'astra-woocommerce' ) !== false ) {
-        return get_stylesheet_directory_uri() . '/assets/css/hv-unified.css';
-    }
-    return $src;
+function handandvision_dequeue_astra_styles() {
+    wp_dequeue_style( 'astra-theme-css' );
+    wp_deregister_style( 'astra-theme-css' );
+    wp_dequeue_style( 'astra-woocommerce' );
+    wp_deregister_style( 'astra-woocommerce' );
 }
-add_filter( 'style_loader_src', 'handandvision_astra_style_fix', 20, 2 );
+add_action( 'wp_enqueue_scripts', 'handandvision_dequeue_astra_styles', 99 );
+
+/**
+ * Scroll-to-top is handled by hv-main.js + hv-unified.css (Astra dynamic CSS is dequeued).
+ */
+add_filter( 'astra_theme_js_localize', function( $localize ) {
+    $localize['is_scroll_to_top'] = false;
+    return $localize;
+} );
 
 add_action( 'wp_enqueue_scripts', function() {
     global $wp_styles;
@@ -494,7 +492,6 @@ function handandvision_custom_header() {
                         : home_url( '/' );
                     $he_url = add_query_arg( 'lang', 'he', $current_url );
                     $en_url = add_query_arg( 'lang', 'en', $current_url );
-                    $lang_param = isset( $_GET['lang'] ) ? sanitize_text_field( wp_unslash( $_GET['lang'] ) ) : '';
                     $current_lang = handandvision_get_current_language();
                     ?>
                     <a href="<?php echo esc_url( $he_url ); ?>" class="hv-lang-link <?php echo ( $current_lang === 'he' ) ? 'active' : ''; ?>">HE</a>
@@ -660,6 +657,9 @@ function handandvision_custom_footer() {
  * One-time URL fix: replace old site URL in DB. Run as admin: ?hv_fix_url=1
  */
 function handandvision_maybe_run_fix_site_url() {
+	if ( ! ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ) {
+		return;
+	}
 	if ( ! isset( $_GET['hv_fix_url'] ) || ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
@@ -668,7 +668,7 @@ function handandvision_maybe_run_fix_site_url() {
 		wp_die( esc_html( $result['message'] ), '', array( 'response' => 200 ) );
 	}
 	wp_die(
-		'URL fix done. Replaced: ' . wp_json_encode( $result['replaced'] ) . ' New URL: ' . esc_html( $result['new_url'] ),
+		esc_html( 'URL fix done. Replaced: ' . wp_json_encode( $result['replaced'] ) . ' New URL: ' . $result['new_url'] ),
 		'',
 		array( 'response' => 200 )
 	);
@@ -687,20 +687,47 @@ function handandvision_get_placeholder_image() {
 }
 
 /**
- * Inject View Transition Name for Single Product Pages
- * Targets the main gallery image.
+ * Inject `view-transition-name` for single post-type destinations so shared
+ * elements from archive/index cards morph into the hero image.
+ *
+ * Naming convention (must match assets/js/hv-view-transitions.js + archive markup):
+ *   product-image-{id} | artist-portrait-{id} | service-image-{id} | post-image-{id}
  */
-function handandvision_product_view_transition_css() {
-    if ( is_product() ) {
-        $product_id = get_the_ID();
-        // Target: first image in the WC gallery
-        echo "<style>
-            .woocommerce-product-gallery__image:first-child img,
-            .woocommerce-product-gallery__wrapper .woocommerce-product-gallery__image:first-child,
-            .hv-service-single-hero__bg img {
-                view-transition-name: product-img-{$product_id};
-            }
-        </style>";
+function handandvision_single_view_transition_css() {
+    $id = absint( get_the_ID() );
+    if ( ! $id ) {
+        return;
+    }
+
+    $css = '';
+
+    if ( function_exists( 'is_product' ) && is_product() ) {
+        $css = sprintf(
+            '.woocommerce-product-gallery__image:first-child img,
+.woocommerce-product-gallery__wrapper .woocommerce-product-gallery__image:first-child,
+.hv-product-gallery { view-transition-name: product-image-%1$d; }',
+            $id
+        );
+    } elseif ( is_singular( 'artist' ) ) {
+        $css = sprintf(
+            '.hv-artist-cinema-hero__visual,
+.hv-artist-cinema-hero__media img { view-transition-name: artist-portrait-%1$d; }',
+            $id
+        );
+    } elseif ( is_singular( 'service' ) ) {
+        $css = sprintf(
+            '.hv-service-single-hero__bg img { view-transition-name: service-image-%1$d; }',
+            $id
+        );
+    } elseif ( is_singular( 'post' ) ) {
+        $css = sprintf(
+            '.hv-single-blog__hero img, .post-thumbnail img { view-transition-name: post-image-%1$d; }',
+            $id
+        );
+    }
+
+    if ( $css ) {
+        wp_add_inline_style( 'hv-unified', $css );
     }
 }
-add_action( 'wp_head', 'handandvision_product_view_transition_css' );
+add_action( 'wp_enqueue_scripts', 'handandvision_single_view_transition_css', 20 );

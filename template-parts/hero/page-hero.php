@@ -14,11 +14,13 @@ $args = wp_parse_args( $args ?? array(), array(
 	'overline' => '',
 	'title'    => '',
 	'subtitle' => '',
+	'class'    => '',
 ) );
 $title = $args['title'];
 $title_lines = is_array( $title ) ? $title : array( array( 'text' => $title, 'accent' => false ) );
+$hero_class = trim( 'hv-hero ' . ( $args['class'] ?? '' ) );
 ?>
-<section class="hv-hero" aria-labelledby="hv-hero-title">
+<section class="<?php echo esc_attr( $hero_class ); ?>" aria-labelledby="hv-hero-title">
 	<div class="hv-hero__bg">
 		<div class="hv-hero__gradient"></div>
 	</div>

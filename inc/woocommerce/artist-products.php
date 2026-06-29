@@ -71,11 +71,11 @@ function handandvision_product_artist_callback( $post ) {
  * @return void
  */
 function handandvision_save_product_artist( $post_id ) {
-    // Check nonce
     if ( ! isset( $_POST['handandvision_product_artist_nonce'] ) ) {
         return;
     }
-    if ( ! wp_verify_nonce( $_POST['handandvision_product_artist_nonce'], 'handandvision_save_product_artist' ) ) {
+    $nonce = sanitize_text_field( wp_unslash( $_POST['handandvision_product_artist_nonce'] ) );
+    if ( ! wp_verify_nonce( $nonce, 'handandvision_save_product_artist' ) ) {
         return;
     }
 
@@ -120,16 +120,18 @@ function handandvision_get_artist_products( $artist_id ) {
         return $cached;
     }
     $args = [
-        'post_type'      => 'product',
-        'posts_per_page' => -1,
-        'meta_query'     => [
+        'post_type'              => 'product',
+        'posts_per_page'         => 200,
+        'meta_query'             => [
             [
                 'key'     => '_handandvision_artist_id',
                 'value'   => $artist_id,
                 'compare' => '=',
             ],
         ],
-        'post_status'    => 'publish',
+        'post_status'            => 'publish',
+        'no_found_rows'          => true,
+        'update_post_term_cache' => false,
     ];
     $products = get_posts( $args );
     set_transient( $cache_key, $products, HOUR_IN_SECONDS );

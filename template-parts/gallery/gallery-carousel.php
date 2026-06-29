@@ -16,20 +16,23 @@ if ( empty( $items ) ) {
 	return;
 }
 ?>
-<section class="hv-section hv-section--dark hv-gallery-carousel-section" aria-labelledby="gallery-heading">
+<section class="hv-section hv-section--dark hv-gallery-carousel-section hv-home-gallery" aria-labelledby="gallery-heading">
 	<div class="hv-container">
-		<header class="hv-section-header hv-text-center hv-animate">
-			<span class="hv-overline hv-overline--light"><?php echo esc_html( handandvision_is_hebrew() ? 'מהאוסף' : 'From the Collection' ); ?></span>
+		<header class="hv-section-header hv-text-center hv-animate hv-home-section-header hv-home-section-header--dark">
+			<span class="hv-home-section-header__eyebrow hv-home-section-header__eyebrow--light">
+				<span class="hv-home-section-header__label"><?php echo esc_html( handandvision_is_hebrew() ? 'מהאוסף' : 'From the Collection' ); ?></span>
+			</span>
 			<h2 id="gallery-heading" class="hv-headline-2 hv-text-white"><?php echo esc_html( handandvision_is_hebrew() ? 'הגלריה' : 'Gallery' ); ?></h2>
 		</header>
+	</div>
 
-		<div class="hv-gallery-carousel-bleed">
+	<div class="hv-gallery-carousel-bleed hv-carousel-bleed">
 		<div class="hv-gallery-carousel swiper">
 		<div class="hv-gallery-carousel__controls">
-            <button type="button" class="hv-gallery-carousel__btn hv-gallery-carousel__btn--prev" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'הבא' : 'Previous' ); ?>">
+            <button type="button" class="hv-gallery-carousel__btn hv-gallery-carousel__btn--prev" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'הקודם' : 'Previous' ); ?>">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
-            <button type="button" class="hv-gallery-carousel__btn hv-gallery-carousel__btn--next" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'הקודם' : 'Next' ); ?>">
+            <button type="button" class="hv-gallery-carousel__btn hv-gallery-carousel__btn--next" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'הבא' : 'Next' ); ?>">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </button>
         </div>
@@ -58,7 +61,6 @@ if ( empty( $items ) ) {
 					</a>
 				</div>
 			<?php endforeach; ?>
-		</div>
 		</div>
 		<div class="swiper-pagination"></div>
 		</div>

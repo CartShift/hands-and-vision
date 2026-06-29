@@ -41,17 +41,24 @@ $features = function_exists( 'get_field' ) ? get_field( 'service_what_we_do', $s
 $gallery = function_exists( 'get_field' ) ? get_field( 'service_gallery', $service_id ) : array();
 $related_artists = function_exists( 'get_field' ) ? get_field( 'service_related_artists', $service_id ) : array();
 $cta_text = function_exists( 'get_field' ) ? get_field( 'service_cta_text', $service_id ) : '';
+$consultation_intro = function_exists( 'get_field' ) ? get_field( 'service_consultation_intro', $service_id ) : '';
+$consultation_pairs = function_exists( 'get_field' ) ? get_field( 'service_consultation_pairs', $service_id ) : array();
+$is_consultation = handandvision_is_consultation_service( $service_id );
 
 // Validate arrays
 $features = is_array( $features ) ? $features : array();
 $gallery = is_array( $gallery ) ? $gallery : array();
 $related_artists = is_array( $related_artists ) ? $related_artists : array();
+$consultation_pairs = is_array( $consultation_pairs ) ? $consultation_pairs : array();
 
 // Normalize gallery
-$gallery_grid_items = array();
-if ( ! empty( $gallery ) && function_exists( 'handandvision_normalize_gallery_grid_items' ) ) {
-    $gallery_grid_items = handandvision_normalize_gallery_grid_items( $gallery, array() );
-}
+$gallery_grid_items = function_exists( 'handandvision_get_service_gallery_items' )
+    ? handandvision_get_service_gallery_items( $service_id )
+    : array();
+
+$service_title = handandvision_strip_dashes_from_copy( $service_title );
+$short_desc = handandvision_strip_dashes_from_copy( $short_desc );
+$full_desc = handandvision_strip_dashes_from_copy( $full_desc );
 
 // English title override
 if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
@@ -62,7 +69,7 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
 }
 ?>
 
-<main id="primary" class="hv-single-service">
+<main id="primary" class="hv-single-service hv-single-service-editorial">
 
     <!-- Hero Section -->
     <section class="hv-service-single-hero">
@@ -86,12 +93,13 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
                         <?php echo esc_html( $is_hebrew ? 'שירות' : 'Service' ); ?>
                     </span>
                     <h1 class="hv-service-single-hero__title">
-                        <?php echo esc_html( $service_title ); ?>
+                        <?php echo esc_html( handandvision_strip_dashes_from_copy( $service_title ) ); ?>
                     </h1>
                     <?php
                     $short_desc_display = function_exists( 'handandvision_acf_display_value' )
                         ? handandvision_acf_display_value( $short_desc, $is_hebrew ? 'תיאור קצר' : 'Short description', 'html' )
                         : $short_desc;
+                    $short_desc_display = handandvision_strip_dashes_from_copy( $short_desc_display );
                     if ( $short_desc_display ) : ?>
                         <p class="hv-service-single-hero__subtitle">
                             <?php echo $short_desc_display === $short_desc ? esc_html( $short_desc ) : wp_kses_post( $short_desc_display ); ?>
@@ -114,6 +122,52 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
                 <?php echo $full_desc_display === $full_desc ? wp_kses_post( wpautop( $full_desc ) ) : wp_kses_post( wpautop( $full_desc_display ) ); ?>
             </div>
         </div>
+    </section>
+    <?php endif; ?>
+
+    <?php if ( $is_consultation ) :
+        $default_intro = $is_hebrew
+            ? 'ייעוץ והכוונה זה תהליך שבו אנחנו מתרגמים את החזון שלכם לעיצוב מקורי, מדויק ואישי. כל פרויקט נבנה מהבסיס, עם הדמיות ותכנון שמראים לכם בדיוק לאן הדרך הולכת, עוד לפני שמתחילים לייצר.'
+            : 'Consultation and guidance is how we translate your vision into original, precise, personal design. Every project is built from the ground up, with visualizations and planning that show you exactly where the journey leads, before production begins.';
+        $intro_display = $consultation_intro ? handandvision_strip_dashes_from_copy( $consultation_intro ) : $default_intro;
+    ?>
+    <section class="hv-service-consultation-section">
+        <div class="hv-container hv-container--narrow hv-text-center">
+            <span class="hv-service-consultation-label"><?php echo esc_html( $is_hebrew ? 'הגישה שלנו' : 'Our Approach' ); ?></span>
+            <h2 class="hv-service-consultation-title"><?php echo esc_html( $is_hebrew ? 'מתכנון לפרויקט מושלם' : 'From Planning to a Finished Project' ); ?></h2>
+            <p class="hv-service-consultation-intro"><?php echo esc_html( $intro_display ); ?></p>
+            <p class="hv-service-consultation-highlight"><?php echo esc_html( $is_hebrew ? 'עיצובים מקוריים, בהתאמה אישית לכל לקוח.' : 'Original designs, tailored personally for every client.' ); ?></p>
+        </div>
+        <?php if ( ! empty( $consultation_pairs ) ) : ?>
+        <div class="hv-container">
+            <div class="hv-consultation-pairs">
+                <?php foreach ( $consultation_pairs as $pair ) :
+                    $plan = $pair['planning_image'] ?? null;
+                    $final = $pair['final_image'] ?? null;
+                    if ( ! is_array( $plan ) || ! is_array( $final ) ) continue;
+                    if ( empty( $plan['url'] ) || empty( $final['url'] ) ) continue;
+                    $caption = handandvision_strip_dashes_from_copy( (string) ( $pair['caption'] ?? '' ) );
+                ?>
+                <article class="hv-consultation-pair">
+                    <div class="hv-consultation-pair__grid">
+                        <div class="hv-consultation-pair__col">
+                            <span class="hv-consultation-pair__label"><?php echo esc_html( $is_hebrew ? 'תכנון / הדמיה' : 'Planning / Visualization' ); ?></span>
+                            <img src="<?php echo esc_url( $plan['url'] ); ?>" alt="<?php echo esc_attr( $is_hebrew ? 'תכנון' : 'Planning' ); ?>" loading="lazy">
+                        </div>
+                        <div class="hv-consultation-pair__arrow" aria-hidden="true">→</div>
+                        <div class="hv-consultation-pair__col">
+                            <span class="hv-consultation-pair__label"><?php echo esc_html( $is_hebrew ? 'פרויקט סופי' : 'Final Project' ); ?></span>
+                            <img src="<?php echo esc_url( $final['url'] ); ?>" alt="<?php echo esc_attr( $is_hebrew ? 'פרויקט סופי' : 'Final project' ); ?>" loading="lazy">
+                        </div>
+                    </div>
+                    <?php if ( $caption ) : ?>
+                        <p class="hv-consultation-pair__caption"><?php echo esc_html( $caption ); ?></p>
+                    <?php endif; ?>
+                </article>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
     </section>
     <?php endif; ?>
 
@@ -143,6 +197,7 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
                     $counter++;
                     $feature_text = is_array( $feature ) && isset( $feature['point'] ) ? $feature['point'] : (string) $feature;
                     if ( empty( $feature_text ) ) continue;
+                    $feature_text = handandvision_strip_dashes_from_copy( $feature_text );
                 ?>
                     <div class="hv-service-feature-item">
                         <div class="hv-service-feature-number"><?php printf( '%02d', $counter ); ?></div>
@@ -176,8 +231,10 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
                     echo '<div class="hv-service-gallery-item"><div class="hv-service-gallery-media"><div class="hv-field-placeholder hv-field-placeholder--image">' . $gallery_placeholder . '</div></div></div>';
                 }
                 foreach ( $gallery_grid_items as $item ) :
-                    $image_url = isset( $item['image'] ) ? $item['image'] : '';
-                    $title = isset( $item['title'] ) ? $item['title'] : '';
+                    $image_url = isset( $item['image'] ) ? $item['image'] : ( $item['url'] ?? '' );
+                    $title = isset( $item['title'] ) ? handandvision_strip_dashes_from_copy( $item['title'] ) : '';
+                    $artist_name = isset( $item['artist_name'] ) ? handandvision_strip_dashes_from_copy( $item['artist_name'] ) : '';
+                    $project = isset( $item['project'] ) ? handandvision_strip_dashes_from_copy( $item['project'] ) : '';
                     $link = isset( $item['link'] ) ? $item['link'] : '';
                     if ( empty( $image_url ) ) continue;
                 ?>
@@ -188,9 +245,16 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
                                 <div class="hv-service-gallery-media">
                                     <img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $title ); ?>" loading="lazy">
                                 </div>
-                                <?php if ( $title ) : ?>
-                                    <div class="hv-service-gallery-caption">
-                                        <?php echo esc_html( $title ); ?>
+                                <?php if ( $artist_name || $project || $title ) : ?>
+                                    <div class="hv-service-gallery-caption hv-service-gallery-caption--meta">
+                                        <?php if ( $artist_name ) : ?>
+                                            <span class="hv-service-gallery-artist"><?php echo esc_html( $artist_name ); ?></span>
+                                        <?php endif; ?>
+                                        <?php if ( $project ) : ?>
+                                            <span class="hv-service-gallery-project"><?php echo esc_html( $project ); ?></span>
+                                        <?php elseif ( $title && ! $artist_name ) : ?>
+                                            <span class="hv-service-gallery-project"><?php echo esc_html( $title ); ?></span>
+                                        <?php endif; ?>
                                     </div>
                                 <?php endif; ?>
                         <?php if ( $link ) : ?>
@@ -277,7 +341,7 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
                     $contact_url = handandvision_get_contact_url();
                 }
                 ?>
-                <a href="<?php echo esc_url( $contact_url ); ?>" class="hv-btn hv-btn--primary-gold">
+                <a href="<?php echo esc_url( $contact_url ); ?>" class="hv-btn hv-btn--cta">
                     <?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Get in Touch' ); ?>
                 </a>
             </div>

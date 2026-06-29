@@ -1,0 +1,4 @@
+* text=auto eol=lf
+docker/*.sh text eol=lf
+docker/php-uploads.ini text eol=lf
+docker/apache-uploads.conf text eol=lf

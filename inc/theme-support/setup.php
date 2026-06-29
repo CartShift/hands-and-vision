@@ -71,6 +71,32 @@ function handandvision_get_logo_url() {
 }
 
 /**
+ * Wordmark logo URL (text only, no symbol) for hero and prominent branding.
+ *
+ * @return string
+ */
+function handandvision_get_wordmark_logo_url() {
+    $upload_dir = wp_upload_dir();
+    $candidates = array(
+        $upload_dir['basedir'] . '/hv-wordmark.png' => $upload_dir['baseurl'] . '/hv-wordmark.png',
+        $upload_dir['basedir'] . '/hv-logo-wordmark.png' => $upload_dir['baseurl'] . '/hv-logo-wordmark.png',
+    );
+
+    foreach ( $candidates as $path => $url ) {
+        if ( file_exists( $path ) ) {
+            return $url;
+        }
+    }
+
+    $theme_path = get_stylesheet_directory() . '/assets/images/hv-wordmark.svg';
+    if ( file_exists( $theme_path ) ) {
+        return get_stylesheet_directory_uri() . '/assets/images/hv-wordmark.svg';
+    }
+
+    return handandvision_get_logo_url();
+}
+
+/**
  * Get container class for header.php
  * Allows full-width sections on pages and archives by replacing .ast-container
  *
@@ -92,3 +118,44 @@ function handandvision_hero_layout_body_class( $classes ) {
     return $classes;
 }
 add_filter( 'body_class', 'handandvision_hero_layout_body_class' );
+
+/**
+ * Whether the current request is a WooCommerce storefront page.
+ *
+ * @return bool
+ */
+function handandvision_is_woocommerce_page() {
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		return false;
+	}
+
+	return ( function_exists( 'is_woocommerce' ) && is_woocommerce() )
+		|| ( function_exists( 'is_shop' ) && is_shop() )
+		|| ( function_exists( 'is_product_category' ) && is_product_category() )
+		|| ( function_exists( 'is_product_tag' ) && is_product_tag() )
+		|| ( function_exists( 'is_product' ) && is_product() )
+		|| ( function_exists( 'is_cart' ) && is_cart() )
+		|| ( function_exists( 'is_checkout' ) && is_checkout() )
+		|| ( function_exists( 'is_account_page' ) && is_account_page() );
+}
+
+/**
+ * Pages that render Swiper carousels.
+ *
+ * @return bool
+ */
+function handandvision_needs_swiper_assets() {
+	return is_front_page()
+		|| is_singular( array( 'artist', 'service' ) )
+		|| is_post_type_archive( array( 'artist', 'service', 'gallery_item' ) );
+}
+
+/**
+ * Pages that use scroll parallax (homepage hero, single CPT heroes).
+ *
+ * @return bool
+ */
+function handandvision_needs_parallax_assets() {
+	return is_front_page() || is_singular( array( 'artist', 'service', 'product' ) );
+}
+

@@ -14,7 +14,7 @@ get_header();
 $page_id = get_the_ID();
 
 // Page Header Info
-$page_title_display = get_field( 'page_title_display', $page_id ) ?: ( handandvision_is_hebrew() ? 'צור קשר' : "Let's Talk" );
+$page_title_display = get_field( 'page_title_display', $page_id ) ?: ( handandvision_is_hebrew() ? 'צרו קשר' : "Let's Talk" );
 $page_overline = get_field( 'page_overline', $page_id ) ?: ( handandvision_is_hebrew() ? 'בואו נדבר' : 'Let’s Talk' );
 $page_subtitle = get_field( 'page_subtitle', $page_id ) ?: ( handandvision_is_hebrew() ? 'נשמח לשמוע מכם - בין אם מדובר בשאלה על יצירה ספציפית, ייעוץ לאוסף, או שיתוף פעולה עתידי' : 'We’d love to hear from you - whether it’s a question about a specific piece, collection consultancy, or future collaboration' );
 
@@ -22,7 +22,7 @@ $page_subtitle = get_field( 'page_subtitle', $page_id ) ?: ( handandvision_is_he
 
 ?>
 
-<main id="primary" class="hv-hero-layout site-main hv-contact-page">
+<main id="primary" class="hv-hero-layout site-main hv-contact-page hv-contact-editorial">
 
 <?php
 get_template_part( 'template-parts/hero/page-hero', null, array(

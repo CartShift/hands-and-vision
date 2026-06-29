@@ -88,10 +88,14 @@
 			overlay.setAttribute("aria-modal", "true");
 			overlay.setAttribute("aria-label", typeof hv_i18n !== "undefined" && hv_i18n.lightbox_label ? hv_i18n.lightbox_label : "Image lightbox");
 			overlay.setAttribute("aria-describedby", "hv-lightbox-caption");
+			const i18n = typeof hv_i18n !== "undefined" ? hv_i18n : {};
+			const closeLabel = i18n.close_label || "Close lightbox";
+			const prevLabel = i18n.prev_label || "Previous image";
+			const nextLabel = i18n.next_label || "Next image";
 			overlay.innerHTML = `
-                <button class="hv-lightbox-close" aria-label="Close lightbox">&times;</button>
-                <button class="hv-lightbox-nav hv-lightbox-prev" aria-label="Previous image">&lsaquo;</button>
-                <button class="hv-lightbox-nav hv-lightbox-next" aria-label="Next image">&rsaquo;</button>
+                <button class="hv-lightbox-close" aria-label="${closeLabel}">&times;</button>
+                <button class="hv-lightbox-nav hv-lightbox-prev" aria-label="${prevLabel}">&lsaquo;</button>
+                <button class="hv-lightbox-nav hv-lightbox-next" aria-label="${nextLabel}">&rsaquo;</button>
                 <div class="hv-lightbox-content">
                     <img class="hv-lightbox-image" src="" alt="">
                     <p class="hv-lightbox-caption" id="hv-lightbox-caption" role="status" aria-live="polite"></p>
@@ -599,16 +603,65 @@
 			if (scrollY > 50) {
 				this.header.classList.add("scrolled");
 				document.body.classList.add("scrolled");
-				const scrollTopBtn = document.getElementById("ast-scroll-top");
-				if (scrollTopBtn) scrollTopBtn.classList.add("show");
 			} else {
 				this.header.classList.remove("scrolled");
 				document.body.classList.remove("scrolled");
-				const scrollTopBtn = document.getElementById("ast-scroll-top");
-				if (scrollTopBtn) scrollTopBtn.classList.remove("show");
 			}
 
 			this.lastScrollY = scrollY;
+		}
+	};
+
+	/**
+	 * Scroll to top button — self-contained (Astra base CSS/JS not reliable after theme CSS dequeue)
+	 */
+	const ScrollToTop = {
+		button: null,
+		threshold: 300,
+
+		init: function () {
+			this.button = document.getElementById("ast-scroll-top");
+			if (!this.button) return;
+
+			const header = document.querySelector("#page header") || document.querySelector(".hv-header");
+			if (header) {
+				this.threshold = header.offsetHeight + 100;
+			}
+
+			this.bindEvents();
+			this.updateVisibility();
+		},
+
+		bindEvents: function () {
+			const self = this;
+			let ticking = false;
+
+			window.addEventListener("scroll", function () {
+				if (!ticking) {
+					window.requestAnimationFrame(function () {
+						self.updateVisibility();
+						ticking = false;
+					});
+					ticking = true;
+				}
+			});
+
+			this.button.addEventListener("click", function (e) {
+				e.preventDefault();
+				window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+			});
+
+			this.button.addEventListener("keydown", function (e) {
+				if (e.key === "Enter" || e.key === " ") {
+					e.preventDefault();
+					window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+				}
+			});
+		},
+
+		updateVisibility: function () {
+			const scrollY = window.scrollY || window.pageYOffset;
+			this.button.classList.toggle("show", scrollY > this.threshold);
 		}
 	};
 
@@ -1178,7 +1231,9 @@
 			const data = new FormData();
 			data.append("action", "hv_quick_view");
 			data.append("product_id", productId);
-			// data.append('nonce', hv_ajax.nonce); // If implemented
+			if (typeof hv_ajax !== "undefined" && hv_ajax.quick_view_nonce) {
+				data.append("nonce", hv_ajax.quick_view_nonce);
+			}
 
 			fetch(hv_ajax.ajaxurl, {
 				method: "POST",
@@ -1227,6 +1282,56 @@
 	};
 
 	/**
+	 * Auto-rotate service card images on homepage carousel
+	 */
+	const ServiceCardRotation = {
+		intervalMs: 4800,
+		timers: [],
+
+		init: function () {
+			const cards = document.querySelectorAll("[data-hv-service-rotate]");
+			cards.forEach((card) => {
+				let urls;
+				try {
+					urls = JSON.parse(card.getAttribute("data-hv-service-rotate") || "[]");
+				} catch (e) {
+					return;
+				}
+				if (!Array.isArray(urls) || urls.length < 2) return;
+
+				const rotateWrap = card.querySelector(".hv-service-card__rotate");
+				if (!rotateWrap) return;
+
+				let imgs = rotateWrap.querySelectorAll("img");
+				if (imgs.length < 2) {
+					urls.slice(1).forEach((url) => {
+						const img = document.createElement("img");
+						img.src = url;
+						img.alt = imgs[0]?.alt || "";
+						img.loading = "lazy";
+						img.className = "hv-service-card__img";
+						img.setAttribute("aria-hidden", "true");
+						rotateWrap.appendChild(img);
+					});
+					imgs = rotateWrap.querySelectorAll("img");
+				}
+
+				let index = 0;
+				const crossfade = () => {
+					const current = rotateWrap.querySelector("img.is-active") || imgs[0];
+					index = (index + 1) % urls.length;
+					const next = imgs[index] || current;
+					if (next.src !== urls[index]) next.src = urls[index];
+					current.classList.remove("is-active");
+					next.classList.add("is-active");
+				};
+
+				this.timers.push(setInterval(crossfade, this.intervalMs));
+			});
+		}
+	};
+
+	/**
 	 * Initialize on DOM ready
 	 */
 	document.addEventListener("DOMContentLoaded", function () {
@@ -1235,6 +1340,7 @@
 		SmoothScroll.init();
 		MobileMenu.init();
 		StickyHeader.init();
+		ScrollToTop.init();
 		ContactForm.init();
 		// DragScroll.init(); // Replaced by Swiper
 		HeroScroll.init();
@@ -1242,5 +1348,6 @@
 		AjaxFilters.init();
 		ArtistInfo.init();
 		QuickView.init();
+		ServiceCardRotation.init();
 	});
 })();

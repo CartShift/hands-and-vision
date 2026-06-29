@@ -39,7 +39,7 @@ while ( have_posts() ) :
 
 <div id="product-<?php the_ID(); ?>" <?php wc_product_class( '', $product ); ?>>
 
-<main id="primary" class="hv-single-product">
+<main id="primary" class="hv-single-product hv-single-product-editorial">
 
     <!-- Product Hero -->
     <?php
@@ -75,7 +75,7 @@ while ( have_posts() ) :
             <div class="hv-product-layout">
 
                 <!-- Product Gallery -->
-                <div class="hv-product-gallery hv-reveal" style="view-transition-name: product-image-<?php echo esc_attr( $product->get_id() ); ?>">
+                <div class="hv-product-gallery hv-reveal">
                     <?php
                     /**
                      * Hook: woocommerce_before_single_product_summary.
@@ -118,9 +118,13 @@ while ( have_posts() ) :
 
                     <!-- Title moved to Hero -->
 
-                    <div class="hv-product-price hv-reveal">
-                        <?php echo wp_kses_post( $product->get_price_html() ); ?>
-                    </div>
+                    <?php $has_price = $product->get_price() !== '' && $product->get_price() !== null; ?>
+
+                    <?php if ( $has_price ) : ?>
+                        <div class="hv-product-price hv-reveal">
+                            <?php echo wp_kses_post( $product->get_price_html() ); ?>
+                        </div>
+                    <?php endif; ?>
 
                     <?php if ( $product->get_short_description() ) : ?>
                         <div class="hv-product-excerpt hv-reveal">
@@ -130,13 +134,32 @@ while ( have_posts() ) :
 
                     <div class="hv-product-meta hv-reveal">
                         <?php
-                        /**
-                         * Hook: woocommerce_single_product_summary.
-                         *
-                         * @hooked woocommerce_template_single_add_to_cart - 30
-                         * @hooked woocommerce_template_single_meta - 40
-                         */
-                        do_action( 'woocommerce_single_product_summary' );
+                        if ( $has_price ) {
+                            /**
+                             * Hook: woocommerce_single_product_summary.
+                             * Renders add-to-cart + meta. Only fired when the product has a price;
+                             * inquire-only items get a dedicated CTA below.
+                             */
+                            do_action( 'woocommerce_single_product_summary' );
+                        } else {
+                            $inquire_url = function_exists( 'handandvision_get_contact_url' )
+                                ? add_query_arg( array( 'subject' => 'artwork', 'product' => get_the_ID() ), handandvision_get_contact_url() )
+                                : '#';
+                            ?>
+                            <p class="hv-product-inquire-note">
+                                <?php echo esc_html( $is_hebrew
+                                    ? 'יצירה זו זמינה לרכישה בפנייה ישירה.'
+                                    : 'This piece is available by direct inquiry.' ); ?>
+                            </p>
+                            <a href="<?php echo esc_url( $inquire_url ); ?>" class="hv-btn hv-btn--cta hv-product-inquire-cta">
+                                <span><?php echo esc_html( $is_hebrew ? 'צרו קשר להצעת מחיר' : 'Request a Quote' ); ?></span>
+                            </a>
+                            <?php
+                            // Still render product meta (SKU, categories) — useful for inquire-only items.
+                            do_action( 'woocommerce_product_meta_start' );
+                            woocommerce_template_single_meta();
+                            do_action( 'woocommerce_product_meta_end' );
+                        }
                         ?>
                     </div>
 
@@ -246,8 +269,8 @@ while ( have_posts() ) :
                     if ( ! $related_product ) continue;
                 ?>
                     <article class="hv-product-card">
-                        <a href="<?php echo esc_url( get_permalink( $related_product_post->ID ) ); ?>" class="hv-product-card__link">
-                            <div class="hv-product-card__image" style="view-transition-name: product-image-<?php echo esc_attr( $related_product_post->ID ); ?>">
+                        <a href="<?php echo esc_url( get_permalink( $related_product_post->ID ) ); ?>" class="hv-product-card__link" data-product-id="<?php echo esc_attr( (string) $related_product_post->ID ); ?>">
+                            <div class="hv-product-card__image">
                                 <?php echo get_the_post_thumbnail( $related_product_post->ID, 'woocommerce_thumbnail' ); ?>
                             </div>
                             <div class="hv-product-card__content">
@@ -287,8 +310,8 @@ while ( have_posts() ) :
                     $related_artist_name = $related_artist_id ? get_the_title( $related_artist_id ) : '';
                 ?>
                     <article class="hv-product-card">
-                        <a href="<?php echo esc_url( get_permalink( $related_id ) ); ?>" class="hv-product-card__link">
-                            <div class="hv-product-card__image" style="view-transition-name: product-image-<?php echo esc_attr( $related_id ); ?>">
+                        <a href="<?php echo esc_url( get_permalink( $related_id ) ); ?>" class="hv-product-card__link" data-product-id="<?php echo esc_attr( (string) $related_id ); ?>">
+                            <div class="hv-product-card__image">
                                 <?php echo get_the_post_thumbnail( $related_id, 'woocommerce_thumbnail' ); ?>
                             </div>
                             <div class="hv-product-card__content">
@@ -318,10 +341,10 @@ while ( have_posts() ) :
         </div>
         <div class="hv-container">
             <div class="hv-shop-cta-premium__content">
-                <div class="hv-shop-cta-premium__icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        <path d="M9 12l2 2 4-4"/>
+                <div class="hv-shop-cta-premium__icon" aria-hidden="true">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                        <path d="M3 7l9 6 9-6"></path>
                     </svg>
                 </div>
                 <span class="hv-shop-cta-premium__overline">
@@ -336,7 +359,7 @@ while ( have_posts() ) :
                         : 'Have questions about this piece? Want to know more about the artist? Get in touch.'
                     ); ?>
                 </p>
-                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-btn hv-btn--primary-gold hv-shop-cta-premium__btn">
+                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-btn hv-btn--cta hv-shop-cta-premium__btn">
                     <span><?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Contact Us' ); ?></span>
                 </a>
             </div>

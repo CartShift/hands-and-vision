@@ -121,3 +121,35 @@ function handandvision_register_acf_artist_fields() {
     ) );
 }
 add_action( 'acf/init', 'handandvision_register_acf_artist_fields' );
+
+/**
+ * Resolve the best available portrait image ID for an artist.
+ * Priority: Featured Image -> artist_portrait -> artist_image -> profile_image.
+ * Uses the postmeta cache so repeated calls in a loop don't trigger N+1 queries.
+ *
+ * @param int $artist_id Artist post ID.
+ * @return int Attachment ID, or 0 if none found.
+ */
+function handandvision_get_artist_portrait_id( $artist_id ) {
+    $artist_id = (int) $artist_id;
+    if ( ! $artist_id ) {
+        return 0;
+    }
+
+    $img_id = (int) get_post_thumbnail_id( $artist_id );
+    if ( $img_id ) {
+        return $img_id;
+    }
+
+    foreach ( array( 'artist_portrait', 'artist_image', 'profile_image' ) as $field ) {
+        $raw = get_field( $field, $artist_id );
+        if ( is_array( $raw ) && ! empty( $raw['ID'] ) ) {
+            return (int) $raw['ID'];
+        }
+        if ( is_numeric( $raw ) && (int) $raw > 0 ) {
+            return (int) $raw;
+        }
+    }
+
+    return 0;
+}

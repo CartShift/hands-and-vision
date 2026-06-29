@@ -354,12 +354,8 @@ PRESERVED SELECTORS (WordPress/Libraries - Manually Verify):
 
 
 ──────────────────────────────────────────────────────────────────────
-assets/css/hv-main.css
+assets/css/hv-main.css  [REMOVED — consolidated into hv-unified.css]
 ──────────────────────────────────────────────────────────────────────
-Total selectors: 608
-Used: 301 (49.5%)
-Unused: 255 (41.9%)
-Preserved: 52 (8.6%)
 
 UNUSED SELECTORS:
 ─────────────────

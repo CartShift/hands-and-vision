@@ -12,13 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 
-if ( ! function_exists( 'handandvision_is_hebrew' ) ) {
-	function handandvision_is_hebrew() { return false; }
-}
 $is_hebrew = handandvision_is_hebrew();
 ?>
 
-<main id="primary" class="hv-hero-layout hv-shop-page">
+<main id="primary" class="hv-hero-layout hv-shop-page hv-shop-editorial">
 
 <?php
 get_template_part( 'template-parts/hero/page-hero', null, array(
@@ -82,10 +79,14 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
         <div class="hv-container">
             <header class="hv-shop-category__header">
                 <div class="hv-shop-category__title-wrap">
+                    <span class="hv-shop-category__eyebrow">
+                        <span class="hv-shop-category__label"><?php echo esc_html( $is_hebrew ? 'אוסף' : 'Collection' ); ?></span>
+                    </span>
                     <h2 class="hv-headline-2 hv-reveal"><?php echo esc_html( $category->name ); ?></h2>
                     <?php if ( $category->description ) : ?>
                         <p class="hv-shop-category__description hv-reveal"><?php echo esc_html( $category->description ); ?></p>
                     <?php endif; ?>
+                    <span class="hv-shop-category__count"><?php echo esc_html( sprintf( $is_hebrew ? '%s יצירות' : '%s pieces', str_pad( (string) $products->found_posts, 2, '0', STR_PAD_LEFT ) ) ); ?></span>
                 </div>
                 <?php
                 $category_link = get_term_link( $category );
@@ -108,8 +109,8 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
                     $artist_name = $artist_id ? get_the_title( $artist_id ) : '';
                 ?>
                     <article <?php wc_product_class( 'hv-product-card', $product ); ?>>
-                        <a href="<?php echo esc_url( get_permalink() ); ?>" class="hv-product-card__link">
-                            <div class="hv-product-card__image" style="view-transition-name: product-image-<?php echo esc_attr( $product->get_id() ); ?>">
+                        <a href="<?php echo esc_url( get_permalink() ); ?>" class="hv-product-card__link" data-product-id="<?php echo esc_attr( $product->get_id() ); ?>">
+                            <div class="hv-product-card__image">
                                 <button type="button" class="hv-quick-view-btn" data-product-id="<?php echo esc_attr( $product->get_id() ); ?>" aria-label="<?php echo esc_attr( $is_hebrew ? 'תצוגה מהירה' : 'Quick View' ); ?>">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -227,10 +228,10 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
         </div>
         <div class="hv-container">
             <div class="hv-shop-cta-premium__content">
-                <div class="hv-shop-cta-premium__icon">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-                        <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        <path d="M9 12l2 2 4-4"/>
+                <div class="hv-shop-cta-premium__icon" aria-hidden="true">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                        <path d="M3 7l9 6 9-6"></path>
                     </svg>
                 </div>
                 <span class="hv-shop-cta-premium__overline">
@@ -245,7 +246,7 @@ get_template_part( 'template-parts/hero/page-hero', null, array(
                         : 'Looking for something specific? Our artists are available for commissions and custom pieces.'
                     ); ?>
                 </p>
-                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-btn hv-btn--primary-gold hv-shop-cta-premium__btn">
+                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>" class="hv-btn hv-btn--cta hv-shop-cta-premium__btn">
                     <span><?php echo esc_html( $is_hebrew ? 'צרו קשר' : 'Contact Us' ); ?></span>
                 </a>
             </div>

@@ -5,18 +5,21 @@
  * This logic controls access to the site when in maintenance mode.
  */
 
-// Configuration
-// You can toggle this to false to disable maintenance mode.
-define( 'HV_MAINTENANCE_MODE', true );
+// Enable in wp-config.php: define( 'HV_MAINTENANCE_MODE', true );
+if ( ! defined( 'HV_MAINTENANCE_MODE' ) ) {
+	define( 'HV_MAINTENANCE_MODE', false );
+}
 
-// Password to bypass maintenance mode
-// Use a secure password.
-define( 'HV_MAINTENANCE_PASSWORD', 'vision2025' );
+// Set in wp-config.php when maintenance is on: define( 'HV_MAINTENANCE_PASSWORD', 'your-secret' );
 
 /**
  * Handle Maintenance Mode Redirects & Auth
  */
 function handandvision_maintenance_mode() {
+    if ( defined( 'WP_ENVIRONMENT_TYPE' ) && 'local' === WP_ENVIRONMENT_TYPE ) {
+        return;
+    }
+
     // 1. Check if maintenance mode is enabled
     if ( ! defined( 'HV_MAINTENANCE_MODE' ) || ! HV_MAINTENANCE_MODE ) {
         return;
@@ -36,23 +39,31 @@ function handandvision_maintenance_mode() {
         return;
     }
 
-    // 4. Check for Bypass Cookie
-    $cookie_name = 'hv_maintenance_auth';
-    $auth_hash   = md5( HV_MAINTENANCE_PASSWORD . AUTH_SALT ); // Salted hash for better security
+    $has_password_gate = defined( 'HV_MAINTENANCE_PASSWORD' ) && HV_MAINTENANCE_PASSWORD;
 
-    if ( isset( $_COOKIE[ $cookie_name ] ) && $_COOKIE[ $cookie_name ] === $auth_hash ) {
-        return;
+    // 4. Check for Bypass Cookie
+    if ( $has_password_gate ) {
+        $cookie_name = 'hv_maintenance_auth';
+        $auth_hash   = wp_hash( HV_MAINTENANCE_PASSWORD );
+
+        if ( isset( $_COOKIE[ $cookie_name ] ) && hash_equals( $auth_hash, sanitize_text_field( wp_unslash( $_COOKIE[ $cookie_name ] ) ) ) ) {
+            return;
+        }
     }
 
     // 5. Handle Password Submission
     $error = '';
-    if ( isset( $_POST['hv_pass'] ) ) {
-        $entered_pass = sanitize_text_field( $_POST['hv_pass'] );
-        if ( $entered_pass === HV_MAINTENANCE_PASSWORD ) {
-            setcookie( $cookie_name, $auth_hash, time() + ( 86400 * 30 ), COOKIEPATH, COOKIE_DOMAIN ); // 30 days
-            wp_redirect( home_url() ); // Reload to clear POST and showing site
-            exit;
+    if ( $has_password_gate && isset( $_POST['hv_pass'] ) ) {
+        $nonce = isset( $_POST['hv_maintenance_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['hv_maintenance_nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'hv_maintenance_login' ) ) {
+            $error = 'Incorrect password';
         } else {
+            $entered_pass = sanitize_text_field( wp_unslash( $_POST['hv_pass'] ) );
+            if ( hash_equals( HV_MAINTENANCE_PASSWORD, $entered_pass ) ) {
+                setcookie( $cookie_name, $auth_hash, time() + ( 86400 * 30 ), COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true );
+                wp_safe_redirect( home_url() );
+                exit;
+            }
             $error = 'Incorrect password';
         }
     }

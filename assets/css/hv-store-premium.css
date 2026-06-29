@@ -34,7 +34,7 @@
 .hv-shop-hero-premium__gradient {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, var(--hv-white) 0%, #fdfbf7 50%, #f7f3ed 100%);
+    background: linear-gradient(135deg, var(--hv-white) 0%, var(--hv-cream) 50%, var(--hv-warm-cream) 100%);
 }
 
 .hv-shop-hero-premium__orb {
@@ -51,7 +51,7 @@
     height: 600px;
     background: var(--hv-lilac);
     top: -10%;
-    right: -5%;
+    inset-inline-end: -5%;
     animation-delay: 0s;
 }
 
@@ -60,7 +60,7 @@
     height: 500px;
     background: var(--hv-blue-soft);
     bottom: -10%;
-    left: -10%;
+    inset-inline-start: -10%;
     animation-delay: -8s;
 }
 
@@ -69,7 +69,7 @@
     height: 400px;
     background: var(--hv-pink);
     top: 60%;
-    left: 60%;
+    inset-inline-start: 60%;
     transform: translate(-50%, -50%);
     animation-delay: -15s;
 }

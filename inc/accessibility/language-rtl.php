@@ -26,7 +26,14 @@ function handandvision_init_language_cookie() {
     if ( isset( $_GET['lang'] ) ) {
         $lang = sanitize_text_field( wp_unslash( $_GET['lang'] ) );
         if ( in_array( $lang, [ 'en', 'he' ], true ) ) {
-            setcookie( 'hv_lang', $lang, time() + 30 * DAY_IN_SECONDS, COOKIEPATH, COOKIE_DOMAIN );
+            setcookie( 'hv_lang', $lang, [
+                'expires'  => time() + 30 * DAY_IN_SECONDS,
+                'path'     => COOKIEPATH ? COOKIEPATH : '/',
+                'domain'   => COOKIE_DOMAIN,
+                'secure'   => is_ssl(),
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ] );
             $_COOKIE['hv_lang'] = $lang; // Update global for immediate use in this request
         }
     }
@@ -110,3 +117,76 @@ function handandvision_body_class_rtl( $classes ) {
     return $classes;
 }
 add_filter( 'body_class', 'handandvision_body_class_rtl' );
+
+/**
+ * Curated <title> labels per archive / page-type, language-aware. Avoids the
+ * default WordPress "Archive: Artists" / "ארכיון אמנים" labels leaking into
+ * the document title.
+ *
+ * @since 3.3.11
+ * @param array $parts The document title parts.
+ * @return array Filtered parts.
+ */
+function handandvision_get_curated_title() {
+    $is_hebrew = handandvision_is_hebrew();
+
+    if ( is_post_type_archive( 'artist' ) ) {
+        return $is_hebrew ? 'האמנים שלנו' : 'Our Artists';
+    }
+    if ( is_post_type_archive( 'service' ) ) {
+        return $is_hebrew ? 'השירותים שלנו' : 'Our Services';
+    }
+    if ( is_post_type_archive( 'gallery_item' ) ) {
+        return $is_hebrew ? 'הגלריה' : 'Gallery';
+    }
+    if ( is_search() ) {
+        return $is_hebrew ? 'תוצאות חיפוש' : 'Search Results';
+    }
+    if ( is_404() ) {
+        return $is_hebrew ? 'דף לא נמצא' : 'Page Not Found';
+    }
+    if ( function_exists( 'is_shop' ) && is_shop() ) {
+        return $is_hebrew ? 'חנות האמנות' : 'Art Gallery Shop';
+    }
+    return '';
+}
+
+function handandvision_document_title_parts( $parts ) {
+    $curated = handandvision_get_curated_title();
+    if ( $curated ) {
+        $parts['title'] = $curated;
+    }
+    return $parts;
+}
+add_filter( 'document_title_parts', 'handandvision_document_title_parts', 20 );
+
+/**
+ * Override SEO-plugin generated titles for archives we control so EN switch
+ * works regardless of whether Yoast / Rank Math / etc. is active.
+ *
+ * @since 3.3.11
+ */
+function handandvision_override_plugin_title( $title ) {
+    $curated = handandvision_get_curated_title();
+    if ( ! $curated ) {
+        return $title;
+    }
+    $site = get_bloginfo( 'name' );
+    return $site ? $curated . ' | ' . $site : $curated;
+}
+add_filter( 'wpseo_title', 'handandvision_override_plugin_title', 20 );
+add_filter( 'rank_math/frontend/title', 'handandvision_override_plugin_title', 20 );
+add_filter( 'aioseo_title', 'handandvision_override_plugin_title', 20 );
+
+/**
+ * Force the document title separator and tagline behavior to follow the active
+ * UI language (not WP locale), so EN mode doesn't ship a Hebrew separator.
+ *
+ * @since 3.3.11
+ * @param string $sep Current separator.
+ * @return string Filtered separator.
+ */
+function handandvision_document_title_separator( $sep ) {
+    return '|';
+}
+add_filter( 'document_title_separator', 'handandvision_document_title_separator' );

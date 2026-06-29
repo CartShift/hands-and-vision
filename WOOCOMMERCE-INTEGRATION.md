@@ -242,9 +242,10 @@ Artist products on artist pages come only from the product meta `_handandvision_
 
 ### Styling issues?
 
-- Make sure both `hv-unified.css` and `hv-main.css` are in sync
-- Clear browser cache
+- Clear site and browser cache
 - Check for conflicting plugins
+- All styles live in `assets/css/hv-unified.css` (tokens + components) and `assets/css/hv-design-refinements.css` (page polish)
+- WooCommerce pages also load `assets/css/hv-store-premium.css`
 
 ---
 

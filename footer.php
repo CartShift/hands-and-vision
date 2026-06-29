@@ -21,7 +21,7 @@ if ( ! defined( 'HV_FOOTER_RENDERING' ) ) {
 $footer_tagline = handandvision_is_hebrew()
 	? 'כאשר אמנות פוגשת כוונה. אנחנו מחברים בין אמנים לאספנים, בין יצירה לחלל, בין חזון למציאות.'
 	: 'When art meets intention. We connect artists with collectors, creation with space, vision with reality.';
-$current_year = date( 'Y' );
+$current_year = wp_date( 'Y' );
 ?>
 
 <footer class="hv-footer" id="hv-footer">
@@ -64,10 +64,13 @@ $current_year = date( 'Y' );
                 <ul class="hv-footer__links">
                     <?php
                     $services = get_posts( [
-                        'post_type'      => 'service',
-                        'posts_per_page' => 5,
-                        'orderby'        => 'menu_order',
-                        'order'          => 'ASC',
+                        'post_type'              => 'service',
+                        'posts_per_page'         => 5,
+                        'orderby'                => 'menu_order',
+                        'order'                  => 'ASC',
+                        'no_found_rows'          => true,
+                        'update_post_meta_cache' => false,
+                        'update_post_term_cache' => false,
                     ] );
                     foreach ( $services as $service ) :
                         ?>
@@ -79,7 +82,7 @@ $current_year = date( 'Y' );
         </div>
 
         <div class="hv-footer__bottom">
-            <p>© <?php echo esc_html( $current_year ); ?> CartShift Studio. <?php echo esc_html( handandvision_is_hebrew() ? 'כל הזכויות שמורות.' : 'All rights reserved.' ); ?></p>
+            <p>© <?php echo esc_html( $current_year ); ?> Hands &amp; Vision. <?php echo esc_html( handandvision_is_hebrew() ? 'כל הזכויות שמורות.' : 'All rights reserved.' ); ?></p>
             <nav class="hv-footer__legal">
                 <?php
                 $privacy_url = get_privacy_policy_url();
@@ -88,11 +91,21 @@ $current_year = date( 'Y' );
                     <a href="<?php echo esc_url( $privacy_url ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'מדיניות פרטיות' : 'Privacy Policy' ); ?></a>
                     <span>·</span>
                 <?php endif; ?>
-                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'צור קשר' : 'Contact' ); ?></a>
-                <span>·</span>
-                <a href="<?php echo esc_url( home_url( '/terms' ) ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'תנאי שימוש' : 'Terms' ); ?></a>
-                <span>·</span>
-                <a href="<?php echo esc_url( home_url( '/accessibility' ) ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'נגישות' : 'Accessibility' ); ?></a>
+                <a href="<?php echo esc_url( handandvision_get_contact_url() ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'צרו קשר' : 'Contact' ); ?></a>
+                <?php
+                $terms_page = get_page_by_path( 'terms' );
+                if ( $terms_page && 'publish' === $terms_page->post_status ) :
+                    ?>
+                    <span>·</span>
+                    <a href="<?php echo esc_url( get_permalink( $terms_page ) ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'תנאי שימוש' : 'Terms' ); ?></a>
+                <?php endif; ?>
+                <?php
+                $accessibility_page = get_page_by_path( 'accessibility' );
+                if ( $accessibility_page && 'publish' === $accessibility_page->post_status ) :
+                    ?>
+                    <span>·</span>
+                    <a href="<?php echo esc_url( get_permalink( $accessibility_page ) ); ?>"><?php echo esc_html( handandvision_is_hebrew() ? 'נגישות' : 'Accessibility' ); ?></a>
+                <?php endif; ?>
             </nav>
         </div>
     </div>
