@@ -10,6 +10,7 @@
     "dev:logs": "docker compose logs -f wordpress",
     "dev:cli": "docker compose run --rm --user root --entrypoint wp wpcli --allow-root",
     "dev:import": "docker compose run --rm --user root --entrypoint wp wpcli --allow-root eval-file /var/www/html/wp-content/themes/hands-and-vision/docker/wp-import-restore.php",
+    "dev:polylang": "docker compose run --rm --user root --entrypoint wp wpcli --allow-root eval-file /var/www/html/wp-content/themes/hands-and-vision/docker/wp-polylang-setup.php",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "node -e \"require('child_process').execSync(require('path').join('vendor','bin',process.platform==='win32'?'phpcs.bat':'phpcs'), {stdio:'inherit'})\"",
     "lint:fix": "node -e \"require('child_process').execSync(require('path').join('vendor','bin',process.platform==='win32'?'phpcbf.bat':'phpcbf'), {stdio:'inherit'})\""

@@ -22,9 +22,9 @@
 	letter-spacing: 0.38em;
 	text-transform: uppercase;
 	color: rgba(255, 255, 255, 0.88);
-	margin: 0 0 clamp(20px, 4vw, 36px);
+	margin: clamp(14px, 2.8vw, 24px) 0 0;
 	opacity: 0;
-	animation: hvRefTagline 1s var(--hv-ease-premium) 0.15s forwards;
+	animation: hvRefTagline 1s var(--hv-ease-premium) 0.45s forwards;
 }
 
 @keyframes hvRefTagline {
@@ -51,10 +51,101 @@
 	text-align: center;
 }
 
+.hv-hero-brand {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	margin: 0 auto clamp(28px, 5vw, 44px);
+}
+
+.hv-brand-mark {
+	--hv-brand-mark-color: var(--hv-white);
+	color: var(--hv-brand-mark-color);
+	display: block;
+}
+
+.hv-brand-mark__svg {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.hv-hero-sign.hv-brand-mark .hv-brand-mark__svg {
+	width: clamp(72px, 16vw, 118px);
+	max-width: 100%;
+	margin-inline: auto;
+	filter: drop-shadow(0 10px 32px rgba(0, 0, 0, 0.42));
+}
+
+.hv-hero-wordmark.hv-brand-mark .hv-brand-mark__svg {
+	width: clamp(280px, 72vw, 520px);
+	max-width: 100%;
+	margin-inline: auto;
+	filter: drop-shadow(0 12px 40px rgba(0, 0, 0, 0.45));
+}
+
+.hv-footer__logo.hv-brand-mark .hv-brand-mark__svg {
+	width: clamp(160px, 36vw, 240px);
+	max-width: 100%;
+	opacity: 0.95;
+}
+
+.hv-header-logo-lockup {
+	display: inline-flex;
+	align-items: center;
+	gap: clamp(8px, 1.2vw, 12px);
+	text-decoration: none;
+	line-height: 0;
+}
+
+.hv-header__logo .hv-brand-mark--header {
+	--hv-brand-mark-color: var(--hv-black);
+	color: var(--hv-brand-mark-color);
+	display: block;
+	flex-shrink: 0;
+}
+
+.hv-header__logo .hv-brand-mark--sign.hv-brand-mark--header .hv-brand-mark__svg {
+	width: clamp(34px, 4.5vw, 44px);
+	max-height: 44px;
+	height: auto;
+}
+
+.hv-header__logo .hv-brand-mark--wordmark.hv-brand-mark--header {
+	transform: translateY(5px);
+}
+
+.hv-header__logo .hv-brand-mark--wordmark.hv-brand-mark--header .hv-brand-mark__svg {
+	width: clamp(132px, 20vw, 210px);
+	max-height: 40px;
+	height: auto;
+}
+
+.hv-hero-sign {
+	margin: 0 auto clamp(10px, 2.2vw, 18px);
+	opacity: 0;
+	animation: hvRefSign 1s var(--hv-ease-premium) 0.22s forwards;
+}
+
+@keyframes hvRefSign {
+	from {
+		opacity: 0;
+		transform: translateY(10px) scale(0.94);
+		filter: blur(3px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+		filter: blur(0);
+	}
+}
+
 .hv-hero-wordmark {
 	width: 100%;
 	max-width: 100%;
-	margin: 0 auto clamp(28px, 5vw, 44px);
+	margin: 0;
 	padding: 0;
 	border: 0;
 	line-height: 1;
@@ -79,21 +170,9 @@
 	}
 }
 
-.hv-hero-wordmark__img {
-	display: block;
-	width: clamp(360px, 94vw, 960px);
-	max-width: 100%;
-	height: auto;
-	margin-inline: auto;
-	margin-block: 0;
-	filter: drop-shadow(0 12px 40px rgba(0, 0, 0, 0.45));
-	object-fit: contain;
-	object-position: center center;
-}
-
-/* Text fallback when no wordmark image */
+/* Text fallback when no wordmark SVG */
 .hv-hero-video .hv-hero-wordmark.hv-display,
-.hv-hero-video h1.hv-hero-wordmark:not(:has(img)) {
+.hv-hero-video h1.hv-hero-wordmark:not(:has(.hv-brand-mark__svg)) {
 	width: 100%;
 	text-align: center;
 	font-size: clamp(2rem, 7.5vw, 5.5rem);
@@ -149,6 +228,36 @@
 	body.menu-open {
 		overflow: hidden;
 	}
+}
+
+/* ─── WordPress admin bar (logged-in frontend) ─────────── */
+body.admin-bar {
+	--hv-admin-bar-height: 32px;
+}
+
+@media screen and (max-width: 782px) {
+	body.admin-bar {
+		--hv-admin-bar-height: 46px;
+	}
+}
+
+body.admin-bar .hv-header,
+body.admin-bar .hv-header.scrolled,
+body.admin-bar .hv-header.menu-open {
+	top: var(--hv-admin-bar-height) !important;
+	z-index: 99998 !important;
+}
+
+body.admin-bar .hv-artist-statement__aside {
+	top: calc(var(--hv-header-height, 80px) + var(--hv-admin-bar-height) + 32px);
+}
+
+body.admin-bar .hv-sticky-portrait {
+	top: calc(var(--hv-header-height, 80px) + var(--hv-admin-bar-height) + 40px);
+}
+
+body.admin-bar .hv-single-product-editorial .hv-product-gallery {
+	top: calc(var(--hv-header-height, 80px) + var(--hv-admin-bar-height) + 24px);
 }
 
 /* ─── Services: "What we do" ───────────────────────────── */
@@ -1075,11 +1184,15 @@ body.hv-hero-layout-page #primary > .hv-hero:first-child {
 	}
 
 	.hv-hero-tagline {
-		margin-bottom: clamp(14px, 3vw, 22px);
+		margin-top: clamp(10px, 2.5vw, 16px);
+	}
+
+	.hv-hero-brand {
+		margin-bottom: clamp(18px, 4vw, 28px);
 	}
 
 	.hv-hero-wordmark {
-		margin-bottom: clamp(18px, 4vw, 28px);
+		margin-bottom: 0;
 	}
 
 	.hv-services-main-title {
@@ -1147,6 +1260,17 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 	align-items: center;
 	gap: 2px;
 	line-height: 1;
+}
+
+.hv-header__actions .hv-header__lang {
+	position: static;
+}
+
+.hv-header__actions .hv-header__cart {
+	position: relative;
+	inset-inline-end: auto;
+	top: auto;
+	transform: none;
 }
 
 .hv-lang-link {

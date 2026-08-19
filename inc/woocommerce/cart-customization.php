@@ -67,6 +67,7 @@ add_filter( 'woocommerce_order_item_name', 'handandvision_add_artist_to_order_it
 
 function handandvision_header_cart_markup( $cart_count ) {
     $aria_label = handandvision_is_hebrew() ? 'עגלת קניות' : 'Shopping Cart';
+    $has_items  = $cart_count > 0;
     ?>
     <a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="hv-header__cart" id="hv-header-cart" aria-label="<?php echo esc_attr( $aria_label ); ?>">
         <svg class="hv-cart-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -74,7 +75,7 @@ function handandvision_header_cart_markup( $cart_count ) {
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <path d="M16 10a4 4 0 0 1-8 0"></path>
         </svg>
-        <span class="hv-cart-count has-items" id="hv-cart-count"><?php echo esc_html( $cart_count ); ?></span>
+        <span class="hv-cart-count<?php echo $has_items ? ' has-items' : ''; ?>" id="hv-cart-count"><?php echo esc_html( $cart_count ); ?></span>
     </a>
     <?php
 }
@@ -82,9 +83,7 @@ function handandvision_header_cart_markup( $cart_count ) {
 function handandvision_cart_count_fragments( $fragments ) {
     $cart_count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
     ob_start();
-    if ( $cart_count > 0 ) {
-        handandvision_header_cart_markup( $cart_count );
-    }
+    handandvision_header_cart_markup( $cart_count );
     $fragments['#hv-header-cart-wrap'] = ob_get_clean();
     return $fragments;
 }

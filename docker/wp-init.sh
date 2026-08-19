@@ -20,7 +20,9 @@ wp core update --allow-root
 
 wp plugin install advanced-custom-fields --activate --force --allow-root
 wp plugin install woocommerce --activate --force --allow-root
+wp plugin install polylang --activate --force --allow-root
 wp plugin install all-in-one-wp-migration --activate --force --allow-root
+wp eval-file /var/www/html/wp-content/themes/hands-and-vision/docker/wp-polylang-setup.php --allow-root
 wp theme activate hands-and-vision --allow-root
 
 mkdir -p /var/www/html/wp-content/ai1wm-backups

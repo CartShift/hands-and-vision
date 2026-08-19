@@ -24,7 +24,7 @@ define( 'ASTRA_THEME_ORG_VERSION', file_exists( ASTRA_THEME_DIR . 'inc/w-org-ver
 /**
  * Hand and Vision Custom Theme Version
  */
-define( 'HV_THEME_VERSION', '3.3.10' );
+define( 'HV_THEME_VERSION', '3.3.11' );
 
 /**
  * Minimum Version requirement of the Astra Pro addon.
@@ -282,6 +282,7 @@ require_once ASTRA_THEME_DIR . 'inc/maintenance-mode.php';
 
 // IMPORTANT: Load accessibility first - other modules depend on handandvision_is_hebrew()
 require_once ASTRA_THEME_DIR . 'inc/accessibility/language-rtl.php';
+require_once ASTRA_THEME_DIR . 'inc/accessibility/polylang-integration.php';
 
 // SEO Module - Lightweight Open Graph & Meta Tags
 require_once ASTRA_THEME_DIR . 'inc/seo/class-hv-seo.php';
@@ -457,57 +458,77 @@ add_action( 'wp_enqueue_scripts', function() {
  * @return void
  */
 function handandvision_custom_header() {
-    $logo_url = handandvision_get_logo_url();
+    $sign_svg        = handandvision_get_brand_svg_markup( 'sign' );
+    $wordmark_svg    = handandvision_get_brand_svg_markup( 'wordmark' );
+    $header_logo_alt = get_bloginfo( 'name' ) ?: 'Hands and Vision Collective';
 
     ob_start();
     ?>
     <header class="hv-header" id="hv-masthead">
         <div class="hv-header__container">
-            <!-- Language Switcher (Floating Left on Desktop) -->
-            <div class="hv-header__lang">
-                <?php
-                if ( function_exists( 'icl_get_languages' ) ) {
-                    $languages = icl_get_languages( 'skip_missing=0' );
-                    if ( ! empty( $languages ) ) {
-                        foreach ( $languages as $l ) {
-                            echo '<a href="' . esc_url( $l['url'] ) . '" class="hv-lang-link ' . ( ! empty( $l['active'] ) ? 'active' : '' ) . '">' . esc_html( strtoupper( $l['language_code'] ) ) . '</a>';
-                            if ( end( $languages ) !== $l ) {
-                                echo '<span class="hv-lang-sep">|</span>';
-                            }
-                        }
-                    }
-                } elseif ( function_exists( 'pll_the_languages' ) ) {
-                    $languages = pll_the_languages( array( 'raw' => 1 ) );
-                    if ( ! empty( $languages ) ) {
-                        foreach ( $languages as $l ) {
-                            echo '<a href="' . esc_url( $l['url'] ) . '" class="hv-lang-link ' . ( ! empty( $l['current_lang'] ) ? 'active' : '' ) . '">' . esc_html( strtoupper( $l['slug'] ) ) . '</a>';
-                            if ( end( $languages ) !== $l ) {
-                                echo '<span class="hv-lang-sep">|</span>';
-                            }
-                        }
-                    }
-                } else {
-                    $current_url = ( isset( $GLOBALS['wp'] ) && is_object( $GLOBALS['wp'] ) && isset( $GLOBALS['wp']->request ) )
-                        ? home_url( '/' . $GLOBALS['wp']->request )
-                        : home_url( '/' );
-                    $he_url = add_query_arg( 'lang', 'he', $current_url );
-                    $en_url = add_query_arg( 'lang', 'en', $current_url );
-                    $current_lang = handandvision_get_current_language();
-                    ?>
-                    <a href="<?php echo esc_url( $he_url ); ?>" class="hv-lang-link <?php echo ( $current_lang === 'he' ) ? 'active' : ''; ?>">HE</a>
-                    <span class="hv-lang-sep">|</span>
-                    <a href="<?php echo esc_url( $en_url ); ?>" class="hv-lang-link <?php echo ( $current_lang === 'en' ) ? 'active' : ''; ?>">EN</a>
+            <div class="hv-header__actions">
+                <div class="hv-header__lang">
                     <?php
-                }
-                ?>
+                    if ( function_exists( 'icl_get_languages' ) ) {
+                        $languages = icl_get_languages( 'skip_missing=0' );
+                        if ( ! empty( $languages ) ) {
+                            foreach ( $languages as $l ) {
+                                echo '<a href="' . esc_url( $l['url'] ) . '" class="hv-lang-link ' . ( ! empty( $l['active'] ) ? 'active' : '' ) . '">' . esc_html( strtoupper( $l['language_code'] ) ) . '</a>';
+                                if ( end( $languages ) !== $l ) {
+                                    echo '<span class="hv-lang-sep">|</span>';
+                                }
+                            }
+                        }
+                    } elseif ( function_exists( 'pll_the_languages' ) ) {
+                        $languages = pll_the_languages( array( 'raw' => 1 ) );
+                        if ( ! empty( $languages ) ) {
+                            foreach ( $languages as $l ) {
+                                echo '<a href="' . esc_url( $l['url'] ) . '" class="hv-lang-link ' . ( ! empty( $l['current_lang'] ) ? 'active' : '' ) . '">' . esc_html( strtoupper( $l['slug'] ) ) . '</a>';
+                                if ( end( $languages ) !== $l ) {
+                                    echo '<span class="hv-lang-sep">|</span>';
+                                }
+                            }
+                        }
+                    } else {
+                        $current_url = ( isset( $GLOBALS['wp'] ) && is_object( $GLOBALS['wp'] ) && isset( $GLOBALS['wp']->request ) )
+                            ? home_url( '/' . $GLOBALS['wp']->request )
+                            : home_url( '/' );
+                        $he_url = add_query_arg( 'lang', 'he', $current_url );
+                        $en_url = add_query_arg( 'lang', 'en', $current_url );
+                        $current_lang = handandvision_get_current_language();
+                        ?>
+                        <a href="<?php echo esc_url( $he_url ); ?>" class="hv-lang-link <?php echo ( $current_lang === 'he' ) ? 'active' : ''; ?>">HE</a>
+                        <span class="hv-lang-sep">|</span>
+                        <a href="<?php echo esc_url( $en_url ); ?>" class="hv-lang-link <?php echo ( $current_lang === 'en' ) ? 'active' : ''; ?>">EN</a>
+                        <?php
+                    }
+                    ?>
+                </div>
+
+                <?php if ( class_exists( 'WooCommerce' ) ) : ?>
+                    <div id="hv-header-cart-wrap"><?php
+                    $cart_count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
+                    handandvision_header_cart_markup( $cart_count );
+                    ?></div>
+                <?php endif; ?>
             </div>
 
             <!-- Centered Wrapper for Logo + Nav -->
             <div class="hv-header__center">
                 <div class="hv-header__logo">
-                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hv-logo-link">
-                        <?php if ( $logo_url ) : ?>
-                            <img src="<?php echo esc_url( $logo_url ); ?>" alt="Hand and Vision" style="width: 60px; height: 60px; object-fit: contain; display: block;">
+                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hv-logo-link hv-header-logo-lockup">
+                        <?php if ( $sign_svg || $wordmark_svg ) : ?>
+                            <span class="screen-reader-text"><?php echo esc_html( $header_logo_alt ); ?></span>
+                            <?php if ( $sign_svg ) : ?>
+                                <span class="hv-brand-mark hv-brand-mark--sign hv-brand-mark--header">
+                                    <?php echo $sign_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- theme SVG asset. ?>
+                                </span>
+                            <?php endif; ?>
+                            <?php if ( $wordmark_svg ) : ?>
+                                <span class="hv-brand-mark hv-brand-mark--wordmark hv-brand-mark--header">
+                                    <?php echo $wordmark_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- theme SVG asset. ?>
+                                </span>
+                            <?php endif; ?>
                         <?php else : ?>
                             <span class="hv-logo-text">HAND & VISION</span>
                         <?php endif; ?>
@@ -526,17 +547,6 @@ function handandvision_custom_header() {
                     ?>
                 </nav>
             </div>
-
-            <?php
-            if ( class_exists( 'WooCommerce' ) ) {
-                $cart_count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
-                ?>
-                <div id="hv-header-cart-wrap"><?php
-                if ( $cart_count > 0 ) {
-                    handandvision_header_cart_markup( $cart_count );
-                }
-                ?></div>
-            <?php } ?>
 
             <!-- Mobile Menu Toggle -->
             <button class="hv-header__menu-toggle" id="hv-menu-toggle" aria-label="<?php echo esc_attr( handandvision_is_hebrew() ? 'תפריט' : 'Menu' ); ?>">

@@ -73,17 +73,27 @@ $is_hebrew = handandvision_is_hebrew();
             <div class="hv-hero-video__overlay"></div>
         </div>
         <div class="hv-hero-video__content hv-hero-video__content--center">
-            <p class="hv-overline hv-hero-overline-v2 hv-hero-tagline" dir="ltr">Art. Design. Installations.</p>
             <?php
-            $wordmark_url = handandvision_get_wordmark_logo_url();
-            if ( $wordmark_url ) :
+            $sign_svg      = handandvision_get_brand_svg_markup( 'sign' );
+            $wordmark_svg  = handandvision_get_brand_svg_markup( 'wordmark' );
+            $hero_logo_alt = $hero_title ?: 'Hands and Vision Collective';
             ?>
-            <h1 class="hv-hero-wordmark">
-                <img src="<?php echo esc_url( $wordmark_url ); ?>" alt="<?php echo esc_attr( $hero_title ?: 'Hands and Vision' ); ?>" class="hv-hero-wordmark__img" width="960" height="72" fetchpriority="high">
-            </h1>
-            <?php else : ?>
-            <h1 class="hv-display hv-hero-title-v2" dir="ltr"><?php echo esc_html( $hero_title ?: 'HANDS AND VISION' ); ?></h1>
-            <?php endif; ?>
+            <div class="hv-hero-brand">
+                <?php if ( $sign_svg ) : ?>
+                <div class="hv-hero-sign hv-brand-mark hv-brand-mark--sign" aria-hidden="true">
+                    <?php echo $sign_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- theme SVG asset. ?>
+                </div>
+                <?php endif; ?>
+                <?php if ( $wordmark_svg ) : ?>
+                <h1 class="hv-hero-wordmark hv-brand-mark hv-brand-mark--wordmark">
+                    <span class="screen-reader-text"><?php echo esc_html( $hero_logo_alt ); ?></span>
+                    <?php echo $wordmark_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- theme SVG asset. ?>
+                </h1>
+                <?php else : ?>
+                <h1 class="hv-display hv-hero-title-v2" dir="ltr"><?php echo esc_html( $hero_title ?: 'HANDS AND VISION' ); ?></h1>
+                <?php endif; ?>
+                <p class="hv-overline hv-hero-overline-v2 hv-hero-tagline" dir="ltr">Art. Design. Installations.</p>
+            </div>
             <?php if ( $hero_subtitle ) : ?><p class="hv-subtitle hv-mt-0"><?php echo esc_html( $hero_subtitle ); ?></p><?php endif; ?>
             <div class="hv-hero-video__actions">
                 <a href="<?php echo esc_url( get_post_type_archive_link( 'artist' ) ); ?>" class="hv-btn hv-btn--primary"><?php echo esc_html( $is_hebrew ? 'קולקטיב האמנים' : 'ARTISTS COLLECTIVE' ); ?></a>

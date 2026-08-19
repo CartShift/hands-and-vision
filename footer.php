@@ -30,8 +30,17 @@ $current_year = wp_date( 'Y' );
 
             <!-- Brand Column -->
             <div class="hv-footer__brand">
-                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hv-footer__logo">
-                    HAND & VISION
+                <?php
+                $footer_wordmark_svg = handandvision_get_brand_svg_markup( 'wordmark' );
+                $footer_logo_alt     = get_bloginfo( 'name' ) ?: 'Hands and Vision Collective';
+                ?>
+                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="hv-footer__logo hv-brand-mark hv-brand-mark--wordmark">
+                    <?php if ( $footer_wordmark_svg ) : ?>
+                        <span class="screen-reader-text"><?php echo esc_html( $footer_logo_alt ); ?></span>
+                        <?php echo $footer_wordmark_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- theme SVG asset. ?>
+                    <?php else : ?>
+                        HAND &amp; VISION
+                    <?php endif; ?>
                 </a>
                 <p class="hv-footer__tagline"><?php echo esc_html( $footer_tagline ); ?></p>
                 <div class="hv-social-links">

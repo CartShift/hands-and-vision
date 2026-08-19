@@ -22,6 +22,10 @@ function handandvision_init_language_cookie() {
         return;
     }
 
+    if ( function_exists( 'pll_current_language' ) || defined( 'ICL_LANGUAGE_CODE' ) ) {
+        return;
+    }
+
     // if GET param is present, update the cookie
     if ( isset( $_GET['lang'] ) ) {
         $lang = sanitize_text_field( wp_unslash( $_GET['lang'] ) );
@@ -47,23 +51,7 @@ add_action( 'init', 'handandvision_init_language_cookie' );
  * @return string Language code (he or en)
  */
 function handandvision_get_current_language() {
-    // 1. Check URL Parameter (Highest Priority)
-    if ( isset( $_GET['lang'] ) ) {
-        $lang = sanitize_text_field( wp_unslash( $_GET['lang'] ) );
-        if ( 'en' === $lang || 'he' === $lang ) {
-            return $lang;
-        }
-    }
-
-    // 2. Check Cookie (Medium Priority)
-    if ( isset( $_COOKIE['hv_lang'] ) ) {
-        $lang = sanitize_text_field( wp_unslash( $_COOKIE['hv_lang'] ) );
-        if ( 'en' === $lang || 'he' === $lang ) {
-            return $lang;
-        }
-    }
-
-    // 3. Fallback to Plugins (Polylang / WPML)
+    // 1. Polylang / WPML — canonical language from URL structure.
     if ( function_exists( 'pll_current_language' ) ) {
         $pll_lang = pll_current_language();
         if ( $pll_lang ) {
@@ -74,7 +62,21 @@ function handandvision_get_current_language() {
         return ICL_LANGUAGE_CODE;
     }
 
-    // 4. Default to Hebrew
+    // 2. Legacy ?lang= and cookie when no multilingual plugin is active.
+    if ( isset( $_GET['lang'] ) ) {
+        $lang = sanitize_text_field( wp_unslash( $_GET['lang'] ) );
+        if ( 'en' === $lang || 'he' === $lang ) {
+            return $lang;
+        }
+    }
+
+    if ( isset( $_COOKIE['hv_lang'] ) ) {
+        $lang = sanitize_text_field( wp_unslash( $_COOKIE['hv_lang'] ) );
+        if ( 'en' === $lang || 'he' === $lang ) {
+            return $lang;
+        }
+    }
+
     return 'he';
 }
 

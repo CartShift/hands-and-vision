@@ -71,11 +71,89 @@ function handandvision_get_logo_url() {
 }
 
 /**
- * Wordmark logo URL (text only, no symbol) for hero and prominent branding.
+ * Brand SVG asset map.
+ *
+ * @return array<string, string>
+ */
+function handandvision_get_brand_svg_files() {
+    return array(
+        'sign'     => 'logo-sign-black.svg',
+        'wordmark' => 'logo-text-black.svg',
+    );
+}
+
+/**
+ * Resolve a brand SVG path on disk.
+ *
+ * @param string $variant sign|wordmark
+ * @return string
+ */
+function handandvision_get_brand_svg_path( $variant ) {
+    $files = handandvision_get_brand_svg_files();
+    if ( ! isset( $files[ $variant ] ) ) {
+        return '';
+    }
+
+    $path = get_stylesheet_directory() . '/assets/images/' . $files[ $variant ];
+    return file_exists( $path ) ? $path : '';
+}
+
+/**
+ * Public URL for a brand SVG asset.
+ *
+ * @param string $variant sign|wordmark
+ * @return string
+ */
+function handandvision_get_brand_svg_url( $variant ) {
+    $path = handandvision_get_brand_svg_path( $variant );
+    if ( ! $path ) {
+        return '';
+    }
+
+    $files = handandvision_get_brand_svg_files();
+    return get_stylesheet_directory_uri() . '/assets/images/' . $files[ $variant ];
+}
+
+/**
+ * Inline brand SVG markup for crisp, theme-controlled rendering.
+ *
+ * @param string $variant sign|wordmark
+ * @return string
+ */
+function handandvision_get_brand_svg_markup( $variant ) {
+    $path = handandvision_get_brand_svg_path( $variant );
+    if ( ! $path ) {
+        return '';
+    }
+
+    $svg = file_get_contents( $path );
+    if ( false === $svg || '' === trim( $svg ) ) {
+        return '';
+    }
+
+    $svg = preg_replace( '/<\?xml.*?\?>\s*/s', '', $svg );
+    $svg = preg_replace( '/<!DOCTYPE.*?>\s*/s', '', $svg );
+    $svg = preg_replace(
+        '/<svg /',
+        '<svg class="hv-brand-mark__svg" focusable="false" aria-hidden="true" ',
+        trim( $svg ),
+        1
+    );
+
+    return $svg;
+}
+
+/**
+ * Wordmark logo URL for hero, footer, and prominent branding.
  *
  * @return string
  */
 function handandvision_get_wordmark_logo_url() {
+    $svg_url = handandvision_get_brand_svg_url( 'wordmark' );
+    if ( $svg_url ) {
+        return $svg_url;
+    }
+
     $upload_dir = wp_upload_dir();
     $candidates = array(
         $upload_dir['basedir'] . '/hv-wordmark.png' => $upload_dir['baseurl'] . '/hv-wordmark.png',
@@ -88,12 +166,16 @@ function handandvision_get_wordmark_logo_url() {
         }
     }
 
-    $theme_path = get_stylesheet_directory() . '/assets/images/hv-wordmark.svg';
-    if ( file_exists( $theme_path ) ) {
-        return get_stylesheet_directory_uri() . '/assets/images/hv-wordmark.svg';
-    }
-
     return handandvision_get_logo_url();
+}
+
+/**
+ * Sign/symbol logo URL for hero branding.
+ *
+ * @return string
+ */
+function handandvision_get_sign_logo_url() {
+    return handandvision_get_brand_svg_url( 'sign' );
 }
 
 /**

@@ -39,6 +39,7 @@ Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) (runn
 | `npm run dev:stop` | Stop containers |
 | `npm run dev:destroy` | Remove containers and database |
 | `npm run dev:import -- file.wpress` | Import a backup from `backups/` |
+| `npm run dev:polylang` | Configure Polylang (Hebrew default + English `/en/`) |
 | `npm run dev:cli -- user list` | Run WP-CLI |
 
 **Use http://127.0.0.1:8888** (not `localhost`) on Windows — Docker port forwarding can hang on `localhost`.
@@ -91,6 +92,34 @@ Key spacing tokens:
 ### RTL
 
 Use `[dir="rtl"]` overrides and logical properties (`inset-inline`, `margin-inline`). PHP strings: `$is_hebrew ? 'HE' : 'EN'`.
+
+## Multilingual (Hebrew + English)
+
+**Recommended stack:** [Polylang](https://wordpress.org/plugins/polylang/) + **Yoast SEO** (already active on production).
+
+| Piece | Role |
+|-------|------|
+| Polylang | Language URLs (`/en/…`), content translations, locale switching, RTL/LTR |
+| Yoast SEO | Per-language titles, meta, sitemaps; hreflang with Polylang |
+| Theme (`inc/accessibility/`) | `handandvision_is_hebrew()`, header switcher, `is_rtl` sync |
+
+**Local setup:** Polylang is installed by `npm run dev`. Run `npm run dev:polylang` to add Hebrew (default, no URL prefix) and English (`/en/` prefix).
+
+**Content workflow:**
+1. In WP Admin → Languages, confirm Hebrew + English.
+2. For each page/CPT post, create a translation and link them in the Polylang column.
+3. Register menus per language (Appearance → Menus → language tabs).
+4. Products: ACF `product_title_en` still works for EN titles until you add **Polylang for WooCommerce** (paid) for full shop sync (cart, checkout pages, categories).
+
+**Production:** Install Polylang from Plugins → Add New, then Languages → setup wizard (same settings: Hebrew default, directory name, hide default language). Theme integration in `inc/accessibility/polylang-integration.php` registers `artist`, `service`, `gallery_item`, and `product` for translation.
+
+**SEO best practices (already configured):**
+- Canonical language URLs (not `?lang=en` query args)
+- `hreflang` via Polylang + Yoast
+- `x-default` → Hebrew (default language)
+- Per-language sitemaps in Yoast
+
+The legacy `?lang=en` cookie switcher is disabled when Polylang is active.
 
 ## SEO
 
