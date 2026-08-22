@@ -27,11 +27,11 @@ $is_hebrew = handandvision_is_hebrew();
 
     <?php
     get_template_part( 'template-parts/hero/page-hero', null, array(
-        'overline'   => $is_hebrew ? 'הקולקטיב' : 'The Collective',
-        'title'      => $is_hebrew ? 'האמנים שלנו' : 'Our Artists',
+        'overline'   => '',
+        'title'      => $is_hebrew ? 'הקולקטיב' : 'The Collective',
         'subtitle'   => $is_hebrew
-            ? 'יוצרים מהקולקטיב שלנו. לחצו על כל אמן לצפייה בעבודות.'
-            : 'Creators from our collective. Tap any artist to explore their work.',
+            ? 'לחצו על כל אומן לצפייה בפרופיל'
+            : 'Tap any artist to view their profile.',
         'class'      => 'hv-hero--artists-dark',
     ) );
     ?>

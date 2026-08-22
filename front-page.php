@@ -74,8 +74,8 @@ $is_hebrew = handandvision_is_hebrew();
         </div>
         <div class="hv-hero-video__content hv-hero-video__content--center">
             <?php
-            $sign_svg      = handandvision_get_brand_svg_markup( 'sign' );
-            $wordmark_svg  = handandvision_get_brand_svg_markup( 'wordmark' );
+            $sign_svg      = handandvision_get_brand_svg_markup( 'sign', 'brand' );
+            $wordmark_svg  = handandvision_get_brand_svg_markup( 'wordmark', 'brand' );
             $hero_logo_alt = $hero_title ?: 'Hands and Vision Collective';
             ?>
             <div class="hv-hero-brand">
@@ -203,11 +203,10 @@ $is_hebrew = handandvision_is_hebrew();
     <!-- FEATURED ARTISTS SECTION -->
     <section class="hv-section hv-section--white hv-home-artists">
         <div class="hv-container">
-            <header class="hv-section-header hv-text-center hv-animate hv-home-section-header">
+            <header class="hv-section-header hv-text-center hv-animate hv-home-section-header hv-home-section-header--artists">
                 <span class="hv-home-section-header__eyebrow">
                     <span class="hv-home-section-header__label"><?php echo esc_html( $is_hebrew ? 'הקולקטיב' : 'The Collective' ); ?></span>
                 </span>
-                <h2 class="hv-headline-2"><?php echo esc_html( $is_hebrew ? 'האמנים שלנו' : 'Our Artists' ); ?></h2>
             </header>
         </div>
 
@@ -226,6 +225,20 @@ $is_hebrew = handandvision_is_hebrew();
             }
             $display_artists = is_array( $display_artists ) ? $display_artists : array();
             $display_artists = handandvision_sort_artists_for_display( $display_artists );
+            foreach ( $display_artists as $artist_index => $artist_item ) {
+                $artist_name = is_object( $artist_item ) ? strtolower( trim( get_the_title( $artist_item->ID ) ) ) : '';
+                $artist_slug = is_object( $artist_item ) ? strtolower( trim( get_post_field( 'post_name', $artist_item->ID ) ) ) : '';
+                if (
+                    false !== strpos( $artist_name, 'daniel philosoph' )
+                    || false !== strpos( $artist_slug, 'daniel-philosoph' )
+                    || false !== strpos( $artist_name, 'דניאל' )
+                ) {
+                    unset( $display_artists[ $artist_index ] );
+                    array_unshift( $display_artists, $artist_item );
+                    $display_artists = array_values( $display_artists );
+                    break;
+                }
+            }
             ?>
             <?php if ( ! empty( $display_artists ) ) : ?>
             <div class="hv-artists-showcase-bleed hv-carousel-bleed">

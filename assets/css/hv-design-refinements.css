@@ -296,13 +296,24 @@ body.admin-bar .hv-single-product-editorial .hv-product-gallery {
 }
 
 .hv-services-carousel {
-	gap: clamp(16px, 2.5vw, 28px);
+	display: block !important;
+	direction: ltr;
 	padding: 8px 0 24px;
+	overflow: visible !important;
+}
+
+.hv-services-carousel .swiper-wrapper {
+	align-items: stretch;
+}
+
+[dir="rtl"] .hv-services-carousel .hv-service-card--gallery {
+	direction: rtl;
 }
 
 .hv-services-carousel .swiper-slide {
 	height: auto;
 	width: min(300px, 78vw) !important;
+	margin-inline-start: 0 !important;
 }
 
 @media (min-width: 768px) {
@@ -542,6 +553,7 @@ body.admin-bar .hv-single-product-editorial .hv-product-gallery {
 	line-height: 1.65;
 	color: rgba(255, 255, 255, 0.82);
 	max-width: 36ch;
+	margin-top: clamp(14px, 2.4vw, 24px);
 	margin-inline: auto;
 }
 
@@ -1080,6 +1092,79 @@ body.hv-hero-layout-page #primary > .hv-hero:first-child {
 	box-shadow: none !important;
 }
 
+.hv-homepage .hv-artists-showcase.swiper {
+	display: block !important;
+	overflow-x: auto !important;
+	overflow-y: visible !important;
+	overscroll-behavior-inline: contain;
+	padding-inline: clamp(20px, 6vw, 48px) !important;
+	scrollbar-width: none;
+	touch-action: pan-x pan-y;
+	-webkit-overflow-scrolling: touch;
+	cursor: auto;
+}
+
+.hv-homepage .hv-artists-showcase.swiper::-webkit-scrollbar {
+	display: none;
+}
+
+[dir="rtl"] .hv-homepage .hv-artists-showcase.swiper {
+	direction: ltr;
+}
+
+[dir="rtl"] .hv-homepage .hv-artists-showcase .hv-artist-card__info {
+	direction: rtl;
+}
+
+.hv-homepage .hv-artists-showcase .swiper-wrapper {
+	display: flex !important;
+	flex-wrap: nowrap !important;
+	justify-content: flex-start !important;
+	gap: clamp(16px, 5vw, 24px) !important;
+	width: max-content !important;
+	min-width: 0;
+	will-change: transform;
+	user-select: none;
+}
+
+.hv-homepage .hv-artists-showcase--rtl-loop .swiper-wrapper {
+	flex-direction: row-reverse !important;
+}
+
+.hv-homepage .hv-artists-showcase .swiper-slide {
+	flex: 0 0 clamp(92px, 25vw, 132px) !important;
+	width: clamp(92px, 25vw, 132px) !important;
+	margin-inline: 0 !important;
+	scroll-snap-align: center;
+}
+
+.hv-homepage .hv-artists-showcase .hv-artist-card__portrait {
+	width: 100% !important;
+	height: auto !important;
+	min-width: 0 !important;
+	min-height: 0 !important;
+	max-width: none !important;
+	max-height: none !important;
+	aspect-ratio: 1;
+}
+
+.hv-homepage .hv-artists-showcase .hv-artist-card__portrait img,
+.hv-homepage .hv-artists-showcase .hv-artist-card__img,
+.hv-homepage .hv-artists-showcase .hv-artist-card__placeholder {
+	width: 100% !important;
+	height: 100% !important;
+	-webkit-user-drag: none;
+	user-select: none;
+}
+
+.hv-homepage .hv-artists-showcase.swiper-horizontal {
+	touch-action: pan-x pan-y;
+}
+
+.hv-homepage .hv-artists-showcase.is-dragging {
+	cursor: grabbing;
+}
+
 .hv-artist-card__quote {
 	margin-top: 4px;
 	font-size: 0.78rem;
@@ -1193,6 +1278,10 @@ body.hv-hero-layout-page #primary > .hv-hero:first-child {
 
 	.hv-hero-wordmark {
 		margin-bottom: 0;
+	}
+
+	.home .hv-hero-video__scroll {
+		bottom: clamp(76px, 12svh, 112px);
 	}
 
 	.hv-services-main-title {
@@ -1458,24 +1547,23 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 }
 
 .hv-artist-cinema-hero__overline {
+	display: inline-flex;
+	align-items: center;
+	gap: 16px;
 	font-size: 0.72rem;
 	letter-spacing: 0.32em;
 	text-transform: uppercase;
 	color: var(--hv-lilac);
 	font-weight: 500;
-	position: relative;
-	padding-inline-start: 56px;
 }
 
-.hv-artist-cinema-hero__overline::before {
+.hv-artist-cinema-hero__overline::before,
+.hv-artist-cinema-hero__overline::after {
 	content: "";
-	position: absolute;
-	inset-inline-start: 0;
-	top: 50%;
+	flex: 0 0 40px;
 	width: 40px;
 	height: 1px;
 	background: var(--hv-lilac);
-	transform: translateY(-50%);
 }
 
 .hv-artist-cinema-hero__name {
@@ -1942,12 +2030,14 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 	}
 
 	.hv-artist-cinema-hero__overline {
-		padding-inline-start: 40px;
+		gap: 12px;
 		font-size: 0.66rem;
 		letter-spacing: 0.26em;
 	}
 
-	.hv-artist-cinema-hero__overline::before {
+	.hv-artist-cinema-hero__overline::before,
+	.hv-artist-cinema-hero__overline::after {
+		flex-basis: 26px;
 		width: 26px;
 	}
 
@@ -2064,21 +2154,20 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 }
 
 .hv-shop-category__label {
-	position: relative;
-	padding-inline-start: 28px;
+	display: inline-flex;
+	align-items: center;
+	gap: 14px;
 	color: var(--hv-petrol);
 }
 
-.hv-shop-category__label::before {
+.hv-shop-category__label::before,
+.hv-shop-category__label::after {
 	content: "";
-	position: absolute;
-	inset-inline-start: 0;
-	top: 50%;
+	flex: 0 0 18px;
 	width: 18px;
 	height: 1px;
 	background: var(--hv-petrol);
 	opacity: 0.4;
-	transform: translateY(-50%);
 }
 
 .hv-shop-editorial .hv-shop-category__title-wrap h2 {
@@ -2339,24 +2428,23 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 }
 
 .hv-single-product-editorial .hv-service-single-hero__label {
+	display: inline-flex;
+	align-items: center;
+	gap: 16px;
 	font-size: 0.72rem;
 	letter-spacing: 0.34em;
 	text-transform: uppercase;
 	color: var(--hv-lilac);
-	position: relative;
-	padding-inline-start: 52px;
 	font-weight: 500;
 }
 
-.hv-single-product-editorial .hv-service-single-hero__label::before {
+.hv-single-product-editorial .hv-service-single-hero__label::before,
+.hv-single-product-editorial .hv-service-single-hero__label::after {
 	content: "";
-	position: absolute;
-	inset-inline-start: 0;
-	top: 50%;
+	flex: 0 0 36px;
 	width: 36px;
 	height: 1px;
 	background: var(--hv-lilac);
-	transform: translateY(-50%);
 }
 
 .hv-single-product-editorial .hv-service-single-hero__title {
@@ -2817,6 +2905,20 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 }
 
 /* Controls row — editorial composition */
+.hv-gallery-editorial .hv-hero--gallery-title-only {
+	padding-block: clamp(80px, 8vw, 104px) clamp(72px, 7vw, 96px);
+}
+
+.hv-gallery-editorial .hv-hero--gallery-title-only .hv-hero__inner {
+	max-width: min(100%, 980px);
+	margin-inline: auto;
+	text-align: center;
+}
+
+.hv-gallery-editorial .hv-hero--gallery-title-only .hv-hero__title {
+	margin: 0;
+}
+
 .hv-gallery-editorial .hv-gallery-controls {
 	max-width: var(--hv-container-wide);
 	margin: 0 auto;
@@ -3220,22 +3322,22 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 
 .hv-home-section-header__label,
 .hv-home-intro__label {
-	position: relative;
-	padding-inline-start: 28px;
+	display: inline-flex;
+	align-items: center;
+	gap: 14px;
 	color: var(--hv-petrol);
 }
 
 .hv-home-section-header__label::before,
-.hv-home-intro__label::before {
+.hv-home-section-header__label::after,
+.hv-home-intro__label::before,
+.hv-home-intro__label::after {
 	content: "";
-	position: absolute;
-	inset-inline-start: 0;
-	top: 50%;
+	flex: 0 0 18px;
 	width: 18px;
 	height: 1px;
 	background: var(--hv-petrol);
 	opacity: 0.4;
-	transform: translateY(-50%);
 }
 
 /* Dark variant for gallery-carousel section over petrol bg */
@@ -3247,7 +3349,8 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 	color: var(--hv-white);
 }
 
-.hv-home-section-header__eyebrow--light .hv-home-section-header__label::before {
+.hv-home-section-header__eyebrow--light .hv-home-section-header__label::before,
+.hv-home-section-header__eyebrow--light .hv-home-section-header__label::after {
 	background: var(--hv-white);
 	opacity: 0.5;
 }
@@ -3282,6 +3385,22 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 
 .hv-homepage-editorial .hv-home-section-header .hv-headline-2 {
 	font-size: clamp(2rem, 4.4vw, 3rem) !important;
+}
+
+.hv-homepage-editorial .hv-home-section-header--artists .hv-home-section-header__eyebrow {
+	margin-bottom: 0;
+}
+
+.hv-homepage-editorial .hv-home-section-header--artists .hv-home-section-header__label {
+	font-size: clamp(1.45rem, 3.6vw, 2.8rem);
+	letter-spacing: 0.16em;
+	font-weight: 300;
+}
+
+.hv-homepage-editorial .hv-home-section-header--artists .hv-home-section-header__label::before,
+.hv-homepage-editorial .hv-home-section-header--artists .hv-home-section-header__label::after {
+	flex-basis: clamp(24px, 5vw, 52px);
+	width: clamp(24px, 5vw, 52px);
 }
 
 .hv-homepage-editorial .hv-home-section-header.hv-home-section-header--dark .hv-headline-2,
@@ -3526,11 +3645,14 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 
 	.hv-home-section-header__label,
 	.hv-home-intro__label {
-		padding-inline-start: 22px;
+		gap: 10px;
 	}
 
 	.hv-home-section-header__label::before,
-	.hv-home-intro__label::before {
+	.hv-home-section-header__label::after,
+	.hv-home-intro__label::before,
+	.hv-home-intro__label::after {
+		flex-basis: 14px;
 		width: 14px;
 	}
 }
@@ -3554,21 +3676,20 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 }
 
 .hv-editorial-eyebrow__label {
-	position: relative;
-	padding-inline-start: 28px;
+	display: inline-flex;
+	align-items: center;
+	gap: 14px;
 	color: var(--hv-petrol);
 }
 
-.hv-editorial-eyebrow__label::before {
+.hv-editorial-eyebrow__label::before,
+.hv-editorial-eyebrow__label::after {
 	content: "";
-	position: absolute;
-	inset-inline-start: 0;
-	top: 50%;
+	flex: 0 0 18px;
 	width: 18px;
 	height: 1px;
 	background: var(--hv-petrol);
 	opacity: 0.4;
-	transform: translateY(-50%);
 }
 
 .hv-editorial-eyebrow--light {
@@ -3579,7 +3700,8 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 	color: var(--hv-white);
 }
 
-.hv-editorial-eyebrow--light .hv-editorial-eyebrow__label::before {
+.hv-editorial-eyebrow--light .hv-editorial-eyebrow__label::before,
+.hv-editorial-eyebrow--light .hv-editorial-eyebrow__label::after {
 	background: var(--hv-white);
 	opacity: 0.5;
 }
@@ -4053,24 +4175,23 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 }
 
 .hv-single-service-editorial .hv-service-single-hero__label {
+	display: inline-flex;
+	align-items: center;
+	gap: 16px;
 	font-size: 0.72rem;
 	letter-spacing: 0.34em;
 	text-transform: uppercase;
 	color: var(--hv-lilac);
-	position: relative;
-	padding-inline-start: 52px;
 	font-weight: 500;
 }
 
-.hv-single-service-editorial .hv-service-single-hero__label::before {
+.hv-single-service-editorial .hv-service-single-hero__label::before,
+.hv-single-service-editorial .hv-service-single-hero__label::after {
 	content: "";
-	position: absolute;
-	inset-inline-start: 0;
-	top: 50%;
+	flex: 0 0 36px;
 	width: 36px;
 	height: 1px;
 	background: var(--hv-lilac);
-	transform: translateY(-50%);
 }
 
 .hv-single-service-editorial .hv-service-single-hero__title {
@@ -4634,14 +4755,3 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 .hv-artist-card-premium__placeholder span {
 	opacity: 0.7;
 }
-
-
-
-
-
-
-
-
-
-
-

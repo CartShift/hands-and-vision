@@ -77,8 +77,14 @@ function handandvision_get_logo_url() {
  */
 function handandvision_get_brand_svg_files() {
     return array(
-        'sign'     => 'logo-sign-black.svg',
-        'wordmark' => 'logo-text-black.svg',
+        'sign'     => array(
+            'default' => 'logo-sign-black.svg',
+            'brand'   => 'logo-sign-brand.svg',
+        ),
+        'wordmark' => array(
+            'default' => 'logo-text-black.svg',
+            'brand'   => 'logo-text-brand.svg',
+        ),
     );
 }
 
@@ -86,15 +92,17 @@ function handandvision_get_brand_svg_files() {
  * Resolve a brand SVG path on disk.
  *
  * @param string $variant sign|wordmark
+ * @param string $tone    default|brand
  * @return string
  */
-function handandvision_get_brand_svg_path( $variant ) {
+function handandvision_get_brand_svg_path( $variant, $tone = 'default' ) {
     $files = handandvision_get_brand_svg_files();
     if ( ! isset( $files[ $variant ] ) ) {
         return '';
     }
 
-    $path = get_stylesheet_directory() . '/assets/images/' . $files[ $variant ];
+    $file = isset( $files[ $variant ][ $tone ] ) ? $files[ $variant ][ $tone ] : $files[ $variant ]['default'];
+    $path = get_stylesheet_directory() . '/assets/images/' . $file;
     return file_exists( $path ) ? $path : '';
 }
 
@@ -102,26 +110,29 @@ function handandvision_get_brand_svg_path( $variant ) {
  * Public URL for a brand SVG asset.
  *
  * @param string $variant sign|wordmark
+ * @param string $tone    default|brand
  * @return string
  */
-function handandvision_get_brand_svg_url( $variant ) {
-    $path = handandvision_get_brand_svg_path( $variant );
+function handandvision_get_brand_svg_url( $variant, $tone = 'default' ) {
+    $path = handandvision_get_brand_svg_path( $variant, $tone );
     if ( ! $path ) {
         return '';
     }
 
     $files = handandvision_get_brand_svg_files();
-    return get_stylesheet_directory_uri() . '/assets/images/' . $files[ $variant ];
+    $file  = isset( $files[ $variant ][ $tone ] ) ? $files[ $variant ][ $tone ] : $files[ $variant ]['default'];
+    return get_stylesheet_directory_uri() . '/assets/images/' . $file;
 }
 
 /**
  * Inline brand SVG markup for crisp, theme-controlled rendering.
  *
  * @param string $variant sign|wordmark
+ * @param string $tone    default|brand
  * @return string
  */
-function handandvision_get_brand_svg_markup( $variant ) {
-    $path = handandvision_get_brand_svg_path( $variant );
+function handandvision_get_brand_svg_markup( $variant, $tone = 'default' ) {
+    $path = handandvision_get_brand_svg_path( $variant, $tone );
     if ( ! $path ) {
         return '';
     }
@@ -240,4 +251,3 @@ function handandvision_needs_swiper_assets() {
 function handandvision_needs_parallax_assets() {
 	return is_front_page() || is_singular( array( 'artist', 'service', 'product' ) );
 }
-

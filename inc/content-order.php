@@ -95,7 +95,61 @@ function handandvision_sort_services_for_display( array $services ) {
  * @return WP_Post[]
  */
 function handandvision_sort_artists_for_display( array $artists ) {
-	return handandvision_sort_posts_by_title_order( $artists, handandvision_get_artist_display_order() );
+	if ( empty( $artists ) ) {
+		return $artists;
+	}
+
+	$artist_order = array(
+		array( 'daniel philosoph', 'daniel philosof', 'דניאל פילוסוף', '×“× ×™××œ ×¤×™×œ×•×¡×•×£' ),
+		array( 'noa afriat', 'נועה אפריאט', '× ×•×¢×” ××¤×¨×™××˜' ),
+		array( 'mantis', 'מנטיס', '×ž× ×˜×™×¡' ),
+		array( 'rafi', 'רפי', '×¨×¤×™' ),
+		array( 'borix', 'boris', 'בוריס', '×‘×•×¨×™×¡' ),
+		array( 'daniel rotenberg', 'דניאל רוטנברג', '×“× ×™××œ ×¨×•×˜× ×‘×¨×’' ),
+		array( 'yula', 'יולה', '×™×•×œ×”' ),
+		array( 'sabres', 'סברס', '×¡×‘×¨×¡' ),
+		array( 'addison', 'אדיסון', '××“×™×¡×•×Ÿ' ),
+		array( 'vika', 'vika gorelik', 'ויקה', '×•×™×§×”' ),
+		array( 'daniel atiya', 'דניאל עטיה', '×“× ×™××œ ×¢×˜×™×”' ),
+		array( 'boaz philosoph', 'boaz philosof', 'בועז', '×‘×•×¢×–' ),
+		array( 'chenka', 'chen', 'חן', '×—×Ÿ' ),
+	);
+
+	$get_rank = static function ( $artist ) use ( $artist_order ) {
+		$title = is_object( $artist ) ? mb_strtolower( trim( get_the_title( $artist->ID ) ) ) : '';
+		$slug  = is_object( $artist ) ? mb_strtolower( trim( get_post_field( 'post_name', $artist->ID ) ) ) : '';
+		$haystack = $title . ' ' . str_replace( '-', ' ', $slug );
+
+		foreach ( $artist_order as $rank => $aliases ) {
+			foreach ( $aliases as $alias ) {
+				$alias = mb_strtolower( trim( $alias ) );
+				if ( '' !== $alias && false !== mb_strpos( $haystack, $alias ) ) {
+					return $rank;
+				}
+			}
+		}
+
+		return 9999;
+	};
+
+	usort(
+		$artists,
+		static function ( $a, $b ) use ( $get_rank ) {
+			$ra = $get_rank( $a );
+			$rb = $get_rank( $b );
+
+			if ( $ra === $rb ) {
+				return strcmp(
+					is_object( $a ) ? mb_strtolower( trim( get_the_title( $a->ID ) ) ) : '',
+					is_object( $b ) ? mb_strtolower( trim( get_the_title( $b->ID ) ) ) : ''
+				);
+			}
+
+			return $ra <=> $rb;
+		}
+	);
+
+	return $artists;
 }
 
 /**

@@ -773,7 +773,7 @@
 	 */
 	const DragScroll = {
 		init: function () {
-			const containers = document.querySelectorAll(".hv-artists-showcase, .hv-services-carousel");
+			const containers = document.querySelectorAll(".hv-services-carousel");
 			const prefersReducedMotion = A11yUtils.prefersReducedMotion();
 
 			containers.forEach(function (container) {
@@ -857,7 +857,7 @@
 			// Navigation arrows
 			const prevBtn = document.querySelector(".hv-carousel-prev");
 			const nextBtn = document.querySelector(".hv-carousel-next");
-			const showcase = document.querySelector(".hv-artists-showcase");
+			const showcase = document.querySelector(".hv-services-carousel");
 
 			if (prevBtn && nextBtn && showcase) {
 				const scrollAmount = 200; // Pixels to scroll per click
@@ -1332,6 +1332,292 @@
 	};
 
 	/**
+	 * Infinite native-scroll loop for the homepage artists carousel.
+	 */
+	const ArtistsCarouselLoop = {
+		init: function () {
+			const scroller = document.querySelector(".hv-artists-showcase");
+			if (!scroller || scroller.dataset.hvArtistsLoop === "ready") return;
+
+			const wrapper = scroller.querySelector(".swiper-wrapper");
+			if (!wrapper) return;
+
+			const isDanielSlide = function (slide) {
+				const name = (slide.querySelector(".hv-artist-card__name")?.textContent || "").trim().toLowerCase();
+				const link = (slide.querySelector(".hv-artist-card__link")?.getAttribute("href") || "").toLowerCase();
+				return name.includes("daniel philosoph") || name.includes("דניאל") || link.includes("daniel-philosoph");
+			};
+
+			let originals = Array.from(wrapper.children).filter(function (slide) {
+				return !slide.hasAttribute("data-hv-loop-clone");
+			});
+			if (originals.length < 2) return;
+
+			const danielSlide = originals.find(isDanielSlide);
+			if (danielSlide && danielSlide !== originals[0]) {
+				wrapper.insertBefore(danielSlide, originals[0]);
+				originals = Array.from(wrapper.children).filter(function (slide) {
+					return !slide.hasAttribute("data-hv-loop-clone");
+				});
+			}
+
+			scroller.dataset.hvArtistsLoop = "ready";
+			scroller.setAttribute("dir", "ltr");
+			scroller.classList.add("hv-artists-showcase--infinite-drag");
+
+			const cloneSlide = function (slide) {
+				const clone = slide.cloneNode(true);
+				clone.setAttribute("data-hv-loop-clone", "true");
+				clone.setAttribute("aria-hidden", "true");
+				clone.querySelectorAll("a, button, input, select, textarea, [tabindex]").forEach(function (node) {
+					node.setAttribute("tabindex", "-1");
+				});
+				return clone;
+			};
+
+			const before = originals.map(cloneSlide);
+			const after = originals.map(cloneSlide);
+			wrapper.prepend(...before);
+			wrapper.append(...after);
+			wrapper.addEventListener("dragstart", function (event) {
+				event.preventDefault();
+			});
+
+			let segmentWidth = 0;
+			let translate = 0;
+			let startX = 0;
+			let startTranslate = 0;
+			let lastX = 0;
+			let lastTime = 0;
+			let velocity = 0;
+			let isDragging = false;
+			let didDrag = false;
+			let rafId = null;
+
+			const normalize = function (value) {
+				if (!segmentWidth) return value;
+				while (value > -segmentWidth * 0.5) {
+					value -= segmentWidth;
+				}
+				while (value < -segmentWidth * 1.5) {
+					value += segmentWidth;
+				}
+				return value;
+			};
+
+			const setTranslate = function (value) {
+				translate = normalize(value);
+				wrapper.style.transform = "translate3d(" + translate + "px, 0, 0)";
+			};
+
+			const measure = function () {
+				const firstOriginal = originals[0];
+				const firstAfter = after[0];
+				if (!firstOriginal || !firstAfter) return;
+
+				segmentWidth = firstAfter.offsetLeft - firstOriginal.offsetLeft;
+				if (segmentWidth > 0) {
+					wrapper.style.transition = "none";
+					setTranslate(-segmentWidth);
+				}
+			};
+
+			const stopMomentum = function () {
+				if (rafId) {
+					cancelAnimationFrame(rafId);
+					rafId = null;
+				}
+			};
+
+			const momentum = function () {
+				velocity *= 0.965;
+				setTranslate(translate + velocity);
+				if (Math.abs(velocity) > 0.08) {
+					rafId = requestAnimationFrame(momentum);
+				} else {
+					rafId = null;
+				}
+			};
+
+			const pointerDown = function (event) {
+				if (!segmentWidth) measure();
+				stopMomentum();
+				isDragging = true;
+				didDrag = false;
+				startX = event.clientX;
+				startTranslate = translate;
+				lastX = event.clientX;
+				lastTime = performance.now();
+				velocity = 0;
+				scroller.classList.add("is-dragging");
+				if (event.pointerId !== undefined && scroller.setPointerCapture) {
+					scroller.setPointerCapture(event.pointerId);
+				}
+			};
+
+			const pointerMove = function (event) {
+				if (!isDragging) return;
+				const currentX = event.clientX;
+				const now = performance.now();
+				const delta = currentX - startX;
+
+				if (Math.abs(delta) > 2) {
+					didDrag = true;
+					event.preventDefault();
+				}
+
+				const elapsed = Math.max(16, now - lastTime);
+				velocity = (currentX - lastX) / elapsed * 18;
+				lastX = currentX;
+				lastTime = now;
+				setTranslate(startTranslate + delta);
+			};
+
+			const pointerUp = function () {
+				if (!isDragging) return;
+				isDragging = false;
+				scroller.classList.remove("is-dragging");
+				if (Math.abs(velocity) > 0.3) {
+					rafId = requestAnimationFrame(momentum);
+				}
+			};
+
+			scroller.addEventListener("pointerdown", pointerDown);
+			scroller.addEventListener("pointermove", pointerMove);
+			scroller.addEventListener("pointerup", pointerUp);
+			scroller.addEventListener("pointercancel", pointerUp);
+			scroller.addEventListener("lostpointercapture", pointerUp);
+			scroller.addEventListener("click", function (event) {
+				if (!didDrag) return;
+				event.preventDefault();
+				event.stopPropagation();
+				didDrag = false;
+			}, true);
+
+			const setup = function () {
+				stopMomentum();
+				measure();
+			};
+
+			setup();
+			window.addEventListener("load", setup, { once: true });
+			window.addEventListener("resize", setup, { passive: true });
+		}
+	};
+
+	const ArtistsCarouselNativeLoop = {
+		init: function () {
+			const scroller = document.querySelector(".hv-artists-showcase");
+			if (!scroller || scroller.dataset.hvArtistsNativeLoop === "ready") return;
+
+			const wrapper = scroller.querySelector(".swiper-wrapper");
+			if (!wrapper) return;
+
+			const isRtl = document.documentElement.dir === "rtl" || document.body.dir === "rtl";
+			const isDanielSlide = function (slide) {
+				const name = (slide.querySelector(".hv-artist-card__name")?.textContent || "").trim().toLowerCase();
+				const link = (slide.querySelector(".hv-artist-card__link")?.getAttribute("href") || "").toLowerCase();
+				return name.includes("daniel philosoph") || link.includes("daniel-philosoph");
+			};
+
+			let originals = Array.from(wrapper.children).filter(function (slide) {
+				return !slide.hasAttribute("data-hv-loop-clone");
+			});
+			if (originals.length < 2) return;
+
+			const danielSlide = originals.find(isDanielSlide);
+			if (danielSlide && danielSlide !== originals[0]) {
+				wrapper.insertBefore(danielSlide, originals[0]);
+				originals = Array.from(wrapper.children).filter(function (slide) {
+					return !slide.hasAttribute("data-hv-loop-clone");
+				});
+			}
+
+			scroller.dataset.hvArtistsNativeLoop = "ready";
+			scroller.setAttribute("dir", "ltr");
+			scroller.classList.remove("hv-artists-showcase--infinite-drag");
+			scroller.classList.add("hv-artists-showcase--native-loop");
+			if (isRtl) {
+				scroller.classList.add("hv-artists-showcase--rtl-loop");
+			}
+
+			const cycles = 9;
+			const middleCycle = Math.floor(cycles / 2);
+			wrapper.textContent = "";
+			for (let cycle = 0; cycle < cycles; cycle++) {
+				originals.forEach(function (slide) {
+					const item = slide.cloneNode(true);
+					if (cycle !== middleCycle) {
+						item.setAttribute("data-hv-loop-clone", "true");
+					}
+					wrapper.appendChild(item);
+				});
+			}
+
+			wrapper.addEventListener("dragstart", function (event) {
+				event.preventDefault();
+			});
+
+			let segmentWidth = 0;
+			let anchorLeft = 0;
+			let ticking = false;
+			let isAdjusting = false;
+
+			const measure = function () {
+				const slides = Array.from(wrapper.children);
+				const firstMiddle = slides[middleCycle * originals.length];
+				const firstNext = slides[(middleCycle + 1) * originals.length];
+				if (!firstMiddle || !firstNext) return;
+
+				segmentWidth = Math.abs(firstNext.offsetLeft - firstMiddle.offsetLeft);
+				if (!segmentWidth) return;
+
+				anchorLeft = isRtl
+					? firstMiddle.offsetLeft + firstMiddle.offsetWidth - scroller.clientWidth
+					: firstMiddle.offsetLeft;
+
+				isAdjusting = true;
+				scroller.scrollLeft = anchorLeft;
+				requestAnimationFrame(function () {
+					isAdjusting = false;
+				});
+			};
+
+			const keepInMiddle = function () {
+				ticking = false;
+				if (!segmentWidth || isAdjusting) return;
+
+				let nextLeft = scroller.scrollLeft;
+				while (nextLeft < anchorLeft - segmentWidth * 1.5) {
+					nextLeft += segmentWidth;
+				}
+				while (nextLeft > anchorLeft + segmentWidth * 1.5) {
+					nextLeft -= segmentWidth;
+				}
+
+				if (Math.abs(nextLeft - scroller.scrollLeft) > 1) {
+					isAdjusting = true;
+					scroller.scrollLeft = nextLeft;
+					requestAnimationFrame(function () {
+						isAdjusting = false;
+					});
+				}
+			};
+
+			const onScroll = function () {
+				if (ticking) return;
+				ticking = true;
+				requestAnimationFrame(keepInMiddle);
+			};
+
+			measure();
+			window.addEventListener("load", measure, { once: true });
+			window.addEventListener("resize", measure, { passive: true });
+			scroller.addEventListener("scroll", onScroll, { passive: true });
+		}
+	};
+
+	/**
 	 * Initialize on DOM ready
 	 */
 	document.addEventListener("DOMContentLoaded", function () {
@@ -1349,5 +1635,6 @@
 		ArtistInfo.init();
 		QuickView.init();
 		ServiceCardRotation.init();
+		ArtistsCarouselNativeLoop.init();
 	});
 })();

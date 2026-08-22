@@ -7,7 +7,7 @@
 	"use strict";
 
 	const isRtl = document.documentElement.dir === 'rtl' || document.body.dir === 'rtl';
-	const initializedSwipers = new WeakMap();
+	const initializedSwipers = new Map();
 	const initAttempts = new WeakMap();
 	const MAX_INIT_ATTEMPTS = 10;
 	let resizeTimeout = null;
@@ -125,6 +125,10 @@
 		}, 250);
 	};
 
+	const initArtistsNativeLoop = () => {
+		// Artists carousel is handled by ArtistsCarouselLoop in hv-main.js.
+	};
+
 	const initAllSwipers = () => {
 		if (typeof Swiper === "undefined") {
 			setTimeout(initAllSwipers, 100);
@@ -165,32 +169,31 @@
 				loop: false,
 				speed: 600,
 				grabCursor: true,
+				initialSlide: 0,
+				centeredSlides: false,
+				slidesOffsetBefore: 0,
+				slidesOffsetAfter: 0,
 				slidesPerView: "auto",
 				spaceBetween: 20,
 				freeMode: {
 					enabled: true,
 					sticky: false,
 					momentumRatio: 0.8
+				},
+				on: {
+					init: function() {
+						this.slideTo(0, 0, false);
+						this.update();
+					},
+					resize: function() {
+						this.slideTo(0, 0, false);
+						this.update();
+					}
 				}
 			});
 		}
 
-		const artistsShowcase = document.querySelector(".hv-artists-showcase");
-		if (artistsShowcase && !initializedSwipers.has(artistsShowcase)) {
-			initSwiper(".hv-artists-showcase", {
-				loop: false,
-				speed: 600,
-				grabCursor: true,
-				slidesPerView: 1.5,
-				spaceBetween: 16,
-				freeMode: true,
-				breakpoints: {
-					480: { slidesPerView: 2.5, spaceBetween: 20 },
-					768: { slidesPerView: 4, spaceBetween: 24 },
-					1200: { slidesPerView: 5, spaceBetween: 32 }
-				}
-			});
-		}
+		initArtistsNativeLoop();
 
 		const artistProjects = document.querySelector(".hv-artist-projects-carousel");
 		if (artistProjects && !initializedSwipers.has(artistProjects)) {
