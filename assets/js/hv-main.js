@@ -1290,7 +1290,7 @@
 
 		init: function () {
 			const cards = document.querySelectorAll("[data-hv-service-rotate]");
-			cards.forEach((card) => {
+			cards.forEach((card, cardIndex) => {
 				let urls;
 				try {
 					urls = JSON.parse(card.getAttribute("data-hv-service-rotate") || "[]");
@@ -1326,7 +1326,12 @@
 					next.classList.add("is-active");
 				};
 
-				this.timers.push(setInterval(crossfade, this.intervalMs));
+				const startRotation = () => {
+					crossfade();
+					this.timers.push(setInterval(crossfade, this.intervalMs));
+				};
+
+				this.timers.push(setTimeout(startRotation, this.intervalMs + cardIndex * 850));
 			});
 		}
 	};

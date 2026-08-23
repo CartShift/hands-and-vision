@@ -24,7 +24,7 @@ define( 'ASTRA_THEME_ORG_VERSION', file_exists( ASTRA_THEME_DIR . 'inc/w-org-ver
 /**
  * Hand and Vision Custom Theme Version
  */
-define( 'HV_THEME_VERSION', '3.3.19' );
+define( 'HV_THEME_VERSION', '3.3.25' );
 
 /**
  * Minimum Version requirement of the Astra Pro addon.

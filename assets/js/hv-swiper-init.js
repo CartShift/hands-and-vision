@@ -216,9 +216,9 @@
 				initialSlide: 0,
 				centeredSlides: false,
 				slidesOffsetBefore: 28,
-				slidesOffsetAfter: 56,
+				slidesOffsetAfter: 96,
 				slidesPerView: "auto",
-				spaceBetween: 24,
+				spaceBetween: 22,
 				freeMode: {
 					enabled: true,
 					sticky: false,
@@ -226,14 +226,14 @@
 				},
 				breakpoints: {
 					768: {
-						spaceBetween: 36,
+						spaceBetween: 28,
 						slidesOffsetBefore: 36,
-						slidesOffsetAfter: 56
+						slidesOffsetAfter: 88
 					},
 					1200: {
-						spaceBetween: 44,
+						spaceBetween: 28,
 						slidesOffsetBefore: 44,
-						slidesOffsetAfter: 64
+						slidesOffsetAfter: 96
 					}
 				},
 				on: {
@@ -247,7 +247,6 @@
 					},
 					resize: function() {
 						enforceServicesDirection(this.el, servicesTrackDir);
-						this.slideTo(0, 0, false);
 						this.update();
 					}
 				}
