@@ -6,13 +6,15 @@
  preserveAspectRatio="xMidYMid meet">
 
 <defs>
-<linearGradient id="hv-logo-text-brand-gradient" x1="0%" y1="42%" x2="100%" y2="58%">
+<linearGradient id="hv-logo-text-brand-gradient" gradientUnits="userSpaceOnUse" x1="0" y1="1680" x2="15140" y2="1680">
 <stop offset="0%" stop-color="#FCE9B7"/>
-<stop offset="18%" stop-color="#FFE1B6"/>
-<stop offset="38%" stop-color="#F0B7D9"/>
-<stop offset="60%" stop-color="#CAA1E8"/>
-<stop offset="82%" stop-color="#A7A2EE"/>
-<stop offset="100%" stop-color="#8C9BEF"/>
+<stop offset="12%" stop-color="#F3E6A9"/>
+<stop offset="25%" stop-color="#F0DBC0"/>
+<stop offset="38%" stop-color="#E7C2C9"/>
+<stop offset="50%" stop-color="#D4B0D7"/>
+<stop offset="64%" stop-color="#BFA9DD"/>
+<stop offset="80%" stop-color="#AEA1D9"/>
+<stop offset="100%" stop-color="#9B95C5"/>
 </linearGradient>
 </defs><g transform="translate(0.000000,338.000000) scale(0.100000,-0.100000)"
 fill="url(#hv-logo-text-brand-gradient)" stroke="none">

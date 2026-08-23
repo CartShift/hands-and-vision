@@ -6,17 +6,56 @@
  preserveAspectRatio="xMidYMid meet">
 
 <defs>
-<linearGradient id="hv-logo-sign-brand-gradient" x1="2%" y1="26%" x2="96%" y2="72%">
-<stop offset="0%" stop-color="#FFF0A8"/>
-<stop offset="18%" stop-color="#FFE1B6"/>
-<stop offset="38%" stop-color="#F4B7D8"/>
-<stop offset="62%" stop-color="#C99BE9"/>
-<stop offset="82%" stop-color="#9AA2F2"/>
-<stop offset="100%" stop-color="#788DEB"/>
+<linearGradient id="hv-logo-sign-brand-gradient" gradientUnits="userSpaceOnUse" x1="700" y1="5000" x2="10600" y2="8400">
+<stop offset="0%" stop-color="#F1E6AB"/>
+<stop offset="16%" stop-color="#FFE9AE"/>
+<stop offset="31%" stop-color="#FFE1B2"/>
+<stop offset="45%" stop-color="#FFD8B9"/>
+<stop offset="56%" stop-color="#F5C7CD"/>
+<stop offset="65%" stop-color="#E9C5DA"/>
+<stop offset="76%" stop-color="#C0A8E4"/>
+<stop offset="89%" stop-color="#9799F0"/>
+<stop offset="100%" stop-color="#9799F0"/>
+</linearGradient>
+<linearGradient id="hv-flower-petal-top" gradientUnits="userSpaceOnUse" x1="5600" y1="12400" x2="6900" y2="9300">
+<stop offset="0%" stop-color="#FFE9AE"/>
+<stop offset="30%" stop-color="#FFD8B9"/>
+<stop offset="68%" stop-color="#F5C7CD"/>
+<stop offset="100%" stop-color="#D5B8E4"/>
+</linearGradient>
+<linearGradient id="hv-flower-petal-left" gradientUnits="userSpaceOnUse" x1="850" y1="9300" x2="5000" y2="8200">
+<stop offset="0%" stop-color="#F0E6A8"/>
+<stop offset="44%" stop-color="#FFE9AE"/>
+<stop offset="78%" stop-color="#FFE1B2"/>
+<stop offset="100%" stop-color="#F6C9C7"/>
+</linearGradient>
+<linearGradient id="hv-flower-petal-left-bottom" gradientUnits="userSpaceOnUse" x1="600" y1="3400" x2="5000" y2="6900">
+<stop offset="0%" stop-color="#FFE9AE"/>
+<stop offset="36%" stop-color="#FFE1B2"/>
+<stop offset="72%" stop-color="#FFD8B9"/>
+<stop offset="100%" stop-color="#F5C7CD"/>
+</linearGradient>
+<linearGradient id="hv-flower-petal-bottom" gradientUnits="userSpaceOnUse" x1="5200" y1="6350" x2="5900" y2="400">
+<stop offset="0%" stop-color="#F5C7CD"/>
+<stop offset="42%" stop-color="#E9C5DA"/>
+<stop offset="78%" stop-color="#C9A8D7"/>
+<stop offset="100%" stop-color="#B89DD0"/>
+</linearGradient>
+<linearGradient id="hv-flower-petal-right" gradientUnits="userSpaceOnUse" x1="7100" y1="8700" x2="10900" y2="9650">
+<stop offset="0%" stop-color="#F0C4D6"/>
+<stop offset="34%" stop-color="#D4B3E3"/>
+<stop offset="72%" stop-color="#B49CE4"/>
+<stop offset="100%" stop-color="#A897E5"/>
+</linearGradient>
+<linearGradient id="hv-flower-petal-right-bottom" gradientUnits="userSpaceOnUse" x1="6100" y1="6100" x2="11100" y2="4800">
+<stop offset="0%" stop-color="#F1C4D8"/>
+<stop offset="34%" stop-color="#D5B2E4"/>
+<stop offset="64%" stop-color="#B7A2EA"/>
+<stop offset="100%" stop-color="#8F99F0"/>
 </linearGradient>
 </defs><g transform="translate(0.000000,1296.000000) scale(0.100000,-0.100000)"
 fill="url(#hv-logo-sign-brand-gradient)" stroke="none">
-<path d="M5819 12543 c-343 -356 -591 -903 -703 -1548 -48 -278 -60 -434 -59
+<path fill="url(#hv-flower-petal-top)" d="M5819 12543 c-343 -356 -591 -903 -703 -1548 -48 -278 -60 -434 -59
 -770 0 -704 98 -1161 352 -1651 186 -358 468 -696 661 -793 132 -66 175 -54
 174 48 0 76 -36 142 -171 323 -245 327 -366 574 -425 870 -18 92 -22 147 -22
 293 0 197 15 327 65 560 44 206 42 228 -35 457 -90 269 -129 479 -124 677 1
@@ -30,7 +69,7 @@ c-3 -298 -16 -426 -65 -670 -73 -362 -207 -709 -387 -998 -106 -169 -124 -210
 111 282 173 532 219 875 20 152 17 663 -5 835 -67 515 -213 977 -466 1477
 -104 205 -188 352 -380 662 -304 494 -445 848 -469 1185 l-7 93 -86 -89z m938
 -3625 c-2 -18 -4 -4 -4 32 0 36 2 50 4 33 2 -18 2 -48 0 -65z"/>
-<path d="M10340 9629 c-504 -50 -1055 -234 -1570 -527 -155 -88 -458 -290
+<path fill="url(#hv-flower-petal-right)" d="M10340 9629 c-504 -50 -1055 -234 -1570 -527 -155 -88 -458 -290
 -605 -404 -137 -106 -378 -342 -479 -468 -238 -298 -445 -695 -527 -1015 -33
 -126 -34 -310 -3 -352 25 -34 53 -39 91 -19 73 37 119 113 244 401 197 455
 461 751 841 941 135 68 220 102 421 170 88 29 178 65 202 79 26 15 91 79 159
@@ -49,7 +88,7 @@ c-3 -298 -16 -426 -65 -670 -73 -362 -207 -709 -387 -998 -106 -169 -124 -210
 75 -240 285 -418 528 -446 l54 -7 0 30 c0 29 -2 30 -66 42 -130 24 -218 70
 -316 167 -101 100 -160 243 -160 388 -1 189 82 358 227 464 68 49 73 57 52 86
 -12 16 -17 14 -75 -24z"/>
-<path d="M580 9472 c211 -762 910 -1505 1875 -1997 470 -239 832 -349 1275
+<path fill="url(#hv-flower-petal-left)" d="M580 9472 c211 -762 910 -1505 1875 -1997 470 -239 832 -349 1275
 -386 333 -27 773 21 1001 111 75 30 163 85 193 121 40 47 34 74 -20 109 -69
 44 -127 47 -354 20 -525 -61 -840 -22 -1170 146 -185 94 -325 195 -558 402
 -63 56 -133 110 -157 122 -24 12 -103 32 -176 45 -275 51 -446 106 -629 202
@@ -82,7 +121,7 @@ l47 -7 0 51 0 51 -35 0 c-45 0 -87 21 -109 54 -19 30 -21 101 -2 134 16 30 65
 -384 l21 -57 40 26 c44 29 44 29 24 63 -35 61 -4 149 62 176 48 20 94 11 138
 -28 l35 -30 129 128 c70 71 154 164 186 207 66 88 67 82 -25 119 -68 26 -222
 34 -290 15z"/>
-<path d="M4595 6915 c-716 -79 -1381 -376 -1960 -876 -145 -125 -384 -374
+<path fill="url(#hv-flower-petal-left-bottom)" d="M4595 6915 c-716 -79 -1381 -376 -1960 -876 -145 -125 -384 -374
 -505 -526 -250 -311 -422 -581 -699 -1097 -195 -362 -338 -570 -531 -769 -88
 -92 -241 -219 -316 -263 -17 -10 -14 -13 26 -24 121 -33 291 -61 442 -72 771
 -54 1705 270 2515 872 230 172 386 319 551 518 350 425 618 1055 563 1323 -15
@@ -96,7 +135,7 @@ l47 -7 0 51 0 51 -35 0 c-45 0 -87 21 -109 54 -19 30 -21 101 -2 134 16 30 65
 -357 -63 -772 -204 -1080 -367 -58 -30 -100 -51 -95 -45 18 19 229 130 343
 181 353 160 696 254 1097 302 55 7 208 13 340 15 132 1 243 3 248 3 4 1 7 10
 7 21 0 26 -63 67 -131 86 -70 18 -503 17 -674 -1z"/>
-<path d="M5519 6280 c-105 -55 -291 -338 -427 -650 -179 -407 -285 -852 -312
+<path fill="url(#hv-flower-petal-bottom)" d="M5519 6280 c-105 -55 -291 -338 -427 -650 -179 -407 -285 -852 -312
 -1310 -8 -135 -8 -135 -5 45 11 573 191 1180 499 1688 93 154 92 186 -3 138
 -80 -41 -176 -177 -320 -451 -199 -380 -327 -816 -371 -1258 -16 -163 -13
 -531 5 -707 52 -506 190 -971 440 -1480 107 -219 180 -349 383 -680 91 -148
@@ -111,7 +150,7 @@ l47 -7 0 51 0 51 -35 0 c-45 0 -87 21 -109 54 -19 30 -21 101 -2 134 16 30 65
 c-1 132 3 290 8 350 50 528 194 974 450 1395 100 164 119 205 120 251 0 61
 -41 76 -111 39z m-452 -2367 c-2 -16 -4 -5 -4 22 0 28 2 40 4 28 2 -13 2 -35
 0 -50z"/>
-<path d="M6132 6169 c-60 -22 -51 -102 28 -267 265 -551 773 -1044 1435 -1389
+<path fill="url(#hv-flower-petal-right-bottom)" d="M6132 6169 c-60 -22 -51 -102 28 -267 265 -551 773 -1044 1435 -1389
 77 -40 137 -73 132 -73 -4 0 -70 31 -146 69 -687 345 -1184 824 -1511 1458
 -67 130 -146 186 -184 131 -39 -55 -5 -186 100 -387 249 -478 684 -946 1191
 -1282 148 -98 157 -105 98 -73 -96 51 -331 211 -443 301 -240 193 -450 409
