@@ -1517,7 +1517,11 @@
 			const isDanielSlide = function (slide) {
 				const name = (slide.querySelector(".hv-artist-card__name")?.textContent || "").trim().toLowerCase();
 				const link = (slide.querySelector(".hv-artist-card__link")?.getAttribute("href") || "").toLowerCase();
-				return name.includes("daniel philosoph") || link.includes("daniel-philosoph");
+				return name.includes("daniel philosoph")
+					|| name.includes("daniel philosof")
+					|| name.includes("דניאל פילוסוף")
+					|| link.includes("daniel-philosoph")
+					|| link.includes("daniel-philosof");
 			};
 
 			let originals = Array.from(wrapper.children).filter(function (slide) {
@@ -1537,9 +1541,7 @@
 			scroller.setAttribute("dir", "ltr");
 			scroller.classList.remove("hv-artists-showcase--infinite-drag");
 			scroller.classList.add("hv-artists-showcase--native-loop");
-			if (isRtl) {
-				scroller.classList.add("hv-artists-showcase--rtl-loop");
-			}
+			scroller.classList.toggle("hv-artists-showcase--rtl-loop", isRtl);
 
 			const cycles = 9;
 			const middleCycle = Math.floor(cycles / 2);
@@ -1562,6 +1564,10 @@
 			let anchorLeft = 0;
 			let ticking = false;
 			let isAdjusting = false;
+			let isDragging = false;
+			let dragStartX = 0;
+			let dragStartLeft = 0;
+			let didDrag = false;
 
 			const measure = function () {
 				const slides = Array.from(wrapper.children);
@@ -1572,9 +1578,7 @@
 				segmentWidth = Math.abs(firstNext.offsetLeft - firstMiddle.offsetLeft);
 				if (!segmentWidth) return;
 
-				anchorLeft = isRtl
-					? firstMiddle.offsetLeft + firstMiddle.offsetWidth - scroller.clientWidth
-					: firstMiddle.offsetLeft;
+				anchorLeft = firstMiddle.offsetLeft;
 
 				isAdjusting = true;
 				scroller.scrollLeft = anchorLeft;
@@ -1610,10 +1614,59 @@
 				requestAnimationFrame(keepInMiddle);
 			};
 
+			const pointerDown = function (event) {
+				if (event.button !== undefined && event.button !== 0) return;
+				isDragging = true;
+				didDrag = false;
+				dragStartX = event.clientX;
+				dragStartLeft = scroller.scrollLeft;
+				scroller.classList.add("is-dragging");
+				if (event.pointerId !== undefined && scroller.setPointerCapture) {
+					scroller.setPointerCapture(event.pointerId);
+				}
+			};
+
+			const pointerMove = function (event) {
+				if (!isDragging) return;
+
+				const delta = event.clientX - dragStartX;
+				if (Math.abs(delta) > 3) {
+					didDrag = true;
+					event.preventDefault();
+				}
+
+				scroller.scrollLeft = dragStartLeft - delta;
+			};
+
+			const pointerUp = function () {
+				if (!isDragging) return;
+				isDragging = false;
+				scroller.classList.remove("is-dragging");
+			};
+
+			const wheelScroll = function (event) {
+				if (!segmentWidth || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+
+				event.preventDefault();
+				scroller.scrollLeft += event.deltaY;
+			};
+
 			measure();
 			window.addEventListener("load", measure, { once: true });
 			window.addEventListener("resize", measure, { passive: true });
 			scroller.addEventListener("scroll", onScroll, { passive: true });
+			scroller.addEventListener("pointerdown", pointerDown);
+			scroller.addEventListener("pointermove", pointerMove);
+			scroller.addEventListener("pointerup", pointerUp);
+			scroller.addEventListener("pointercancel", pointerUp);
+			scroller.addEventListener("lostpointercapture", pointerUp);
+			scroller.addEventListener("wheel", wheelScroll, { passive: false });
+			scroller.addEventListener("click", function (event) {
+				if (!didDrag) return;
+				event.preventDefault();
+				event.stopPropagation();
+				didDrag = false;
+			}, true);
 		}
 	};
 

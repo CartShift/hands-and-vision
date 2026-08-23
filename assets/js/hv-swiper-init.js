@@ -174,7 +174,7 @@
 				slidesOffsetBefore: 0,
 				slidesOffsetAfter: 0,
 				slidesPerView: "auto",
-				spaceBetween: 20,
+				spaceBetween: 0,
 				freeMode: {
 					enabled: true,
 					sticky: false,

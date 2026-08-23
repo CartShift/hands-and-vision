@@ -226,12 +226,13 @@ $is_hebrew = handandvision_is_hebrew();
             $display_artists = is_array( $display_artists ) ? $display_artists : array();
             $display_artists = handandvision_sort_artists_for_display( $display_artists );
             foreach ( $display_artists as $artist_index => $artist_item ) {
-                $artist_name = is_object( $artist_item ) ? strtolower( trim( get_the_title( $artist_item->ID ) ) ) : '';
-                $artist_slug = is_object( $artist_item ) ? strtolower( trim( get_post_field( 'post_name', $artist_item->ID ) ) ) : '';
+                $artist_name = is_object( $artist_item ) ? mb_strtolower( trim( get_the_title( $artist_item->ID ) ) ) : '';
+                $artist_slug = is_object( $artist_item ) ? mb_strtolower( trim( get_post_field( 'post_name', $artist_item->ID ) ) ) : '';
+                $artist_key  = $artist_name . ' ' . str_replace( '-', ' ', $artist_slug );
                 if (
-                    false !== strpos( $artist_name, 'daniel philosoph' )
-                    || false !== strpos( $artist_slug, 'daniel-philosoph' )
-                    || false !== strpos( $artist_name, 'דניאל' )
+                    false !== mb_strpos( $artist_key, 'daniel philosoph' )
+                    || false !== mb_strpos( $artist_key, 'daniel philosof' )
+                    || false !== mb_strpos( $artist_key, 'דניאל פילוסוף' )
                 ) {
                     unset( $display_artists[ $artist_index ] );
                     array_unshift( $display_artists, $artist_item );
