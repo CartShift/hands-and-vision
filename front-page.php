@@ -139,7 +139,16 @@ $is_hebrew = handandvision_is_hebrew();
 
             <?php if ( ! empty( $display_services ) ) : ?>
             <div class="hv-services-carousel-bleed hv-carousel-bleed">
-                <div class="hv-services-carousel swiper">
+                <?php
+                $services_carousel_classes = array(
+                    'hv-services-carousel',
+                    'swiper',
+                    $is_hebrew ? 'hv-services-carousel--track-rtl' : 'hv-services-carousel--track-ltr',
+                    $is_hebrew ? 'hv-services-carousel--text-rtl' : 'hv-services-carousel--text-ltr',
+                );
+                $services_track_dir = $is_hebrew ? 'rtl' : 'ltr';
+                ?>
+                <div class="<?php echo esc_attr( implode( ' ', $services_carousel_classes ) ); ?>" dir="<?php echo esc_attr( $services_track_dir ); ?>" data-hv-track-dir="<?php echo esc_attr( $services_track_dir ); ?>">
                     <div class="swiper-wrapper">
                         <?php
                         foreach ( $display_services as $i => $service_item ) :

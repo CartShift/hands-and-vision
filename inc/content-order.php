@@ -10,18 +10,59 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Canonical service titles (Hebrew) for homepage / archive ordering.
+ * Canonical service title aliases for homepage / archive ordering.
  *
- * @return string[]
+ * @return string[][]
  */
 function handandvision_get_service_display_order() {
 	return array(
-		'אובייקטים ועיצוב תעשייתי',
-		'עיצוב במות ודקורציה',
-		'אומנות אימרסיבית',
-		'אמנות לייב באירועים',
-		'דיגיטל ארט וגרפיקה',
-		'ייעוץ והכוונה',
+		array(
+			'אובייקטים עיצוביים',
+			'אובייקטים ועיצוב תעשייתי',
+			'עיצוב תעשייתי',
+			'industrial art objects',
+			'industrial design',
+			'industrial art',
+			'design objects',
+		),
+		array(
+			'עיצוב אובייקטים דקורטיבים לאירועים',
+			'עיצוב אובייקטים דקורטיביים לאירועים',
+			'עיצוב במות ודקורציה',
+			'עיצוב במות',
+			'decorative objects for events',
+			'stage design',
+			'event decor',
+			'decorative event objects',
+			'stage decor',
+		),
+		array(
+			'אומנות מרחבית',
+			'אמנות מרחבית',
+			'אומנות אימרסיבית',
+			'אמנות אימרסיבית',
+			'spatial art',
+			'immersive art',
+			'space art',
+		),
+		array(
+			'אומנות דיגיטלית',
+			'אמנות דיגיטלית',
+			'עיצוב דיגיטלי',
+			'דיגיטל ארט',
+			'דיגיטל ארט וגרפיקה',
+			'digital art',
+			'digital design',
+			'digital art design',
+		),
+		array(
+			'אומנות לייב באירועים',
+			'אמנות לייב באירועים',
+			'אמנות חיה באירועים',
+			'live art at events',
+			'live art events',
+			'live art',
+		),
 	);
 }
 
@@ -49,10 +90,24 @@ function handandvision_get_artist_display_order() {
 }
 
 /**
- * Sort post objects by a title whitelist; unknown titles trail in original order.
+ * Normalize display titles for stable multilingual matching.
+ *
+ * @param string $value Raw title / slug.
+ * @return string
+ */
+function handandvision_normalize_display_key( $value ) {
+	$value = is_string( $value ) ? $value : '';
+	$value = handandvision_strip_dashes_from_copy( $value );
+	$value = str_replace( array( '/', '\\', '-', '_', '–', '—' ), ' ', $value );
+	$value = preg_replace( '/\s+/u', ' ', $value );
+	return mb_strtolower( trim( $value ) );
+}
+
+/**
+ * Sort post objects by title aliases; unknown titles trail in original order.
  *
  * @param WP_Post[] $posts   Post objects.
- * @param string[]  $order   Ordered titles.
+ * @param array[]   $order   Ordered title aliases.
  * @return WP_Post[]
  */
 function handandvision_sort_posts_by_title_order( array $posts, array $order ) {
@@ -61,17 +116,49 @@ function handandvision_sort_posts_by_title_order( array $posts, array $order ) {
 	}
 
 	$rank = array();
-	foreach ( $order as $i => $title ) {
-		$rank[ mb_strtolower( trim( $title ) ) ] = $i;
+	foreach ( $order as $i => $aliases ) {
+		foreach ( (array) $aliases as $title ) {
+			$rank[ handandvision_normalize_display_key( $title ) ] = $i;
+		}
 	}
+
+	$get_rank = static function ( $post ) use ( $rank ) {
+		if ( ! is_object( $post ) || empty( $post->ID ) ) {
+			return 9999;
+		}
+
+		$values = array(
+			get_the_title( $post->ID ),
+			get_post_field( 'post_name', $post->ID ),
+		);
+
+		if ( function_exists( 'get_field' ) ) {
+			$values[] = (string) get_field( 'service_title_en', $post->ID );
+		}
+
+		foreach ( $values as $value ) {
+			$key = handandvision_normalize_display_key( $value );
+			if ( isset( $rank[ $key ] ) ) {
+				return $rank[ $key ];
+			}
+
+			foreach ( $rank as $alias => $alias_rank ) {
+				if ( '' !== $alias && '' !== $key && false !== mb_strpos( $key, $alias ) ) {
+					return $alias_rank;
+				}
+			}
+		}
+
+		return 9999;
+	};
 
 	usort(
 		$posts,
-		static function ( $a, $b ) use ( $rank ) {
-			$ta = mb_strtolower( trim( $a->post_title ) );
-			$tb = mb_strtolower( trim( $b->post_title ) );
-			$ra = $rank[ $ta ] ?? 9999;
-			$rb = $rank[ $tb ] ?? 9999;
+		static function ( $a, $b ) use ( $get_rank ) {
+			$ta = handandvision_normalize_display_key( $a->post_title );
+			$tb = handandvision_normalize_display_key( $b->post_title );
+			$ra = $get_rank( $a );
+			$rb = $get_rank( $b );
 			if ( $ra === $rb ) {
 				return strcmp( $ta, $tb );
 			}

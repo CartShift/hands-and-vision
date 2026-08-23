@@ -354,9 +354,16 @@ body.admin-bar .hv-single-product-editorial .hv-product-gallery {
 
 .hv-services-carousel {
 	display: block !important;
-	direction: ltr;
 	padding: 8px 0 24px;
 	overflow: visible !important;
+}
+
+.hv-services-carousel--track-ltr {
+	direction: ltr;
+}
+
+.hv-services-carousel--track-rtl {
+	direction: rtl;
 }
 
 .hv-services-carousel .swiper-wrapper {
@@ -364,8 +371,12 @@ body.admin-bar .hv-single-product-editorial .hv-product-gallery {
 	gap: clamp(16px, 2.5vw, 28px);
 }
 
-[dir="rtl"] .hv-services-carousel .hv-service-card--gallery {
+.hv-services-carousel--text-rtl .hv-service-card--gallery {
 	direction: rtl;
+}
+
+.hv-services-carousel--text-ltr .hv-service-card--gallery {
+	direction: ltr;
 }
 
 .hv-services-carousel .swiper-slide {

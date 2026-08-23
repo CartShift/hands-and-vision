@@ -12,6 +12,46 @@
 	const MAX_INIT_ATTEMPTS = 10;
 	let resizeTimeout = null;
 
+	const getCurrentLanguage = () => {
+		const params = new URLSearchParams(window.location.search);
+		const queryLang = params.get("lang");
+		if (queryLang === "en" || queryLang === "he") {
+			return queryLang;
+		}
+
+		const activeLang = document.querySelector(".hv-lang-link.active");
+		if (activeLang) {
+			const text = (activeLang.textContent || "").trim().toLowerCase();
+			if (text === "en" || text === "he") {
+				return text;
+			}
+		}
+
+		const htmlLang = (document.documentElement.lang || "").toLowerCase();
+		if (htmlLang.startsWith("en")) {
+			return "en";
+		}
+		if (htmlLang.startsWith("he")) {
+			return "he";
+		}
+
+		return isRtl ? "he" : "en";
+	};
+
+	const enforceServicesDirection = (carousel, trackDir) => {
+		if (!carousel) return;
+
+		const isServicesRtl = trackDir === "rtl";
+		carousel.dataset.hvTrackDir = trackDir;
+		carousel.setAttribute("dir", trackDir);
+		carousel.classList.toggle("hv-services-carousel--track-ltr", !isServicesRtl);
+		carousel.classList.toggle("hv-services-carousel--track-rtl", isServicesRtl);
+		carousel.classList.toggle("hv-services-carousel--text-ltr", !isServicesRtl);
+		carousel.classList.toggle("hv-services-carousel--text-rtl", isServicesRtl);
+		carousel.classList.toggle("swiper-rtl", isServicesRtl);
+		carousel.classList.toggle("swiper-ltr", !isServicesRtl);
+	};
+
 	const initSwiper = (selector, options) => {
 		if (typeof Swiper === "undefined") {
 			console.warn("Swiper library not loaded. Skipping initialization for:", selector);
@@ -45,7 +85,7 @@
 
 		const finalOptions = {
 			...options,
-			rtl: isRtl,
+			rtl: typeof options.rtl === "boolean" ? options.rtl : isRtl,
 			watchOverflow: true,
 			updateOnWindowResize: true,
 			preloadImages: true,
@@ -165,10 +205,14 @@
 
 		const servicesCarousel = document.querySelector(".hv-services-carousel");
 		if (servicesCarousel && !initializedSwipers.has(servicesCarousel)) {
+			const servicesTrackDir = getCurrentLanguage() === "en" ? "ltr" : "rtl";
+			enforceServicesDirection(servicesCarousel, servicesTrackDir);
+
 			initSwiper(".hv-services-carousel", {
 				loop: false,
 				speed: 600,
 				grabCursor: true,
+				rtl: servicesTrackDir === "rtl",
 				initialSlide: 0,
 				centeredSlides: false,
 				slidesOffsetBefore: 0,
@@ -182,10 +226,15 @@
 				},
 				on: {
 					init: function() {
+						enforceServicesDirection(this.el, servicesTrackDir);
+						if (typeof this.changeLanguageDirection === "function") {
+							this.changeLanguageDirection(servicesTrackDir);
+						}
 						this.slideTo(0, 0, false);
 						this.update();
 					},
 					resize: function() {
+						enforceServicesDirection(this.el, servicesTrackDir);
 						this.slideTo(0, 0, false);
 						this.update();
 					}
