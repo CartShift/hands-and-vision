@@ -368,7 +368,7 @@ body.admin-bar .hv-single-product-editorial .hv-product-gallery {
 
 .hv-services-carousel .swiper-wrapper {
 	align-items: stretch;
-	gap: clamp(16px, 2.5vw, 28px);
+	gap: 0;
 }
 
 .hv-services-carousel--text-rtl .hv-service-card--gallery {

@@ -215,14 +215,26 @@
 				rtl: servicesTrackDir === "rtl",
 				initialSlide: 0,
 				centeredSlides: false,
-				slidesOffsetBefore: 0,
-				slidesOffsetAfter: 0,
+				slidesOffsetBefore: 28,
+				slidesOffsetAfter: 56,
 				slidesPerView: "auto",
-				spaceBetween: 0,
+				spaceBetween: 24,
 				freeMode: {
 					enabled: true,
 					sticky: false,
 					momentumRatio: 0.8
+				},
+				breakpoints: {
+					768: {
+						spaceBetween: 36,
+						slidesOffsetBefore: 36,
+						slidesOffsetAfter: 56
+					},
+					1200: {
+						spaceBetween: 44,
+						slidesOffsetBefore: 44,
+						slidesOffsetAfter: 64
+					}
 				},
 				on: {
 					init: function() {
