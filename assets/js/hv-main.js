@@ -452,11 +452,33 @@
 
 			// Close menu when clicking a link
 			if (this.nav) {
-				const links = this.nav.querySelectorAll("a");
-				links.forEach(function (link) {
-					link.addEventListener("click", function () {
-						self.close();
-					});
+				this.nav.addEventListener("click", function (e) {
+					const link = e.target.closest("a");
+					if (!link || !self.nav.contains(link)) return;
+
+					const parent = link.closest("li");
+					const submenu = parent ? parent.querySelector(":scope > .sub-menu") : null;
+					if (window.matchMedia("(max-width: 1024px)").matches && submenu && link === parent.querySelector(":scope > a")) {
+						e.preventDefault();
+						e.stopPropagation();
+						parent.classList.toggle("submenu-open");
+						link.setAttribute("aria-expanded", parent.classList.contains("submenu-open") ? "true" : "false");
+						return;
+					}
+
+					self.close();
+				}, true);
+
+				this.nav.querySelectorAll("li").forEach(function (item) {
+					const link = item.querySelector(":scope > a");
+					const submenu = item.querySelector(":scope > .sub-menu");
+					if (link && submenu) {
+						if (!item.classList.contains("menu-item-has-children")) {
+							item.classList.add("menu-item-has-children");
+						}
+						link.setAttribute("aria-haspopup", "true");
+						link.setAttribute("aria-expanded", "false");
+					}
 				});
 			}
 
@@ -556,6 +578,14 @@
 
 			this.header.classList.remove("menu-open");
 			document.body.classList.remove("menu-open");
+			if (this.nav) {
+				this.nav.querySelectorAll(".submenu-open").forEach(function (item) {
+					item.classList.remove("submenu-open");
+				});
+				this.nav.querySelectorAll(".menu-item-has-children > a").forEach(function (link) {
+					link.setAttribute("aria-expanded", "false");
+				});
+			}
 			document.body.style.overflow = "";
 			if (this.toggle) this.toggle.setAttribute("aria-expanded", "false");
 			this.removeFocusTrap();
@@ -1675,6 +1705,84 @@
 		}
 	};
 
+	const ServiceArtistDepth = {
+		init: function () {
+			document.querySelectorAll(".hv-service-artist-depth__project img").forEach(function (img) {
+				const hideBrokenProject = function () {
+					const project = img.closest(".hv-service-artist-depth__project");
+					if (project) {
+						project.hidden = true;
+					}
+				};
+
+				if (img.complete && img.naturalWidth === 0) {
+					hideBrokenProject();
+					return;
+				}
+
+				img.addEventListener("error", hideBrokenProject, { once: true });
+			});
+		}
+	};
+
+	const ServiceArtistJump = {
+		init: function () {
+			document.querySelectorAll("[data-hv-service-artist-jump]").forEach(function (jump) {
+				const button = jump.querySelector(".hv-service-artist-jump__button");
+				const list = jump.querySelector(".hv-service-artist-jump__list");
+				if (!button || !list) return;
+
+				const close = function () {
+					list.hidden = true;
+					button.setAttribute("aria-expanded", "false");
+					jump.classList.remove("is-open");
+				};
+
+				const open = function () {
+					list.hidden = false;
+					button.setAttribute("aria-expanded", "true");
+					jump.classList.add("is-open");
+				};
+
+				button.addEventListener("click", function () {
+					if (list.hidden) {
+						open();
+					} else {
+						close();
+					}
+				});
+
+				list.querySelectorAll("[data-target]").forEach(function (option) {
+					option.addEventListener("click", function () {
+						const target = document.querySelector(option.dataset.target);
+						button.querySelector("span").textContent = option.textContent.trim();
+						close();
+					if (!target) return;
+
+					const headerOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--hv-header-height"), 10) || 90;
+					const targetTop = target.getBoundingClientRect().top + window.pageYOffset - headerOffset - 18;
+
+					window.scrollTo({
+						top: Math.max(targetTop, 0),
+						behavior: A11yUtils.prefersReducedMotion() ? "auto" : "smooth"
+					});
+					});
+				});
+
+				document.addEventListener("click", function (e) {
+					if (!jump.contains(e.target)) close();
+				});
+
+				jump.addEventListener("keydown", function (e) {
+					if (e.key === "Escape") {
+						close();
+						button.focus();
+					}
+				});
+			});
+		}
+	};
+
 	/**
 	 * Initialize on DOM ready
 	 */
@@ -1693,6 +1801,8 @@
 		ArtistInfo.init();
 		QuickView.init();
 		ServiceCardRotation.init();
+		ServiceArtistDepth.init();
+		ServiceArtistJump.init();
 		ArtistsCarouselNativeLoop.init();
 	});
 })();

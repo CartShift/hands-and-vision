@@ -314,6 +314,7 @@ require_once ASTRA_THEME_DIR . 'inc/content-order.php';
 require_once ASTRA_THEME_DIR . 'inc/acf-display-helper.php';
 // Service Helpers (icon SVGs)
 require_once ASTRA_THEME_DIR . 'inc/service-helpers.php';
+require_once ASTRA_THEME_DIR . 'inc/service-artist-sections-admin.php';
 require_once ASTRA_THEME_DIR . 'inc/fix-site-url.php';
 
 
@@ -326,6 +327,15 @@ require_once ASTRA_THEME_DIR . 'inc/fix-site-url.php';
 
 function handandvision_enqueue_custom_assets() {
     $theme_uri = get_stylesheet_directory_uri();
+    $theme_dir = get_stylesheet_directory();
+    $unified_css_path = $theme_dir . '/assets/css/hv-unified.css';
+    $refinements_css_path = $theme_dir . '/assets/css/hv-design-refinements.css';
+    $main_js_path = $theme_dir . '/assets/js/hv-main.js';
+    $refinements_js_path = $theme_dir . '/assets/js/hv-refinements.js';
+    $unified_css_version = file_exists( $unified_css_path ) ? (string) filemtime( $unified_css_path ) : HV_THEME_VERSION;
+    $refinements_css_version = file_exists( $refinements_css_path ) ? (string) filemtime( $refinements_css_path ) : HV_THEME_VERSION;
+    $main_js_version = file_exists( $main_js_path ) ? (string) filemtime( $main_js_path ) : HV_THEME_VERSION;
+    $refinements_js_version = file_exists( $refinements_js_path ) ? (string) filemtime( $refinements_js_path ) : HV_THEME_VERSION;
 
     wp_enqueue_style(
         'handandvision-fonts',
@@ -339,14 +349,28 @@ function handandvision_enqueue_custom_assets() {
         'hv-unified',
         $theme_uri . '/assets/css/hv-unified.css',
         array(),
-        HV_THEME_VERSION
+        $unified_css_version
     );
 
     wp_enqueue_style(
         'hv-design-refinements',
         $theme_uri . '/assets/css/hv-design-refinements.css',
         array( 'hv-unified' ),
-        HV_THEME_VERSION
+        $refinements_css_version
+    );
+
+    wp_add_inline_style(
+        'hv-design-refinements',
+        '@media (max-width: 768px) {' .
+        '.hv-single-service-editorial .hv-service-sketch-section .hv-container{padding-inline:10px!important;}' .
+        '.hv-single-service-editorial .hv-service-sketch-artist{display:block!important;}' .
+        '.hv-single-service-editorial .hv-service-sketch-artist__header{margin-bottom:18px;text-align:center;}' .
+        '.hv-single-service-editorial .hv-service-sketch-artist__identity{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:10px!important;text-align:center!important;width:100%;}' .
+        '.hv-single-service-editorial .hv-service-sketch-artist__portrait{order:1;width:66px!important;}' .
+        '.hv-single-service-editorial .hv-service-sketch-artist__name{order:2;display:block;font-size:1.08rem!important;text-align:center!important;width:100%;}' .
+        '.hv-single-service-editorial .hv-service-sketch-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;margin-inline:-2px!important;}' .
+        '.hv-single-service-editorial .hv-service-sketch-tile{aspect-ratio:4/5.35!important;}' .
+        '}'
     );
 
     // Tell WordPress that hv-unified.css already includes RTL support
@@ -367,7 +391,7 @@ function handandvision_enqueue_custom_assets() {
         'handandvision-main',
         $theme_uri . '/assets/js/hv-main.js',
         array(),
-        HV_THEME_VERSION,
+        $main_js_version,
         true
     );
 
@@ -375,7 +399,7 @@ function handandvision_enqueue_custom_assets() {
         'handandvision-refinements',
         $theme_uri . '/assets/js/hv-refinements.js',
         array( 'handandvision-main' ),
-        HV_THEME_VERSION,
+        $refinements_js_version,
         true
     );
 
@@ -538,12 +562,7 @@ function handandvision_custom_header() {
                 <!-- Navigation -->
                 <nav class="hv-header__nav" id="hv-navigation">
                     <?php
-                    wp_nav_menu( array(
-                        'theme_location' => 'primary',
-                        'menu_class'     => 'hv-nav-menu',
-                        'container'      => false,
-                        'fallback_cb'    => 'handandvision_default_menu',
-                    ) );
+                    wp_nav_menu( handandvision_get_header_menu_args() );
                     ?>
                 </nav>
             </div>
@@ -561,6 +580,30 @@ function handandvision_custom_header() {
 
     <?php
     echo ob_get_clean();
+}
+
+/**
+ * Get language-aware header menu arguments.
+ *
+ * @return array
+ */
+function handandvision_get_header_menu_args() {
+    $args = array(
+        'theme_location' => 'primary',
+        'menu_class'     => 'hv-nav-menu',
+        'container'      => false,
+        'fallback_cb'    => 'handandvision_default_menu',
+    );
+
+    $menu_name = handandvision_is_hebrew() ? 'Main he Menu' : 'EN main menu';
+    $menu      = wp_get_nav_menu_object( $menu_name );
+
+    if ( $menu ) {
+        unset( $args['theme_location'] );
+        $args['menu'] = $menu->term_id;
+    }
+
+    return $args;
 }
 
 /**

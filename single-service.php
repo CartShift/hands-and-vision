@@ -59,6 +59,7 @@ $gallery_grid_items = function_exists( 'handandvision_get_service_gallery_items'
 $service_title = handandvision_strip_dashes_from_copy( $service_title );
 $short_desc = handandvision_strip_dashes_from_copy( $short_desc );
 $full_desc = handandvision_strip_dashes_from_copy( $full_desc );
+$is_digital_art_service = function_exists( 'handandvision_is_digital_art_service' ) && handandvision_is_digital_art_service( $service_id );
 
 // English title override
 if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
@@ -67,9 +68,51 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
         $service_title = $en_title;
     }
 }
+
+if ( $is_digital_art_service ) {
+    if ( empty( $full_desc ) ) {
+        $full_desc = $is_hebrew
+            ? 'אנחנו יוצרים עבודות דיגיטליות שמחברות בין דימוי, סיפור וטכנולוגיה. השירות מתאים למותגים, חללים, אירועים ופרויקטים שרוצים לבנות עולם חזותי מקורי, מדויק וזכיר.'
+            : 'We create digital artworks that connect image, story and technology. This practice is built for brands, spaces, events and projects that need a distinct visual world with depth, motion and character.';
+    }
+
+    if ( empty( $features ) ) {
+        $features = $is_hebrew
+            ? array(
+                array( 'point' => 'עיצוב דימויים דיגיטליים מקוריים למותגים, חללים ואירועים' ),
+                array( 'point' => 'יצירת עולמות חזותיים, דמויות, קומפוזיציות וסדרות תוכן' ),
+                array( 'point' => 'שילוב AI Art, איור, עריכה ו־Mixed Media לפי הקונספט' ),
+                array( 'point' => 'התאמה למסכים, הדפסות, קמפיינים, הקרנות ותוצרים דיגיטליים' ),
+            )
+            : array(
+                array( 'point' => 'Original digital imagery for brands, spaces and events' ),
+                array( 'point' => 'Visual worlds, characters, compositions and content series' ),
+                array( 'point' => 'AI art, illustration, editing and mixed media shaped around the concept' ),
+                array( 'point' => 'Adaptation for screens, prints, campaigns, projections and digital formats' ),
+            );
+    }
+
+    if ( empty( $related_artists ) ) {
+        $related_artists = get_posts(
+            array(
+                'post_type'              => 'artist',
+                'posts_per_page'         => 20,
+                'orderby'                => 'date',
+                'order'                  => 'ASC',
+                'post_status'            => 'publish',
+                'no_found_rows'          => true,
+                'update_post_term_cache' => false,
+            )
+        );
+    }
+}
+
+$digital_art_showcase = ( $is_digital_art_service && function_exists( 'handandvision_get_digital_art_artist_showcase' ) )
+    ? handandvision_get_digital_art_artist_showcase( $service_id )
+    : array();
 ?>
 
-<main id="primary" class="hv-single-service hv-single-service-editorial">
+<main id="primary" class="hv-single-service hv-single-service-editorial <?php echo esc_attr( $is_hebrew ? 'hv-single-service--rtl' : 'hv-single-service--ltr' ); ?>">
 
     <!-- Hero Section -->
     <section class="hv-service-single-hero">
@@ -125,6 +168,93 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
     </section>
     <?php endif; ?>
 
+    <!-- Digital Art Artist Sketch -->
+    <?php if ( ! empty( $digital_art_showcase ) ) : ?>
+    <section class="hv-service-sketch-section" aria-labelledby="hv-service-sketch-heading">
+        <div class="hv-container">
+            <header class="hv-service-sketch-header">
+                <span class="hv-service-sketch-label"><?php echo esc_html( $is_hebrew ? 'יוצרים מתוך השירות' : 'Artists in This Practice' ); ?></span>
+                <h2 id="hv-service-sketch-heading" class="hv-service-sketch-title"><?php echo esc_html( $is_hebrew ? 'עבודות לפי אמן' : 'Work by Artist' ); ?></h2>
+                <div class="hv-service-artist-jump" data-hv-service-artist-jump>
+                    <span class="hv-service-artist-jump__label"><?php echo esc_html( $is_hebrew ? 'בחר אמן' : 'Choose Artist' ); ?></span>
+                    <button class="hv-service-artist-jump__button" type="button" aria-expanded="false" aria-controls="hv-service-artist-jump-list">
+                        <span><?php echo esc_html( $is_hebrew ? 'בחר אמן' : 'Choose Artist' ); ?></span>
+                    </button>
+                    <div id="hv-service-artist-jump-list" class="hv-service-artist-jump__list" hidden>
+                        <?php foreach ( $digital_art_showcase as $jump_index => $jump_artist ) : ?>
+                            <button class="hv-service-artist-jump__option" type="button" data-target="#hv-service-artist-<?php echo esc_attr( (int) $jump_index + 1 ); ?>">
+                                <?php echo esc_html( $jump_artist['name'] ); ?>
+                            </button>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </header>
+
+            <div class="hv-service-sketch-list">
+                <?php foreach ( $digital_art_showcase as $artist_index => $artist ) : ?>
+                <article id="hv-service-artist-<?php echo esc_attr( (int) $artist_index + 1 ); ?>" class="hv-service-sketch-artist">
+                    <header class="hv-service-sketch-artist__header">
+                        <?php if ( ! empty( $artist['link'] ) ) : ?>
+                            <a class="hv-service-sketch-artist__identity" href="<?php echo esc_url( $artist['link'] ); ?>" aria-label="<?php echo esc_attr( sprintf( $is_hebrew ? 'לעמוד הפרופיל של %s' : 'View %s artist profile', $artist['name'] ) ); ?>" title="<?php echo esc_attr( sprintf( $is_hebrew ? 'לעמוד הפרופיל של %s' : 'View %s artist profile', $artist['name'] ) ); ?>">
+                        <?php else : ?>
+                            <div class="hv-service-sketch-artist__identity">
+                        <?php endif; ?>
+                                <span class="hv-service-sketch-artist__portrait">
+                                    <?php if ( ! empty( $artist['portrait'] ) ) : ?>
+                                        <img src="<?php echo esc_url( $artist['portrait'] ); ?>" alt="<?php echo esc_attr( $artist['name'] ); ?>" loading="lazy">
+                                    <?php endif; ?>
+                                </span>
+                                <span class="hv-service-sketch-artist__name"><?php echo esc_html( $artist['name'] ); ?></span>
+                        <?php if ( ! empty( $artist['link'] ) ) : ?>
+                            </a>
+                        <?php else : ?>
+                            </div>
+                        <?php endif; ?>
+                    </header>
+
+                    <div class="hv-service-sketch-grid" aria-label="<?php echo esc_attr( sprintf( $is_hebrew ? 'שישה מקומות לעבודות של %s' : 'Six artwork slots for %s', $artist['name'] ) ); ?>">
+                        <?php foreach ( $artist['projects'] as $slot_index => $project ) : ?>
+                            <?php if ( ! empty( $project['image'] ) ) : ?>
+                                <?php
+                                $lightbox_url = ! empty( $project['full'] ) ? $project['full'] : $project['image'];
+                                $caption_text = ! empty( $project['title'] ) ? $project['title'] : $artist['name'];
+                                ?>
+                                <a class="hv-service-sketch-tile hv-service-sketch-tile--filled hv-lightbox" href="<?php echo esc_url( $lightbox_url ); ?>" data-caption="<?php echo esc_attr( $caption_text ); ?>" aria-label="<?php echo esc_attr( sprintf( $is_hebrew ? 'פתיחת העבודה של %s בגודל מלא' : 'Open %s artwork full size', $artist['name'] ) ); ?>">
+                                    <img src="<?php echo esc_url( $project['image'] ); ?>" alt="<?php echo esc_attr( $project['alt'] ?: $artist['name'] ); ?>" loading="lazy">
+                                    <?php if ( ! empty( $project['title'] ) ) : ?>
+                                        <span class="hv-service-sketch-tile__caption"><?php echo esc_html( $project['title'] ); ?></span>
+                                    <?php endif; ?>
+                                </a>
+                            <?php else : ?>
+                                <div class="hv-service-sketch-tile hv-service-sketch-tile--placeholder" aria-label="<?php echo esc_attr( sprintf( $is_hebrew ? 'מקום ליצירה %02d' : 'Artwork slot %02d', (int) $slot_index + 1 ) ); ?>">
+                                    <span><?php echo esc_html( sprintf( '%02d', (int) $slot_index + 1 ) ); ?></span>
+                                </div>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <div class="hv-service-sketch-deeper">
+                        <?php $deeper_text = ! empty( $artist['deeper_text'] ) ? $artist['deeper_text'] : ( $is_hebrew ? 'להעמקה' : 'Go deeper' ); ?>
+                        <?php if ( ! empty( $artist['link'] ) ) : ?>
+                            <a href="<?php echo esc_url( $artist['link'] ); ?>">
+                        <?php else : ?>
+                            <span>
+                        <?php endif; ?>
+                                <span><?php echo esc_html( $deeper_text ); ?></span>
+                                <span aria-hidden="true">↓</span>
+                        <?php if ( ! empty( $artist['link'] ) ) : ?>
+                            </a>
+                        <?php else : ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                </article>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+    <?php endif; ?>
+
     <?php if ( $is_consultation ) :
         $default_intro = $is_hebrew
             ? 'ייעוץ והכוונה זה תהליך שבו אנחנו מתרגמים את החזון שלכם לעיצוב מקורי, מדויק ואישי. כל פרויקט נבנה מהבסיס, עם הדמיות ותכנון שמראים לכם בדיוק לאן הדרך הולכת, עוד לפני שמתחילים לייצר.'
@@ -171,153 +301,41 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
     </section>
     <?php endif; ?>
 
-    <!-- Features -->
-    <?php
-    $features_placeholder = ( empty( $features ) && function_exists( 'handandvision_acf_can_show_placeholder' ) && handandvision_acf_can_show_placeholder() && function_exists( 'handandvision_acf_display_value' ) )
-        ? handandvision_acf_display_value( array(), $is_hebrew ? 'מה אנחנו עושים' : 'What we do', 'html' )
-        : '';
-    if ( ! empty( $features ) || $features_placeholder ) : ?>
-    <section class="hv-service-features-section">
-        <div class="hv-container">
-            <div class="hv-service-features-header">
-                <span class="hv-service-features-label">
-                    <?php echo esc_html( $is_hebrew ? 'תחומי פעילות' : 'Areas of Expertise' ); ?>
-                </span>
-                <h2 class="hv-service-features-title">
-                    <?php echo esc_html( $is_hebrew ? 'מה כולל השירות' : 'What We Offer' ); ?>
-                </h2>
-            </div>
-            <div class="hv-service-features-grid">
-                <?php
-                if ( $features_placeholder && empty( $features ) ) {
-                    echo '<div class="hv-service-feature-item">' . $features_placeholder . '</div>';
-                }
-                $counter = 0;
-                foreach ( $features as $feature ) :
-                    $counter++;
-                    $feature_text = is_array( $feature ) && isset( $feature['point'] ) ? $feature['point'] : (string) $feature;
-                    if ( empty( $feature_text ) ) continue;
-                    $feature_text = handandvision_strip_dashes_from_copy( $feature_text );
-                ?>
-                    <div class="hv-service-feature-item">
-                        <div class="hv-service-feature-number"><?php printf( '%02d', $counter ); ?></div>
-                        <p class="hv-service-feature-text"><?php echo esc_html( $feature_text ); ?></p>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
-
-    <!-- Gallery -->
-    <?php
-    $gallery_placeholder = ( empty( $gallery_grid_items ) && function_exists( 'handandvision_acf_can_show_placeholder' ) && handandvision_acf_can_show_placeholder() && function_exists( 'handandvision_acf_display_value' ) )
-        ? handandvision_acf_display_value( array(), $is_hebrew ? 'תמונות גלריה' : 'Gallery images', 'html' )
-        : '';
-    if ( ! empty( $gallery_grid_items ) || $gallery_placeholder ) : ?>
-    <section class="hv-service-gallery-section">
-        <div class="hv-container">
-            <div class="hv-service-gallery-header">
-                <span class="hv-service-gallery-label">
-                    <?php echo esc_html( $is_hebrew ? 'פרויקטים' : 'Projects' ); ?>
-                </span>
-                <h2 class="hv-service-gallery-title">
-                    <?php echo esc_html( $is_hebrew ? 'עבודות לדוגמה' : 'Selected Works' ); ?>
-                </h2>
-            </div>
-            <div class="hv-service-gallery-grid">
-                <?php
-                if ( $gallery_placeholder && empty( $gallery_grid_items ) ) {
-                    echo '<div class="hv-service-gallery-item"><div class="hv-service-gallery-media"><div class="hv-field-placeholder hv-field-placeholder--image">' . $gallery_placeholder . '</div></div></div>';
-                }
-                foreach ( $gallery_grid_items as $item ) :
-                    $image_url = isset( $item['image'] ) ? $item['image'] : ( $item['url'] ?? '' );
-                    $title = isset( $item['title'] ) ? handandvision_strip_dashes_from_copy( $item['title'] ) : '';
-                    $artist_name = isset( $item['artist_name'] ) ? handandvision_strip_dashes_from_copy( $item['artist_name'] ) : '';
-                    $project = isset( $item['project'] ) ? handandvision_strip_dashes_from_copy( $item['project'] ) : '';
-                    $link = isset( $item['link'] ) ? $item['link'] : '';
-                    if ( empty( $image_url ) ) continue;
-                ?>
-                    <div class="hv-service-gallery-item">
-                        <?php if ( $link ) : ?>
-                            <a href="<?php echo esc_url( $link ); ?>" class="hv-service-gallery-link">
-                        <?php endif; ?>
-                                <div class="hv-service-gallery-media">
-                                    <img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( $title ); ?>" loading="lazy">
-                                </div>
-                                <?php if ( $artist_name || $project || $title ) : ?>
-                                    <div class="hv-service-gallery-caption hv-service-gallery-caption--meta">
-                                        <?php if ( $artist_name ) : ?>
-                                            <span class="hv-service-gallery-artist"><?php echo esc_html( $artist_name ); ?></span>
-                                        <?php endif; ?>
-                                        <?php if ( $project ) : ?>
-                                            <span class="hv-service-gallery-project"><?php echo esc_html( $project ); ?></span>
-                                        <?php elseif ( $title && ! $artist_name ) : ?>
-                                            <span class="hv-service-gallery-project"><?php echo esc_html( $title ); ?></span>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endif; ?>
-                        <?php if ( $link ) : ?>
-                            </a>
-                        <?php endif; ?>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
-
     <!-- Related Artists -->
     <?php
     $related_placeholder = ( empty( $related_artists ) && function_exists( 'handandvision_acf_can_show_placeholder' ) && handandvision_acf_can_show_placeholder() && function_exists( 'handandvision_acf_display_value' ) )
         ? handandvision_acf_display_value( array(), $is_hebrew ? 'אמנים קשורים' : 'Related artists', 'html' )
         : '';
     if ( ! empty( $related_artists ) || $related_placeholder ) : ?>
-    <section class="hv-service-artists-section">
-        <div class="hv-container">
-            <div class="hv-service-artists-header">
-                <span class="hv-service-artists-label">
-                    <?php echo esc_html( $is_hebrew ? 'שיתופי פעולה' : 'Collaborations' ); ?>
-                </span>
-                <h2 class="hv-service-artists-title">
-                    <?php echo esc_html( $is_hebrew ? 'אמנים שעובדים איתנו' : 'Artists We Work With' ); ?>
-                </h2>
-            </div>
-            <div class="hv-service-artists-grid">
-                <?php
-                if ( $related_placeholder && empty( $related_artists ) ) {
-                    echo '<div class="hv-service-artist-card"><div class="hv-service-artist-media"><div class="hv-field-placeholder hv-field-placeholder--image">' . $related_placeholder . '</div></div></div>';
-                }
-                foreach ( $related_artists as $artist ) :
-                    $artist_id = is_object( $artist ) ? $artist->ID : (int) $artist;
-                    if ( ! $artist_id ) continue;
-
-                    $artist_name = get_the_title( $artist_id );
-                    $portrait = function_exists( 'get_field' ) ? get_field( 'artist_portrait', $artist_id ) : false;
-                    $portrait_url = '';
-
-                    if ( is_array( $portrait ) && isset( $portrait['url'] ) ) {
-                        $portrait_url = $portrait['url'];
-                    } elseif ( has_post_thumbnail( $artist_id ) ) {
-                        $portrait_url = get_the_post_thumbnail_url( $artist_id, 'medium' );
-                    }
-                ?>
-                    <article class="hv-service-artist-card">
-                        <a href="<?php echo esc_url( get_permalink( $artist_id ) ); ?>" class="hv-service-artist-link">
-                            <div class="hv-service-artist-media">
-                                <?php if ( $portrait_url ) : ?>
-                                    <img src="<?php echo esc_url( $portrait_url ); ?>" alt="<?php echo esc_attr( $artist_name ); ?>" loading="lazy">
-                                <?php else : ?>
-                                    <div class="hv-service-artist-placeholder"></div>
-                                <?php endif; ?>
-                            </div>
-                            <h3 class="hv-service-artist-name"><?php echo esc_html( $artist_name ); ?></h3>
-                        </a>
-                    </article>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
+        <?php if ( ! empty( $related_artists ) ) : ?>
+            <?php
+            get_template_part(
+                'template-parts/artist-carousel',
+                null,
+                array(
+                    'artists'         => $related_artists,
+                    'is_hebrew'       => $is_hebrew,
+                    'section_classes' => 'hv-section hv-section--white hv-home-artists hv-service-artists-section hv-service-artists-section--carousel',
+                    'eyebrow'         => $is_hebrew ? 'שיתופי פעולה' : 'Collaborations',
+                    'title'           => $is_hebrew ? 'אמנים שעובדים איתנו' : 'Artists We Work With',
+                    'show_heading'    => true,
+                    'show_cta'        => true,
+                )
+            );
+            ?>
+        <?php else : ?>
+            <section class="hv-service-artists-section">
+                <div class="hv-container">
+                    <div class="hv-service-artists-header">
+                        <span class="hv-service-artists-label"><?php echo esc_html( $is_hebrew ? 'שיתופי פעולה' : 'Collaborations' ); ?></span>
+                        <h2 class="hv-service-artists-title"><?php echo esc_html( $is_hebrew ? 'אמנים שעובדים איתנו' : 'Artists We Work With' ); ?></h2>
+                    </div>
+                    <div class="hv-service-artists-grid">
+                        <div class="hv-service-artist-card"><div class="hv-service-artist-media"><div class="hv-field-placeholder hv-field-placeholder--image"><?php echo wp_kses_post( $related_placeholder ); ?></div></div></div>
+                    </div>
+                </div>
+            </section>
+        <?php endif; ?>
     <?php endif; ?>
 
     <!-- CTA Section -->
@@ -329,7 +347,10 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
                 </span>
                 <?php
                 $default_cta = $is_hebrew ? 'מוכנים להתחיל את הפרויקט?' : 'Ready to Start Your Project?';
-                $display_cta = ! empty( $cta_text ) ? $cta_text : $default_cta;
+                $display_cta = ! empty( $cta_text ) ? handandvision_strip_dashes_from_copy( $cta_text ) : $default_cta;
+                if ( ! $is_hebrew && 'צרו קשר' === trim( $display_cta ) ) {
+                    $display_cta = $default_cta;
+                }
                 ?>
                 <h2 class="hv-service-cta-title"><?php echo esc_html( $display_cta ); ?></h2>
                 <p class="hv-service-cta-desc">
@@ -353,4 +374,3 @@ if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
 <?php
 endwhile; // End Loop
 get_footer();
-

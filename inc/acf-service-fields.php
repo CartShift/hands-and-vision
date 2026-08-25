@@ -271,7 +271,7 @@ function handandvision_register_acf_service_fields() {
             ),
         ),
         'menu_order' => 0,
-        'position' => 'normal',
+        'position' => 'acf_after_title',
         'style' => 'default',
         'label_placement' => 'top',
         'instruction_placement' => 'label',

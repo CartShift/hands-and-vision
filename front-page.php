@@ -209,105 +209,16 @@ $is_hebrew = handandvision_is_hebrew();
             <?php endif; ?>
     </section>
 
-    <!-- FEATURED ARTISTS SECTION -->
-    <section class="hv-section hv-section--white hv-home-artists">
-        <div class="hv-container">
-            <header class="hv-section-header hv-text-center hv-animate hv-home-section-header hv-home-section-header--artists">
-                <span class="hv-home-section-header__eyebrow">
-                    <span class="hv-home-section-header__label"><?php echo esc_html( $is_hebrew ? 'הקולקטיב' : 'The Collective' ); ?></span>
-                </span>
-            </header>
-        </div>
-
-            <?php
-            $display_artists = get_posts( array(
-                'post_type'              => 'artist',
-                'posts_per_page'         => 20,
-                'orderby'                => 'date',
-                'order'                  => 'ASC',
-                'post_status'            => 'publish',
-                'no_found_rows'          => true,
-                'update_post_term_cache' => false,
-            ) );
-            if ( empty( $display_artists ) && ! empty( $featured_artists ) ) {
-                $display_artists = $featured_artists;
-            }
-            $display_artists = is_array( $display_artists ) ? $display_artists : array();
-            $display_artists = handandvision_sort_artists_for_display( $display_artists );
-            foreach ( $display_artists as $artist_index => $artist_item ) {
-                $artist_name = is_object( $artist_item ) ? mb_strtolower( trim( get_the_title( $artist_item->ID ) ) ) : '';
-                $artist_slug = is_object( $artist_item ) ? mb_strtolower( trim( get_post_field( 'post_name', $artist_item->ID ) ) ) : '';
-                $artist_key  = $artist_name . ' ' . str_replace( '-', ' ', $artist_slug );
-                if (
-                    false !== mb_strpos( $artist_key, 'daniel philosoph' )
-                    || false !== mb_strpos( $artist_key, 'daniel philosof' )
-                    || false !== mb_strpos( $artist_key, 'דניאל פילוסוף' )
-                ) {
-                    unset( $display_artists[ $artist_index ] );
-                    array_unshift( $display_artists, $artist_item );
-                    $display_artists = array_values( $display_artists );
-                    break;
-                }
-            }
-            ?>
-            <?php if ( ! empty( $display_artists ) ) : ?>
-            <div class="hv-artists-showcase-bleed hv-carousel-bleed">
-            <div class="hv-artists-showcase swiper">
-                <div class="swiper-wrapper">
-                <?php foreach ( $display_artists as $i => $artist_item ) :
-                    if ( ! is_object( $artist_item ) ) continue;
-                    $a_image_html = '';
-                    $a_image_url = '';
-
-                    {
-                        $a_name       = get_the_title( $artist_item->ID );
-                        $a_discipline = get_field( 'artist_discipline', $artist_item->ID );
-                        $a_quote      = get_field( 'artist_quote', $artist_item->ID );
-                        $a_link       = get_permalink( $artist_item->ID );
-
-                        $a_img_id = handandvision_get_artist_portrait_id( $artist_item->ID );
-
-                        if ( $a_img_id ) {
-                            $a_image_html = wp_get_attachment_image( $a_img_id, 'hv-artist', false, array( 'class' => 'hv-artist-card__img', 'loading' => 'lazy' ) );
-                        } else {
-                            // URL Fallback check (if fields return strings instead of arrays)
-                            $a_image_url = get_the_post_thumbnail_url( $artist_item->ID, 'hv-artist' );
-                        }
-
-                    }
-                ?>
-                    <article class="hv-artist-card swiper-slide">
-                        <a href="<?php echo esc_url( $a_link ); ?>" class="hv-artist-card__link" data-artist-id="<?php echo esc_attr( $artist_item->ID ); ?>">
-                            <div class="hv-artist-card__portrait">
-                                <?php if ( $a_image_html ) : ?>
-                                    <?php echo wp_kses_post( $a_image_html ); ?>
-                                <?php elseif ( $a_image_url ) : ?>
-                                    <img src="<?php echo esc_url( $a_image_url ); ?>" alt="<?php echo esc_attr( $a_name ); ?>" class="hv-artist-card__img" loading="lazy">
-                                <?php else : ?>
-                                    <div class="hv-artist-card__placeholder" style="background: linear-gradient(135deg, hsl(<?php echo (int) ( 30 + $i * 15 ); ?>, 15%, 75%) 0%, hsl(<?php echo (int) ( 40 + $i * 15 ); ?>, 20%, 65%) 100%);"></div>
-                                <?php endif; ?>
-                            </div>
-                            <div class="hv-artist-card__info">
-                                <h3 class="hv-artist-card__name"><?php echo esc_html( $a_name ); ?></h3>
-                                <?php if ( $a_quote ) : ?>
-                                    <p class="hv-artist-card__quote">"<?php echo esc_html( $a_quote ); ?>"</p>
-                                <?php endif; ?>
-                            </div>
-                        </a>
-                    </article>
-                <?php endforeach; ?>
-            </div>
-            </div>
-            </div>
-            <div class="hv-container hv-text-center hv-mt-8">
-                <a href="<?php echo esc_url( get_post_type_archive_link( 'artist' ) ); ?>" class="hv-btn hv-btn--outline"><?php echo esc_html( $is_hebrew ? 'לכל האמנים' : 'All Artists' ); ?></a>
-            </div>
-            <?php else : ?>
-            <div class="hv-container">
-                <p class="hv-text-center hv-muted hv-mt-4"><?php echo esc_html( $is_hebrew ? 'האמנים שלנו יוצגו כאן בקרוב.' : 'Our artists will be featured here soon.' ); ?></p>
-            </div>
-            <?php endif; ?>
-    </section>
+    <?php
+    get_template_part(
+        'template-parts/artist-carousel',
+        null,
+        array(
+            'is_hebrew'       => $is_hebrew,
+            'section_classes' => 'hv-section hv-section--white hv-home-artists',
+        )
+    );
+    ?>
 
     <?php get_template_part( 'template-parts/gallery/gallery-carousel', null, array( 'items' => $gallery_items ) ); ?>
 

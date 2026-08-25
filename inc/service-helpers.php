@@ -21,3 +21,362 @@ function handandvision_get_service_icon_svg( $index = 0 ) {
 	);
 	return $icons[ $index ];
 }
+
+/**
+ * Detect the Digital Art service for editorial fallback copy.
+ *
+ * @param int $service_id Service post ID.
+ * @return bool
+ */
+function handandvision_is_digital_art_service( $service_id ) {
+	$slug  = mb_strtolower( (string) get_post_field( 'post_name', $service_id ) );
+	$title = mb_strtolower( (string) get_the_title( $service_id ) );
+	$key   = $slug . ' ' . $title;
+
+	return false !== mb_strpos( $key, 'digital' )
+		|| false !== mb_strpos( $key, 'דיגיטל' );
+}
+
+/**
+ * Build artist-led project groups for a service page.
+ *
+ * @param int   $service_id      Service post ID.
+ * @param array $related_artists Related artist posts from ACF.
+ * @return array
+ */
+function handandvision_get_service_artist_project_groups( $service_id, $related_artists = array() ) {
+	$groups       = array();
+	$project_rows = function_exists( 'get_field' ) ? get_field( 'service_project_gallery', $service_id ) : array();
+	$project_rows = is_array( $project_rows ) ? $project_rows : array();
+	$artists_pool = is_array( $related_artists ) ? $related_artists : array();
+
+	foreach ( $project_rows as $row ) {
+		$image = $row['image'] ?? null;
+		if ( ! is_array( $image ) || empty( $image['url'] ) ) {
+			continue;
+		}
+
+		$artist_obj = $row['artist'] ?? null;
+		$artist_id  = is_object( $artist_obj ) ? (int) $artist_obj->ID : 0;
+		if ( ! $artist_id ) {
+			continue;
+		}
+
+		if ( empty( $groups[ $artist_id ] ) ) {
+			$groups[ $artist_id ] = handandvision_get_service_artist_group_base( $artist_id );
+		}
+
+		$groups[ $artist_id ]['projects'][] = array(
+			'image'   => $image['sizes']['large'] ?? $image['url'],
+			'alt'     => $image['alt'] ?? get_the_title( $artist_id ),
+			'title'   => handandvision_strip_dashes_from_copy( (string) ( $row['project_title'] ?? '' ) ),
+			'link'    => get_permalink( $artist_id ),
+		);
+	}
+
+	if ( empty( $artists_pool ) && handandvision_is_digital_art_service( $service_id ) ) {
+		$artists_pool = get_posts(
+			array(
+				'post_type'              => 'artist',
+				'posts_per_page'         => 8,
+				'orderby'                => 'date',
+				'order'                  => 'ASC',
+				'post_status'            => 'publish',
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
+			)
+		);
+	}
+
+	foreach ( $artists_pool as $artist ) {
+		$artist_id = is_object( $artist ) ? (int) $artist->ID : (int) $artist;
+		if ( ! $artist_id || ! empty( $groups[ $artist_id ] ) ) {
+			continue;
+		}
+
+		$groups[ $artist_id ] = handandvision_get_service_artist_group_base( $artist_id );
+		$artist_gallery       = function_exists( 'handandvision_get_artist_gallery_items' ) ? handandvision_get_artist_gallery_items( $artist_id, 6 ) : array();
+
+		foreach ( $artist_gallery as $item ) {
+			$image_url = isset( $item['image'] ) ? $item['image'] : ( $item['url'] ?? '' );
+			if ( ! $image_url ) {
+				continue;
+			}
+
+			$groups[ $artist_id ]['projects'][] = array(
+				'image' => $image_url,
+				'alt'   => $item['alt'] ?? get_the_title( $artist_id ),
+				'title' => handandvision_strip_dashes_from_copy( (string) ( $item['title'] ?? '' ) ),
+				'link'  => get_permalink( $artist_id ),
+			);
+		}
+	}
+
+	return array_values(
+		array_filter(
+			$groups,
+			function ( $group ) {
+				return ! empty( $group['projects'] ) && count( $group['projects'] ) >= 3;
+			}
+		)
+	);
+}
+
+/**
+ * Build the curated Digital Art artist sketch requested for the service page.
+ *
+ * @param int $service_id Service post ID.
+ * @return array
+ */
+function handandvision_get_digital_art_artist_showcase( $service_id ) {
+	$configured_sections = handandvision_get_service_artist_sections_meta( $service_id );
+	if ( empty( $configured_sections ) ) {
+		$configured_sections = function_exists( 'get_field' ) ? get_field( 'service_artist_sections', $service_id ) : array();
+	}
+	$configured_sections = is_array( $configured_sections ) ? $configured_sections : array();
+	$showcase            = array();
+
+	foreach ( $configured_sections as $section ) {
+		$artist_obj = $section['artist'] ?? null;
+		$artist_id  = isset( $section['artist_id'] ) ? (int) $section['artist_id'] : 0;
+		$artist_id  = $artist_id ? $artist_id : ( is_object( $artist_obj ) ? (int) $artist_obj->ID : (int) $artist_obj );
+		if ( ! $artist_id ) {
+			continue;
+		}
+
+		$artworks = isset( $section['artworks'] ) && is_array( $section['artworks'] ) ? $section['artworks'] : array();
+		if ( empty( $artworks ) && ! empty( $section['artwork_ids'] ) && is_array( $section['artwork_ids'] ) ) {
+			$artworks = array_map(
+				function ( $attachment_id ) {
+					$attachment_id = (int) $attachment_id;
+					if ( ! $attachment_id ) {
+						return array();
+					}
+
+					$full_url  = wp_get_attachment_image_url( $attachment_id, 'full' );
+					$large_url = wp_get_attachment_image_url( $attachment_id, 'large' );
+
+					return array(
+						'id'      => $attachment_id,
+						'url'     => $full_url,
+						'alt'     => get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ),
+						'title'   => get_the_title( $attachment_id ),
+						'caption' => wp_get_attachment_caption( $attachment_id ),
+						'sizes'   => array(
+							'large' => $large_url ? $large_url : $full_url,
+						),
+					);
+				},
+				$section['artwork_ids']
+			);
+		}
+		$projects = array();
+
+		foreach ( array_slice( $artworks, 0, 6 ) as $image ) {
+			if ( ! is_array( $image ) || empty( $image['url'] ) ) {
+				continue;
+			}
+
+			$projects[] = array(
+				'image' => $image['sizes']['large'] ?? $image['url'],
+				'full'  => $image['url'],
+				'alt'   => $image['alt'] ?? get_the_title( $artist_id ),
+				'title' => handandvision_strip_dashes_from_copy( (string) ( $image['caption'] ?? ( $image['title'] ?? '' ) ) ),
+				'link'  => get_permalink( $artist_id ),
+			);
+		}
+
+		$showcase[] = array(
+			'id'          => $artist_id,
+			'name'        => handandvision_strip_dashes_from_copy( get_the_title( $artist_id ) ),
+			'link'        => get_permalink( $artist_id ),
+			'portrait'    => handandvision_get_service_artist_portrait_url( $artist_id ),
+			'deeper_text' => handandvision_strip_dashes_from_copy( (string) ( $section['deeper_text'] ?? '' ) ),
+			'projects'    => array_pad( array_slice( $projects, 0, 6 ), 6, array() ),
+		);
+	}
+
+	if ( ! empty( $showcase ) ) {
+		return $showcase;
+	}
+
+	$artists = array(
+		array(
+			'name'  => 'Daniel Philosoph',
+			'terms' => array( 'daniel philosoph', 'daniel philosof', 'דניאל פילוסוף' ),
+		),
+		array(
+			'name'  => 'Noa Afriat',
+			'terms' => array( 'noa afriat', 'noa efrati', 'נועה אפריאט', 'נועה אפרתי' ),
+		),
+	);
+
+	foreach ( $artists as $index => $artist ) {
+		$artist_id = handandvision_find_artist_id_by_terms( $artist['terms'] );
+		$projects  = $artist_id ? handandvision_get_service_projects_for_artist( $service_id, $artist_id, 6 ) : array();
+
+		$artists[ $index ]['id']       = $artist_id;
+		$artists[ $index ]['link']     = $artist_id ? get_permalink( $artist_id ) : '';
+		$artists[ $index ]['portrait'] = $artist_id ? handandvision_get_service_artist_portrait_url( $artist_id ) : '';
+		$artists[ $index ]['deeper_text'] = '';
+		$artists[ $index ]['projects'] = array_pad( array_slice( $projects, 0, 6 ), 6, array() );
+	}
+
+	return $artists;
+}
+
+/**
+ * Return artist sections saved by the custom service editor metabox.
+ *
+ * @param int $service_id Service post ID.
+ * @return array
+ */
+function handandvision_get_service_artist_sections_meta( $service_id ) {
+	$sections = get_post_meta( $service_id, '_hv_service_artist_sections', true );
+
+	if ( ! is_array( $sections ) ) {
+		return array();
+	}
+
+	return array_values(
+		array_filter(
+			$sections,
+			function ( $section ) {
+				if ( ! is_array( $section ) ) {
+					return false;
+				}
+
+				$artist_id = isset( $section['artist_id'] ) ? (int) $section['artist_id'] : 0;
+				$image_ids = isset( $section['artwork_ids'] ) && is_array( $section['artwork_ids'] ) ? array_filter( array_map( 'absint', $section['artwork_ids'] ) ) : array();
+
+				return $artist_id || ! empty( $image_ids );
+			}
+		)
+	);
+}
+
+/**
+ * Find an artist by title or slug fragments.
+ *
+ * @param array $terms Search terms.
+ * @return int
+ */
+function handandvision_find_artist_id_by_terms( $terms ) {
+	$artist_posts = get_posts(
+		array(
+			'post_type'              => 'artist',
+			'posts_per_page'         => 100,
+			'orderby'                => 'date',
+			'order'                  => 'ASC',
+			'post_status'            => 'publish',
+			'no_found_rows'          => true,
+			'update_post_term_cache' => false,
+		)
+	);
+
+	foreach ( $artist_posts as $artist ) {
+		$key = mb_strtolower( get_the_title( $artist->ID ) . ' ' . str_replace( '-', ' ', get_post_field( 'post_name', $artist->ID ) ) );
+		foreach ( $terms as $term ) {
+			if ( false !== mb_strpos( $key, mb_strtolower( $term ) ) ) {
+				return (int) $artist->ID;
+			}
+		}
+	}
+
+	return 0;
+}
+
+/**
+ * Get the best portrait URL for a service artist block.
+ *
+ * @param int $artist_id Artist post ID.
+ * @return string
+ */
+function handandvision_get_service_artist_portrait_url( $artist_id ) {
+	$portrait_id = function_exists( 'handandvision_get_artist_portrait_id' ) ? handandvision_get_artist_portrait_id( $artist_id ) : 0;
+	if ( $portrait_id ) {
+		return (string) wp_get_attachment_image_url( $portrait_id, 'thumbnail' );
+	}
+
+	return (string) get_the_post_thumbnail_url( $artist_id, 'thumbnail' );
+}
+
+/**
+ * Collect service-specific projects first, then artist gallery items.
+ *
+ * @param int $service_id Service post ID.
+ * @param int $artist_id  Artist post ID.
+ * @param int $limit      Maximum projects.
+ * @return array
+ */
+function handandvision_get_service_projects_for_artist( $service_id, $artist_id, $limit = 6 ) {
+	$projects     = array();
+	$project_rows = function_exists( 'get_field' ) ? get_field( 'service_project_gallery', $service_id ) : array();
+	$project_rows = is_array( $project_rows ) ? $project_rows : array();
+
+	foreach ( $project_rows as $row ) {
+		$artist_obj = $row['artist'] ?? null;
+		$row_artist = is_object( $artist_obj ) ? (int) $artist_obj->ID : (int) $artist_obj;
+		$image      = $row['image'] ?? null;
+
+		if ( $row_artist !== (int) $artist_id || ! is_array( $image ) || empty( $image['url'] ) ) {
+			continue;
+		}
+
+		$projects[] = array(
+			'image' => $image['sizes']['large'] ?? $image['url'],
+			'full'  => $image['url'],
+			'alt'   => $image['alt'] ?? get_the_title( $artist_id ),
+			'title' => handandvision_strip_dashes_from_copy( (string) ( $row['project_title'] ?? '' ) ),
+			'link'  => get_permalink( $artist_id ),
+		);
+	}
+
+	if ( count( $projects ) < $limit && function_exists( 'handandvision_get_artist_gallery_items' ) ) {
+		$artist_gallery = handandvision_get_artist_gallery_items( $artist_id, $limit );
+		foreach ( $artist_gallery as $item ) {
+			$image_url = isset( $item['image'] ) ? $item['image'] : ( $item['url'] ?? '' );
+			if ( ! $image_url ) {
+				continue;
+			}
+
+			$projects[] = array(
+				'image' => $image_url,
+				'full'  => ! empty( $item['image_id'] ) ? wp_get_attachment_image_url( (int) $item['image_id'], 'full' ) : $image_url,
+				'alt'   => $item['alt'] ?? get_the_title( $artist_id ),
+				'title' => handandvision_strip_dashes_from_copy( (string) ( $item['title'] ?? '' ) ),
+				'link'  => get_permalink( $artist_id ),
+			);
+
+			if ( count( $projects ) >= $limit ) {
+				break;
+			}
+		}
+	}
+
+	return array_slice( $projects, 0, $limit );
+}
+
+/**
+ * Return normalized artist details for the service page.
+ *
+ * @param int $artist_id Artist post ID.
+ * @return array
+ */
+function handandvision_get_service_artist_group_base( $artist_id ) {
+	$portrait_id = function_exists( 'handandvision_get_artist_portrait_id' ) ? handandvision_get_artist_portrait_id( $artist_id ) : 0;
+	$portrait    = $portrait_id ? wp_get_attachment_image_url( $portrait_id, 'thumbnail' ) : get_the_post_thumbnail_url( $artist_id, 'thumbnail' );
+	$statement   = function_exists( 'get_field' ) ? get_field( 'artist_quote', $artist_id ) : '';
+	if ( ! $statement && function_exists( 'get_field' ) ) {
+		$statement = get_field( 'artist_discipline', $artist_id );
+	}
+
+	return array(
+		'id'        => $artist_id,
+		'name'      => handandvision_strip_dashes_from_copy( get_the_title( $artist_id ) ),
+		'portrait'  => $portrait,
+		'statement' => handandvision_strip_dashes_from_copy( (string) $statement ),
+		'link'      => get_permalink( $artist_id ),
+		'projects'  => array(),
+	);
+}
