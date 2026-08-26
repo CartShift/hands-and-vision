@@ -106,14 +106,50 @@ function handandvision_render_service_artist_sections_metabox( $post ) {
 }
 
 /**
- * Return editor defaults that match the front-end fallback for Digital Art.
+ * Return editor defaults that match the front-end fallback for configured services.
  *
  * @param int $service_id Service post ID.
  * @return array
  */
 function handandvision_get_service_artist_sections_editor_defaults( $service_id ) {
-	if ( ! function_exists( 'handandvision_is_digital_art_service' ) || ! handandvision_is_digital_art_service( $service_id ) ) {
+	if ( ! function_exists( 'handandvision_service_uses_artist_sections' ) || ! handandvision_service_uses_artist_sections( $service_id ) ) {
 		return array( array() );
+	}
+
+	if ( ! function_exists( 'handandvision_is_digital_art_service' ) || ! handandvision_is_digital_art_service( $service_id ) ) {
+		$fallback_artists = function_exists( 'get_field' ) ? get_field( 'service_related_artists', $service_id ) : array();
+		$fallback_artists = is_array( $fallback_artists ) ? array_filter( $fallback_artists ) : array();
+
+		if ( empty( $fallback_artists ) ) {
+			$fallback_artists = get_posts(
+				array(
+					'post_type'              => 'artist',
+					'posts_per_page'         => 2,
+					'orderby'                => 'date',
+					'order'                  => 'ASC',
+					'post_status'            => 'publish',
+					'no_found_rows'          => true,
+					'update_post_term_cache' => false,
+				)
+			);
+		}
+
+		$defaults = array();
+
+		foreach ( array_slice( $fallback_artists, 0, 12 ) as $artist ) {
+			$artist_id = is_object( $artist ) ? (int) $artist->ID : (int) $artist;
+			if ( ! $artist_id ) {
+				continue;
+			}
+
+			$defaults[] = array(
+				'artist_id'   => $artist_id,
+				'artwork_ids' => array(),
+				'deeper_text' => '',
+			);
+		}
+
+		return ! empty( $defaults ) ? $defaults : array( array() );
 	}
 
 	$defaults = array();

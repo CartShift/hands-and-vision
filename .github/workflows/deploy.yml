@@ -1,16 +1,10 @@
-name: Deploy to Pressidium
+name: Legacy Pressidium Deploy Disabled
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '.vscode/**'
-      - 'README.md'
-      - 'GEMINI.md'
-      - 'bin/**'
+  workflow_dispatch:
 
 jobs:
   deploy:
+    if: ${{ vars.ENABLE_LEGACY_PRESSIDIUM_DEPLOY == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -48,6 +48,21 @@ Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) (runn
 
 Maintenance mode is automatically disabled locally (`WP_ENVIRONMENT_TYPE=local`).
 
+## Production Deployment
+
+For Bluehost, build a verified full theme zip before uploading:
+
+```powershell
+npm run package:theme
+```
+
+Then upload `deploy/hands-and-vision-theme-folder.zip` through Bluehost File
+Manager. See [docs/BLUEHOST-DEPLOYMENT.md](docs/BLUEHOST-DEPLOYMENT.md).
+
+Avoid WinSCP Synchronize/Mirror for this theme. It can leave the production theme
+folder partially overwritten if the local panel points at a subdirectory such as
+`inc`.
+
 ## Linting (WordPress PHP)
 
 PHP linting uses [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) with [WordPress-Coding-Standards](https://github.com/WordPress/WordPress-Coding-Standards). Requires PHP and Composer.

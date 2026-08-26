@@ -38,6 +38,123 @@ function handandvision_is_digital_art_service( $service_id ) {
 }
 
 /**
+ * Detect the object / industrial design service.
+ *
+ * @param int $service_id Service post ID.
+ * @return bool
+ */
+function handandvision_is_object_design_service( $service_id ) {
+	$slug  = mb_strtolower( (string) get_post_field( 'post_name', $service_id ) );
+	$title = mb_strtolower( (string) get_the_title( $service_id ) );
+	$key   = $slug . ' ' . $title;
+
+	return false !== mb_strpos( $key, 'object' )
+		|| false !== mb_strpos( $key, 'industrial' )
+		|| false !== mb_strpos( $key, 'אובייקט' )
+		|| false !== mb_strpos( $key, 'תעשייתי' );
+}
+
+/**
+ * Detect the decorative event objects service.
+ *
+ * @param int $service_id Service post ID.
+ * @return bool
+ */
+function handandvision_is_decorative_event_objects_service( $service_id ) {
+	$slug  = mb_strtolower( (string) get_post_field( 'post_name', $service_id ) );
+	$title = mb_strtolower( (string) get_the_title( $service_id ) );
+	$key   = $slug . ' ' . $title;
+
+	return ( false !== mb_strpos( $key, 'decorative' )
+		|| false !== mb_strpos( $key, 'event' )
+		|| false !== mb_strpos( $key, 'דקורט' )
+		|| false !== mb_strpos( $key, 'אירוע' ) )
+		&& ( false !== mb_strpos( $key, 'object' )
+			|| false !== mb_strpos( $key, 'אובייקט' ) );
+}
+
+/**
+ * Detect the live art at events service.
+ *
+ * @param int $service_id Service post ID.
+ * @return bool
+ */
+function handandvision_is_live_event_art_service( $service_id ) {
+	$slug  = mb_strtolower( (string) get_post_field( 'post_name', $service_id ) );
+	$title = mb_strtolower( (string) get_the_title( $service_id ) );
+	$key   = $slug . ' ' . $title;
+
+	return ( false !== mb_strpos( $key, 'live' )
+		|| false !== mb_strpos( $key, 'לייב' ) )
+		&& ( false !== mb_strpos( $key, 'event' )
+			|| false !== mb_strpos( $key, 'אירוע' ) );
+}
+
+/**
+ * Detect the spatial art service.
+ *
+ * @param int $service_id Service post ID.
+ * @return bool
+ */
+function handandvision_is_spatial_art_service( $service_id ) {
+	$slug  = mb_strtolower( (string) get_post_field( 'post_name', $service_id ) );
+	$title = mb_strtolower( (string) get_the_title( $service_id ) );
+	$key   = $slug . ' ' . $title;
+
+	return false !== mb_strpos( $key, 'spatial' )
+		|| false !== mb_strpos( $key, 'mural' )
+		|| false !== mb_strpos( $key, 'wall art' )
+		|| false !== mb_strpos( $key, 'מרחבית' )
+		|| false !== mb_strpos( $key, 'אמנות קיר' )
+		|| false !== mb_strpos( $key, 'ציור בהזמנה' );
+}
+
+/**
+ * Detect services that use artist-led artwork sections.
+ *
+ * @param int $service_id Service post ID.
+ * @return bool
+ */
+function handandvision_service_uses_artist_sections( $service_id ) {
+	return handandvision_is_digital_art_service( $service_id )
+		|| handandvision_is_live_event_art_service( $service_id )
+		|| handandvision_is_spatial_art_service( $service_id )
+		|| handandvision_is_decorative_event_objects_service( $service_id )
+		|| handandvision_is_object_design_service( $service_id );
+}
+
+/**
+ * Return the artist section heading for a service.
+ *
+ * @param int  $service_id Service post ID.
+ * @param bool $is_hebrew  Whether the current language is Hebrew.
+ * @return string
+ */
+function handandvision_get_service_artist_sections_heading( $service_id, $is_hebrew ) {
+	if ( handandvision_is_live_event_art_service( $service_id ) ) {
+		return $is_hebrew ? 'עבודות אמנות לייב באירועים לפי אמן' : 'Live Event Art by Artist';
+	}
+
+	if ( handandvision_is_spatial_art_service( $service_id ) ) {
+		return $is_hebrew ? 'עבודות אמנות מרחבית לפי אמן' : 'Spatial Art by Artist';
+	}
+
+	if ( handandvision_is_decorative_event_objects_service( $service_id ) ) {
+		return $is_hebrew ? 'עבודות עיצוב אובייקטים דקורטיביים לאירועים לפי אמן' : 'Decorative Object Design for Events by Artist';
+	}
+
+	if ( handandvision_is_object_design_service( $service_id ) ) {
+		return $is_hebrew ? 'עבודות אובייקטים ועיצוב תעשייתי לפי אמן' : 'Object and Industrial Design Work by Artist';
+	}
+
+	if ( handandvision_is_digital_art_service( $service_id ) ) {
+		return $is_hebrew ? 'עבודות דיגיטליות לפי אמן' : 'Digital Work by Artist';
+	}
+
+	return $is_hebrew ? 'עבודות לפי אמן' : 'Work by Artist';
+}
+
+/**
  * Build artist-led project groups for a service page.
  *
  * @param int   $service_id      Service post ID.
@@ -74,7 +191,7 @@ function handandvision_get_service_artist_project_groups( $service_id, $related_
 		);
 	}
 
-	if ( empty( $artists_pool ) && handandvision_is_digital_art_service( $service_id ) ) {
+	if ( empty( $artists_pool ) && handandvision_service_uses_artist_sections( $service_id ) ) {
 		$artists_pool = get_posts(
 			array(
 				'post_type'              => 'artist',
@@ -123,12 +240,12 @@ function handandvision_get_service_artist_project_groups( $service_id, $related_
 }
 
 /**
- * Build the curated Digital Art artist sketch requested for the service page.
+ * Build the curated artist sketch requested for service pages.
  *
  * @param int $service_id Service post ID.
  * @return array
  */
-function handandvision_get_digital_art_artist_showcase( $service_id ) {
+function handandvision_get_service_artist_showcase( $service_id ) {
 	$configured_sections = handandvision_get_service_artist_sections_meta( $service_id );
 	if ( empty( $configured_sections ) ) {
 		$configured_sections = function_exists( 'get_field' ) ? get_field( 'service_artist_sections', $service_id ) : array();
@@ -200,6 +317,49 @@ function handandvision_get_digital_art_artist_showcase( $service_id ) {
 		return $showcase;
 	}
 
+	if ( ! handandvision_is_digital_art_service( $service_id ) ) {
+		if ( ! handandvision_service_uses_artist_sections( $service_id ) ) {
+			return array();
+		}
+
+		$fallback_artists = function_exists( 'get_field' ) ? get_field( 'service_related_artists', $service_id ) : array();
+		$fallback_artists = is_array( $fallback_artists ) ? array_filter( $fallback_artists ) : array();
+
+		if ( empty( $fallback_artists ) ) {
+			$fallback_artists = get_posts(
+				array(
+					'post_type'              => 'artist',
+					'posts_per_page'         => 2,
+					'orderby'                => 'date',
+					'order'                  => 'ASC',
+					'post_status'            => 'publish',
+					'no_found_rows'          => true,
+					'update_post_term_cache' => false,
+				)
+			);
+		}
+
+		$fallback_showcase = array();
+
+		foreach ( array_slice( $fallback_artists, 0, 12 ) as $artist ) {
+			$artist_id = is_object( $artist ) ? (int) $artist->ID : (int) $artist;
+			if ( ! $artist_id ) {
+				continue;
+			}
+
+			$fallback_showcase[] = array(
+				'id'          => $artist_id,
+				'name'        => handandvision_strip_dashes_from_copy( get_the_title( $artist_id ) ),
+				'link'        => get_permalink( $artist_id ),
+				'portrait'    => handandvision_get_service_artist_portrait_url( $artist_id ),
+				'deeper_text' => '',
+				'projects'    => array_pad( array(), 6, array() ),
+			);
+		}
+
+		return $fallback_showcase;
+	}
+
 	$artists = array(
 		array(
 			'name'  => 'Daniel Philosoph',
@@ -223,6 +383,16 @@ function handandvision_get_digital_art_artist_showcase( $service_id ) {
 	}
 
 	return $artists;
+}
+
+/**
+ * Backwards-compatible wrapper for the Digital Art showcase function name.
+ *
+ * @param int $service_id Service post ID.
+ * @return array
+ */
+function handandvision_get_digital_art_artist_showcase( $service_id ) {
+	return handandvision_get_service_artist_showcase( $service_id );
 }
 
 /**

@@ -60,6 +60,7 @@ $service_title = handandvision_strip_dashes_from_copy( $service_title );
 $short_desc = handandvision_strip_dashes_from_copy( $short_desc );
 $full_desc = handandvision_strip_dashes_from_copy( $full_desc );
 $is_digital_art_service = function_exists( 'handandvision_is_digital_art_service' ) && handandvision_is_digital_art_service( $service_id );
+$uses_artist_sections = function_exists( 'handandvision_service_uses_artist_sections' ) && handandvision_service_uses_artist_sections( $service_id );
 
 // English title override
 if ( ! $is_hebrew && function_exists( 'get_field' ) ) {
@@ -92,24 +93,28 @@ if ( $is_digital_art_service ) {
             );
     }
 
-    if ( empty( $related_artists ) ) {
-        $related_artists = get_posts(
-            array(
-                'post_type'              => 'artist',
-                'posts_per_page'         => 20,
-                'orderby'                => 'date',
-                'order'                  => 'ASC',
-                'post_status'            => 'publish',
-                'no_found_rows'          => true,
-                'update_post_term_cache' => false,
-            )
-        );
-    }
 }
 
-$digital_art_showcase = ( $is_digital_art_service && function_exists( 'handandvision_get_digital_art_artist_showcase' ) )
-    ? handandvision_get_digital_art_artist_showcase( $service_id )
+if ( $uses_artist_sections && empty( $related_artists ) ) {
+    $related_artists = get_posts(
+        array(
+            'post_type'              => 'artist',
+            'posts_per_page'         => 20,
+            'orderby'                => 'date',
+            'order'                  => 'ASC',
+            'post_status'            => 'publish',
+            'no_found_rows'          => true,
+            'update_post_term_cache' => false,
+        )
+    );
+}
+
+$service_artist_showcase = ( $uses_artist_sections && function_exists( 'handandvision_get_service_artist_showcase' ) )
+    ? handandvision_get_service_artist_showcase( $service_id )
     : array();
+$service_artist_sections_heading = function_exists( 'handandvision_get_service_artist_sections_heading' )
+    ? handandvision_get_service_artist_sections_heading( $service_id, $is_hebrew )
+    : ( $is_hebrew ? 'עבודות לפי אמן' : 'Work by Artist' );
 ?>
 
 <main id="primary" class="hv-single-service hv-single-service-editorial <?php echo esc_attr( $is_hebrew ? 'hv-single-service--rtl' : 'hv-single-service--ltr' ); ?>">
@@ -168,20 +173,19 @@ $digital_art_showcase = ( $is_digital_art_service && function_exists( 'handandvi
     </section>
     <?php endif; ?>
 
-    <!-- Digital Art Artist Sketch -->
-    <?php if ( ! empty( $digital_art_showcase ) ) : ?>
+    <!-- Service Artist Sketch -->
+    <?php if ( ! empty( $service_artist_showcase ) ) : ?>
     <section class="hv-service-sketch-section" aria-labelledby="hv-service-sketch-heading">
         <div class="hv-container">
             <header class="hv-service-sketch-header">
                 <span class="hv-service-sketch-label"><?php echo esc_html( $is_hebrew ? 'יוצרים מתוך השירות' : 'Artists in This Practice' ); ?></span>
-                <h2 id="hv-service-sketch-heading" class="hv-service-sketch-title"><?php echo esc_html( $is_hebrew ? 'עבודות לפי אמן' : 'Work by Artist' ); ?></h2>
+                <h2 id="hv-service-sketch-heading" class="hv-service-sketch-title"><?php echo esc_html( $service_artist_sections_heading ); ?></h2>
                 <div class="hv-service-artist-jump" data-hv-service-artist-jump>
-                    <span class="hv-service-artist-jump__label"><?php echo esc_html( $is_hebrew ? 'בחר אמן' : 'Choose Artist' ); ?></span>
                     <button class="hv-service-artist-jump__button" type="button" aria-expanded="false" aria-controls="hv-service-artist-jump-list">
                         <span><?php echo esc_html( $is_hebrew ? 'בחר אמן' : 'Choose Artist' ); ?></span>
                     </button>
                     <div id="hv-service-artist-jump-list" class="hv-service-artist-jump__list" hidden>
-                        <?php foreach ( $digital_art_showcase as $jump_index => $jump_artist ) : ?>
+                        <?php foreach ( $service_artist_showcase as $jump_index => $jump_artist ) : ?>
                             <button class="hv-service-artist-jump__option" type="button" data-target="#hv-service-artist-<?php echo esc_attr( (int) $jump_index + 1 ); ?>">
                                 <?php echo esc_html( $jump_artist['name'] ); ?>
                             </button>
@@ -191,7 +195,7 @@ $digital_art_showcase = ( $is_digital_art_service && function_exists( 'handandvi
             </header>
 
             <div class="hv-service-sketch-list">
-                <?php foreach ( $digital_art_showcase as $artist_index => $artist ) : ?>
+                <?php foreach ( $service_artist_showcase as $artist_index => $artist ) : ?>
                 <article id="hv-service-artist-<?php echo esc_attr( (int) $artist_index + 1 ); ?>" class="hv-service-sketch-artist">
                     <header class="hv-service-sketch-artist__header">
                         <?php if ( ! empty( $artist['link'] ) ) : ?>
@@ -240,8 +244,8 @@ $digital_art_showcase = ( $is_digital_art_service && function_exists( 'handandvi
                         <?php else : ?>
                             <span>
                         <?php endif; ?>
-                                <span><?php echo esc_html( $deeper_text ); ?></span>
-                                <span aria-hidden="true">↓</span>
+                                <span class="hv-service-sketch-deeper__text"><?php echo esc_html( $deeper_text ); ?></span>
+                                <span class="hv-service-sketch-deeper__arrow" aria-hidden="true">↓</span>
                         <?php if ( ! empty( $artist['link'] ) ) : ?>
                             </a>
                         <?php else : ?>
@@ -301,42 +305,21 @@ $digital_art_showcase = ( $is_digital_art_service && function_exists( 'handandvi
     </section>
     <?php endif; ?>
 
-    <!-- Related Artists -->
+    <!-- Artists Carousel -->
     <?php
-    $related_placeholder = ( empty( $related_artists ) && function_exists( 'handandvision_acf_can_show_placeholder' ) && handandvision_acf_can_show_placeholder() && function_exists( 'handandvision_acf_display_value' ) )
-        ? handandvision_acf_display_value( array(), $is_hebrew ? 'אמנים קשורים' : 'Related artists', 'html' )
-        : '';
-    if ( ! empty( $related_artists ) || $related_placeholder ) : ?>
-        <?php if ( ! empty( $related_artists ) ) : ?>
-            <?php
-            get_template_part(
-                'template-parts/artist-carousel',
-                null,
-                array(
-                    'artists'         => $related_artists,
-                    'is_hebrew'       => $is_hebrew,
-                    'section_classes' => 'hv-section hv-section--white hv-home-artists hv-service-artists-section hv-service-artists-section--carousel',
-                    'eyebrow'         => $is_hebrew ? 'שיתופי פעולה' : 'Collaborations',
-                    'title'           => $is_hebrew ? 'אמנים שעובדים איתנו' : 'Artists We Work With',
-                    'show_heading'    => true,
-                    'show_cta'        => true,
-                )
-            );
-            ?>
-        <?php else : ?>
-            <section class="hv-service-artists-section">
-                <div class="hv-container">
-                    <div class="hv-service-artists-header">
-                        <span class="hv-service-artists-label"><?php echo esc_html( $is_hebrew ? 'שיתופי פעולה' : 'Collaborations' ); ?></span>
-                        <h2 class="hv-service-artists-title"><?php echo esc_html( $is_hebrew ? 'אמנים שעובדים איתנו' : 'Artists We Work With' ); ?></h2>
-                    </div>
-                    <div class="hv-service-artists-grid">
-                        <div class="hv-service-artist-card"><div class="hv-service-artist-media"><div class="hv-field-placeholder hv-field-placeholder--image"><?php echo wp_kses_post( $related_placeholder ); ?></div></div></div>
-                    </div>
-                </div>
-            </section>
-        <?php endif; ?>
-    <?php endif; ?>
+    get_template_part(
+        'template-parts/artist-carousel',
+        null,
+        array(
+            'is_hebrew'       => $is_hebrew,
+            'section_classes' => 'hv-section hv-section--white hv-home-artists hv-service-artists-section hv-service-artists-section--carousel',
+            'eyebrow'         => $is_hebrew ? 'שיתופי פעולה' : 'Collaborations',
+            'title'           => $is_hebrew ? 'אמנים שעובדים איתנו' : 'Artists We Work With',
+            'show_heading'    => true,
+            'show_cta'        => true,
+        )
+    );
+    ?>
 
     <!-- CTA Section -->
     <section class="hv-service-cta-section">

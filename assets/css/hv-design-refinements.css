@@ -4365,7 +4365,7 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 	margin-inline: 0 4px;
 }
 
-/* Digital Art sketch requested by client */
+/* Service artist sketch requested by client */
 .hv-single-service-editorial .hv-service-sketch-section {
 	background: var(--hv-cream) !important;
 	padding-block: clamp(64px, 9vw, 112px) !important;
@@ -4434,11 +4434,18 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 	content: "";
 	position: absolute;
 	top: 50%;
-	inset-inline-end: 16px;
-	width: 24px;
-	height: 1px;
-	background: var(--hv-lilac);
-	transform: translateY(-50%);
+	inset-inline-end: 18px;
+	width: 8px;
+	height: 8px;
+	border: solid var(--hv-lilac);
+	border-width: 0 1.5px 1.5px 0;
+	background: transparent;
+	transform: translateY(-65%) rotate(45deg);
+	transition: transform 180ms ease;
+}
+
+.hv-single-service-editorial .hv-service-artist-jump__button[aria-expanded="true"]::after {
+	transform: translateY(-25%) rotate(225deg);
 }
 
 .hv-single-service-editorial .hv-service-artist-jump__button:focus-visible {
@@ -4643,9 +4650,13 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 
 .hv-single-service-editorial .hv-service-sketch-deeper a,
 .hv-single-service-editorial .hv-service-sketch-deeper > span {
-	display: inline-flex;
+	display: inline-grid;
+	grid-template-columns: minmax(44px, 96px) auto minmax(44px, 96px);
+	grid-template-rows: auto auto;
 	align-items: center;
-	gap: 14px;
+	justify-items: center;
+	column-gap: 14px;
+	row-gap: 8px;
 	color: var(--hv-petrol);
 	font-family: var(--hv-font-heading);
 	font-size: 0.78rem;
@@ -4653,6 +4664,21 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 	letter-spacing: 0.22em;
 	text-transform: uppercase;
 	text-decoration: none;
+}
+
+.hv-single-service-editorial .hv-service-sketch-deeper__text {
+	grid-column: 2;
+	grid-row: 1;
+}
+
+.hv-single-service-editorial .hv-service-sketch-deeper__arrow {
+	grid-column: 1 / -1;
+	grid-row: 2;
+	color: var(--hv-petrol);
+	font-size: 0.95rem;
+	letter-spacing: 0;
+	line-height: 1;
+	animation: hv-service-deeper-arrow 1.8s ease-in-out infinite;
 }
 
 .hv-single-service-editorial .hv-service-sketch-deeper a::before,
@@ -4665,8 +4691,36 @@ html[dir="rtl"] .hv-gallery-carousel__btn svg {
 	background: rgba(37, 75, 97, 0.28);
 }
 
+.hv-single-service-editorial .hv-service-sketch-deeper a::before,
+.hv-single-service-editorial .hv-service-sketch-deeper > span::before {
+	grid-column: 1;
+	grid-row: 1;
+}
+
+.hv-single-service-editorial .hv-service-sketch-deeper a::after,
+.hv-single-service-editorial .hv-service-sketch-deeper > span::after {
+	grid-column: 3;
+	grid-row: 1;
+}
+
 .hv-single-service-editorial .hv-service-sketch-deeper a:hover {
 	color: var(--hv-purple);
+}
+
+.hv-single-service-editorial .hv-service-sketch-deeper a:hover .hv-service-sketch-deeper__arrow,
+.hv-single-service-editorial .hv-service-sketch-deeper a:focus-visible .hv-service-sketch-deeper__arrow {
+	color: var(--hv-purple);
+}
+
+@keyframes hv-service-deeper-arrow {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+
+	50% {
+		transform: translateY(5px);
+	}
 }
 
 .hv-single-service-editorial .hv-service-sketch-artist + .hv-service-sketch-artist {
